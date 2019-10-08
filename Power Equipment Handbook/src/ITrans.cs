@@ -9,9 +9,9 @@ namespace Power_Equipment_Handbook.src
     interface ITrans
     {
         //Основные параметры трансформатора
-        Params Paramss { get; set; }
+        Base_Params Params { get; set; }
         //Дополнительные параметры трансформатора
-        Trans_Params Trans_Paramss { get; set; }
+        Trans_Params TransParams { get; set; }
         double Ktr { get; set; }
         //Номинальные напряжения сторон
         double Unom_High { get; set; }

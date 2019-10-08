@@ -9,14 +9,14 @@ namespace Power_Equipment_Handbook.src
     interface IMultiTrans
     {
         //Основные параметры по каждой из сторон трансформатора
-        Params Paramss_High { get; set; }
-        Params Paramss_Mid { get; set; }
-        Params Paramss_Low { get; set; }
+        Base_Params Params_High { get; set; }
+        Base_Params Params_Mid { get; set; }
+        Base_Params Params_Low { get; set; }
 
         //Дополнительные параметры по каждой из сторон трансформатора
-        Trans_Params Trans_Paramss_High { get; set; }
-        Trans_Params Trans_Paramss_Mid { get; set; }
-        Trans_Params Trans_Paramss_Low { get; set; }
+        Trans_Params TransParams_High { get; set; }
+        Trans_Params TransParams_Mid { get; set; }
+        Trans_Params TransParams_Low { get; set; }
 
         //Коэффициенты трансформации
         double Ktr_High { get; set; }

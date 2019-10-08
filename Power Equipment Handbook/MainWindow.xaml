@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="1600">
     <Grid>
+        <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" Margin="10,680,0,0" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="231" FontFamily="Showcard Gothic" Background="{x:Null}"/>
 
     </Grid>
 </Window>

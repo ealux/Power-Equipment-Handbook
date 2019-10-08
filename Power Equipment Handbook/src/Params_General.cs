@@ -9,7 +9,7 @@ namespace Power_Equipment_Handbook.src
     /// <summary>
     /// Группа основных параметров элемента
     /// </summary>
-    public class Params
+    public class Base_Params
     {
         public double R { get; set; }
         public double X { get; set; }
@@ -23,7 +23,7 @@ namespace Power_Equipment_Handbook.src
         /// <param name="x">Реакт. сопротивление, Ом</param>
         /// <param name="g">Акт. проводимость, мкрСм</param>
         /// <param name="b">Реакт. проводимость, мкрСм</param>
-        public Params(double r = 0, double x = 0,
+        public Base_Params(double r = 0, double x = 0,
                       double g = 0, double b = 0)
         {
             R = r;
