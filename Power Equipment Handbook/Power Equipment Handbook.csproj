@@ -54,8 +54,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="src\MultiTrans.cs" />
-    <Compile Include="src\SingleTrans.cs" />
+    <Compile Include="src\ILine.cs" />
+    <Compile Include="src\IMultiTrans.cs" />
+    <Compile Include="src\ITrans.cs" />
+    <Compile Include="src\Params_General.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
