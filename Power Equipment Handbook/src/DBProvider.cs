@@ -21,7 +21,24 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public string Status
         {
-            get { if (Connection.State == ConnectionState.Open) status = "Подключен"; else status = "Отключен"; return status; }
+            get
+            {
+                if (Connection == null)
+                {
+                    status = "Отключен";
+                    return status;
+                }
+                else if (Connection.State == ConnectionState.Open)
+                {
+                    status = "Подключен";
+                    return status;
+                }
+                else
+                {
+                    status = "Отключен";
+                    return status;
+                }
+            }
             set => status = value;
         }
 
@@ -38,9 +55,6 @@ namespace Power_Equipment_Handbook.src
         {
             Connect(соnnection_string);
         }
-
-
-        //TODO Проверка на наличие файла базы в папке
 
         /// <summary>
         /// Создание подключения
@@ -86,6 +100,8 @@ namespace Power_Equipment_Handbook.src
         /// <param name="conn">SQLiteConnection переменная (метод Connect)</param>
         public void Command_NonQuery(string cmd, SQLiteConnection conn)
         {
+            if (conn == null) return;
+
             SQLiteCommand command = new SQLiteCommand(cmd, conn);
 
             try { command.ExecuteNonQuery(); }
@@ -100,6 +116,8 @@ namespace Power_Equipment_Handbook.src
         /// <returns>SQLiteDataReader объект</returns>
         public SQLiteDataReader Command_Query(string cmd, SQLiteConnection conn)
         {
+            if (conn == null) return null;
+
             SQLiteCommand command = new SQLiteCommand(cmd, conn);
             SQLiteDataReader dr = command.ExecuteReader();
 

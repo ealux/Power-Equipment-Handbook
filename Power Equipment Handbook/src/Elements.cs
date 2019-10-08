@@ -52,7 +52,7 @@ namespace Power_Equipment_Handbook.src
     /// <summary>
     /// Базовый класс Двухобмоточных Трансформаторов
     /// </summary>
-    public class Trans_Base : Element, ITrans
+    public abstract class Trans_Base : Element, ITrans
     {
         public Trans_Base(string type, string type_name, int Unom, string name = "", int region = 0) : base(type, type_name, Unom, name, region) { }
 
@@ -69,7 +69,7 @@ namespace Power_Equipment_Handbook.src
     /// <summary>
     /// Базовый класс Трехобмоточных Трансфоматоров и Автотрансформаторов
     /// </summary>
-    public class MultiTrans_Base : Element, IMultiTrans
+    public abstract class MultiTrans_Base : Element, IMultiTrans
     {
         public MultiTrans_Base(string type, string type_name, int Unom, string name = "", int region = 0) : base(type, type_name, Unom, name, region) { }
 
