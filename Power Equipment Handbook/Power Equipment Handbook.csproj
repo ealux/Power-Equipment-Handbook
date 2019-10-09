@@ -73,14 +73,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="src\Elements.cs" />
     <Compile Include="src\DBProvider.cs" />
-    <Compile Include="src\ILine.cs" />
-    <Compile Include="src\IMultiTrans.cs" />
-    <Compile Include="src\ITrans.cs" />
-    <Compile Include="src\Line.cs" />
-    <Compile Include="src\MultiTrans.cs" />
-    <Compile Include="src\Params_General.cs" />
-    <Compile Include="src\Trans.cs" />
+    <Compile Include="src\Params.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -89,7 +84,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Elements.cs" />
+    <Compile Include="src\Elements_Base.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

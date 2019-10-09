@@ -23,22 +23,50 @@ namespace Power_Equipment_Handbook
         public MainWindow()
         {
             InitializeComponent();
-
-            //DBProvider db_prv = new DBProvider("test.db");
-            //Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
-
-            //string str_com = "DROP TABLE IF EXISTS [workers];"
-            //                    +"CREATE TABLE [workers] ("
-            //                    +"[id] integer PRIMARY KEY AUTOINCREMENT NOT NULL,"
-            //                    + "[name] char(100) NOT NULL,"
-            //                    + "[family] char(100) NOT NULL,"
-            //                    + "[age] int NOT NULL,"
-            //                    + "[profession] char(100) NOT NULL"
-            //                    + "); ";
-
-            //db_prv.Command_NonQuery(str_com, db_prv.Connection);
-
-            //Line l1 = new Line(type: "L", type_name: "AC-150", Unom: 110);
         }
+
+
+        #region Helpers
+        /// <summary>
+        /// Проверка ввода цифр
+        /// </summary>
+        private void DigitChecker(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0))
+            {
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+
+
+        //DBProvider db_prv = new DBProvider("test.db");
+        //Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
+
+        //string str_com = "DROP TABLE IF EXISTS [workers];"
+        //                    + "CREATE TABLE [workers] ("
+        //                    + "[id] integer PRIMARY KEY AUTOINCREMENT NOT NULL,"
+        //                    + "[name] char(100) NOT NULL,"
+        //                    + "[family] char(100) NOT NULL,"
+        //                    + "[age] int NOT NULL,"
+        //                    + "[profession] char(100) NOT NULL"
+        //                    + "); ";
+
+        //db_prv.Command_NonQuery(str_com, db_prv.Connection);
+
+        //Line l1 = new Line(Unom: 110, type_name: "AC-150")
+        //{
+        //    Base_params = new Base_Params(),
+        //    Line_params = new Line_Params()
+        //};
+
+        //Trans t1 = new Trans(Unom: 220, type_name: "ТРДН-4000/50");
+
+        //MultiTrans mt1 = new MultiTrans(Unom: 220, type_name: "АДЦТДНЕКСЫВЦО-500000/1000000")
+        //{
+
+        //};
+
     }
 }

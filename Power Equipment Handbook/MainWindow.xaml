@@ -5,9 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Power_Equipment_Handbook"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1600">
-    <Grid>
-        <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" Margin="10,680,0,0" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="231" FontFamily="Showcard Gothic" Background="{x:Null}"/>
+        Title="MainWindow" Height="750" Width="1200" ScrollViewer.CanContentScroll="True" MinWidth="1200" MinHeight="750" MaxWidth="1200" MaxHeight="750" SnapsToDevicePixels="True" ResizeMode="CanMinimize">
+    <Grid Height="722" VerticalAlignment="Top" Margin="0,0,0,3" RenderTransformOrigin="0.505,0.357">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="249*"/>
+            <RowDefinition Height="473*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <StatusBar HorizontalAlignment="Left" Height="29" Margin="0,434,0,0" VerticalAlignment="Top" Width="1194" Grid.Row="1">
+            <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="240" FontFamily="Showcard Gothic" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0" FontWeight="Bold" IsEnabled="False" AllowDrop="False" IsTabStop="False" Focusable="False"/>
+        </StatusBar>
+        <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="247" VerticalAlignment="Top" Width="1184">
+            <TabItem x:Name="Tab_Lines" Header="Lines" Margin="-2,-2,-46,0">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox x:Name="txtStartNode_L" HorizontalAlignment="Left" Height="20" Margin="15,100,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <TextBox x:Name="txtEndNode_L" HorizontalAlignment="Left" Height="20" Margin="72,100,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <Label x:Name="lblStartNode_L" Content="Начало" HorizontalAlignment="Left" Margin="7,71,0,0" VerticalAlignment="Top" Height="24"/>
+                    <Label x:Name="lblEndNode_L" Content="Конец" HorizontalAlignment="Left" Margin="67,71,0,0" VerticalAlignment="Top" Height="24"/>
+                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="53,109,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
+                        <Ellipse.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="-1"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </Ellipse.RenderTransform>
+                    </Ellipse>
+                    <ComboBox x:Name="cmbTypeName_L" HorizontalAlignment="Left" Margin="124,100,0,0" VerticalAlignment="Top" Width="135" Height="20"/>
+                    <TextBox x:Name="txtTypeName_L" HorizontalAlignment="Left" Height="20" Margin="124,100,0,0" VerticalAlignment="Top" Width="115" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Text="TypeName" />
+                    <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="20" Margin="273,100,0,0" VerticalAlignment="Top" Width="151" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Text="Name" />
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="Tab_Trans" Header="Transformers" Margin="46,-2,-65,0">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <TabControl x:Name="Tab_Data" HorizontalAlignment="Left" Height="424" Margin="0,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="1194">
+            <TabItem x:Name="Tab_Nodes" Header="Nodes" Background="{x:Null}">
+                <Grid/>
+            </TabItem>
+            <TabItem x:Name="Tab_Branches" Header="Branches" Background="{x:Null}">
+                <Grid/>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </Window>
