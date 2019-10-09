@@ -26,7 +26,8 @@ namespace Power_Equipment_Handbook
         }
 
 
-        #region Helpers
+#region Helpers
+
         /// <summary>
         /// Проверка ввода цифр
         /// </summary>
@@ -37,7 +38,44 @@ namespace Power_Equipment_Handbook
                 e.Handled = true;
             }
         }
-        #endregion
+
+        /// <summary>
+        /// Проверка ввода вещественных чисел
+        /// </summary>
+        private void DoubleChecker(object sender, TextCompositionEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            if ((e.Text.Contains(".") || e.Text.Contains(",")) &
+                (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
+
+            if (!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0)))
+            {
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Замена введенной запятой на точку
+        /// </summary>
+        private void DotCommaReplacer(object sender, TextChangedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            using (tb.DeclareChangeBlock())
+            {
+                foreach (var c in e.Changes)
+                {
+                    if (c.AddedLength == 0) continue;
+                    tb.Select(c.Offset, c.AddedLength);
+                    if (tb.SelectedText.Contains(','))
+                    {
+                        tb.SelectedText = tb.SelectedText.Replace(',', '.');
+                    }
+                    tb.Select(c.Offset + c.AddedLength, 0);
+                }
+            }
+        }
+
+#endregion
 
 
 
