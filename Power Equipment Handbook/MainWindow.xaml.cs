@@ -75,7 +75,12 @@ namespace Power_Equipment_Handbook
             }
         }
 
-#endregion
+        private void Tab_Elements_SelectionChanged()
+        {
+
+        }
+
+        #endregion
 
 
 
