@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,13 +47,14 @@ namespace Power_Equipment_Handbook.src
         }
     }
 
-    public class Branch : INotifyPropertyChanged
+    public class Branch : INotifyPropertyChanged, IEquatable<Branch>
     {
         private int state;
         private string type;
         private int start; private int end;
         private int npar;
         private string name;
+        private string typename;
         private double r; private double x; private double g; private double b;
         private double ktr;
         private double idd;
@@ -88,6 +90,11 @@ namespace Power_Equipment_Handbook.src
         {
             get => name;
             set { SetProperty(ref name, value); }
+        }
+        public string TypeName
+        {
+            get => typename;
+            set { SetProperty(ref typename, value); }
         }
         public double R
         {
@@ -127,9 +134,8 @@ namespace Power_Equipment_Handbook.src
         #endregion
         
         public Branch() { }
-
-        public Branch(int start, int end, string type, int state = 0, string name = "", int npar = 0, 
-                      double r = 0, double x = 0, double b = 0, double g = 0, double ktr = 0,
+        public Branch(int start, int end, string type, int state = 0, string typename = "", string name = "", 
+                      int npar = 0, double r = 0, double x = 0, double b = 0, double g = 0, double ktr = 0,
                       double idd = 0, int region = 0)
         {
             State = state;
@@ -137,7 +143,7 @@ namespace Power_Equipment_Handbook.src
             Start = start;
             End = end;
             Npar = npar;
-            Name = name;
+            TypeName = typename; Name = name;
             R = r; X = x; B = b; G = g;
             Ktr = ktr;
             Idd = idd;
@@ -156,9 +162,26 @@ namespace Power_Equipment_Handbook.src
             storage = value; OnPropertyChanged(propertyName); return true;
         }
         #endregion
+
+        #region IEquatable interface block
+        public new int GetHashCode()
+        {
+            return this.GetHashCode();
+        }
+        /// <summary>
+        /// Возвращает результат сравнения Branch с другим экземпляром Branch
+        /// </summary>
+        public bool Equals(Branch other)
+        {
+            if (this == null && other == null) return true;
+            else if (this == null || other == null) return false;
+            else if (type == other.type && start == other.start && end == other.end) return true;
+            else return false;
+        }
+        #endregion
     }
 
-    public class Node:INotifyPropertyChanged
+    public class Node:INotifyPropertyChanged, IEquatable<Node>
     {
         private int state;
         private string type;
@@ -270,6 +293,24 @@ namespace Power_Equipment_Handbook.src
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
+        }
+        #endregion
+
+        #region IEquatable interface block
+        public new int GetHashCode()
+        {
+            return this.GetHashCode();
+        }
+
+        /// <summary>
+        /// Возвращает результат сравнения Node с другим экземпляром Node
+        /// </summary>
+        public bool Equals(Node other) 
+        {
+            if (this == null && other == null) return true;
+            else if (this == null || other == null) return false;
+            else if (type == other.type && number == other.number) return true;
+            else return false;
         }
         #endregion
     }

@@ -34,9 +34,21 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <ComboBox x:Name="cmbUnom_L" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" IsEditable="True" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="cmbUnom_L" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" IsEditable="True" Grid.ColumnSpan="3">
+                        <ListBoxItem Content="0,4"/>
+                        <ListBoxItem Content="3"/>
+                        <ListBoxItem Content="6"/>
+                        <ListBoxItem Content="10"/>
+                        <ListBoxItem Content="35"/>
+                        <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="220"/>
+                        <ListBoxItem Content="330"/>
+                        <ListBoxItem Content="500"/>
+                        <ListBoxItem Content="750"/>
+                        <ListBoxItem Content="1150"/>
+                    </ComboBox>
                     <ComboBox x:Name="cmbTypeName_L" HorizontalAlignment="Left" Margin="22,100,0,0" VerticalAlignment="Top" Width="134" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="2"/>
-                    <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="22" Margin="180,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Text="Name" Grid.Column="2" />
+                    <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="22" Margin="180,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="2" />
                     <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="110,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
                         <Ellipse.RenderTransform>
                             <TransformGroup>
@@ -207,7 +219,7 @@
                     <Label x:Name="lblRegion_L" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24"/>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="Tab_Trans" Header="Transformers" Margin="46,-2,-65,0">
+            <TabItem x:Name="Tab_Trans" Header="Transformers" Margin="46,-2,-65,0" HorizontalAlignment="Left" Width="102">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="135*"/>
@@ -319,7 +331,7 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <TextBox x:Name="txtGH_T" HorizontalAlignment="Left" Height="22" Margin="869,100,0,0" VerticalAlignment="Top" Width="74" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="1" TabIndex="2147483645"/>
+                    <TextBox x:Name="txtGH_T" HorizontalAlignment="Left" Height="22" Margin="869,100,0,0" VerticalAlignment="Top" Width="74" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="1" TabIndex="2147483647"/>
                     <Label x:Name="lblGH_T" Content="G ВН, мкрСм" HorizontalAlignment="Left" Margin="872,74,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" Grid.Column="1"/>
                     <GroupBox x:Name="grpMid" Header="Средняя обмотка" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="378" FontSize="10" Margin="355,-2,0,0" BorderBrush="#FFB5BBBF" Grid.Column="1" Visibility="Hidden">
                         <Grid x:Name="gridMid" Margin="0,10,-2,-5">
@@ -417,7 +429,7 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <Button Name="btnAdd_T" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="95" Grid.Column="1" Margin="948,100,0,0" Click="BtnAdd_T_Click"/>
+                    <Button Name="btnAdd_T" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Grid.Column="1" Margin="948,100,0,0" Click="BtnAdd_T_Click"/>
                     <TextBox x:Name="txtState_T" HorizontalAlignment="Left" Height="22" Margin="15,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Text="0" />
                     <Label x:Name="lblState_T" Content="Состояние" HorizontalAlignment="Left" Margin="4,23,0,0" VerticalAlignment="Top" Height="24" FontSize="10"/>
                     <TextBox x:Name="txtRegion_T" HorizontalAlignment="Left" Height="22" Margin="67,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
@@ -454,16 +466,17 @@
                 <Grid>
                     <DataGrid x:Name="grdBranches" ItemsSource="{Binding}"  Height="369" VerticalAlignment="Top" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0,0,10,0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="S" Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="N__Нач" Width="*" Binding="{Binding Start}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="N__кон" Width="*" Binding="{Binding End}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Тип" Width="*" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="N__п" Width="*" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="R" Width="*" Binding="{Binding R}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="X" Width="*" Binding="{Binding X}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="B" Width="*" Binding="{Binding B}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="G" Width="*" Binding="{Binding G}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="N__Нач" Width="50" Binding="{Binding Start}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="N__кон" Width="50" Binding="{Binding End}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Тип" Width="50" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="N__п" Width="50" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Марка" Width="200" Binding="{Binding TypeName}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Название" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="R" Width="60" Binding="{Binding R}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="X" Width="60" Binding="{Binding X}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="B" Width="60" Binding="{Binding B}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="G" Width="60" Binding="{Binding G}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="Ктр" Width="*" Binding="{Binding Ktr}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="I__доп__обор" Width="*" Binding="{Binding Idd}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="Район" Width="*" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}"/>
