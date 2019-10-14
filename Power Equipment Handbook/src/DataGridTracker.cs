@@ -47,6 +47,9 @@ namespace Power_Equipment_Handbook.src
         }
     }
 
+    /// <summary>
+    /// Тип ветви в сети
+    /// </summary>
     public class Branch : INotifyPropertyChanged, IEquatable<Branch>
     {
         private int state;
@@ -181,6 +184,9 @@ namespace Power_Equipment_Handbook.src
         #endregion
     }
 
+    /// <summary>
+    /// Тип узла в сети
+    /// </summary>
     public class Node:INotifyPropertyChanged, IEquatable<Node>
     {
         private int state;

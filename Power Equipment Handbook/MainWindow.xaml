@@ -41,6 +41,7 @@
                         <ListBoxItem Content="10"/>
                         <ListBoxItem Content="35"/>
                         <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="150"/>
                         <ListBoxItem Content="220"/>
                         <ListBoxItem Content="330"/>
                         <ListBoxItem Content="500"/>
@@ -72,7 +73,7 @@
                     </Ellipse>
                     <Label x:Name="lblUnom_L" Content="Uном" HorizontalAlignment="Left" Margin="135,76,0,0" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="2"/>
                     <Label x:Name="lblTypeName_L" Content="Сечение" HorizontalAlignment="Left" Margin="57,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2"/>
-                    <Label x:Name="lblName_L" Content="Название" HorizontalAlignment="Left" Margin="223,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2"/>
+                    <Label x:Name="lblName_L" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="166,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2"/>
                     <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="334,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
                         <Ellipse.RenderTransform>
                             <TransformGroup>
@@ -234,14 +235,27 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <ComboBox x:Name="cmbUnom_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="True" RenderTransformOrigin="0.473,0.439" IsEditable="True"/>
+                    <ComboBox x:Name="cmbUnom_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="True" RenderTransformOrigin="0.473,0.439" IsEditable="True">
+                        <ListBoxItem Content="0,4"/>
+                        <ListBoxItem Content="3"/>
+                        <ListBoxItem Content="6"/>
+                        <ListBoxItem Content="10"/>
+                        <ListBoxItem Content="35"/>
+                        <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="150"/>
+                        <ListBoxItem Content="220"/>
+                        <ListBoxItem Content="330"/>
+                        <ListBoxItem Content="500"/>
+                        <ListBoxItem Content="750"/>
+                        <ListBoxItem Content="1150"/>
+                    </ComboBox>
                     <ComboBox x:Name="cmbType_T" HorizontalAlignment="Left" Margin="124,100,0,0" VerticalAlignment="Top" Width="60" Height="22" IsTabStop="False" Text="двух." IsReadOnly="True" IsEditable="True" SelectionChanged="CmbType_T_SelectionChanged" Grid.ColumnSpan="2">
                         <ListBoxItem Content="двух."/>
                         <ListBoxItem Content="тр./АТ"/>
                     </ComboBox>
                     <Label x:Name="lblUnom_T" Content="Uном" HorizontalAlignment="Left" Margin="68,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10"/>
                     <Label x:Name="lblTypeName_T" Content="Марка трансформатора" HorizontalAlignment="Left" Margin="78,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1"/>
-                    <Label x:Name="lblName_T" Content="Название" HorizontalAlignment="Left" Margin="271,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1"/>
+                    <Label x:Name="lblName_T" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="219,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1"/>
                     <Label x:Name="lblType_T" Content="Тип" HorizontalAlignment="Left" Margin="5,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1"/>
                     <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="116,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
                         <Ellipse.RenderTransform>
@@ -272,10 +286,7 @@
                         </Ellipse.RenderTransform>
                     </Ellipse>
                     <Label x:Name="lblEndHighNode_T" Content="Конец" HorizontalAlignment="Left" Margin="359,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1" HorizontalContentAlignment="Center" Width="56"/>
-                    <ComboBox x:Name="cmbTypeName_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="160" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="1">
-                        <ListBoxItem Content="двух."/>
-                        <ListBoxItem Content="тр./АТ"/>
-                    </ComboBox>
+                    <ComboBox x:Name="cmbTypeName_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="160" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="1">                    </ComboBox>
                     <TextBox x:Name="txtName_T" HorizontalAlignment="Left" Height="22" Margin="230,100,0,0" VerticalAlignment="Top" Width="129" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="1" />
                     <TextBox x:Name="txtEndHighNode_T" HorizontalAlignment="Left" Height="22" Margin="368,100,0,0" VerticalAlignment="Top" Width="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Grid.Column="1" />
                     <Label x:Name="lblUnomHigh_T" Content="Uном ВН" HorizontalAlignment="Left" Margin="415,74,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" Grid.Column="1"/>

@@ -196,8 +196,8 @@ namespace Power_Equipment_Handbook
             if (nodesSt.Count == 0) track.AddNode(new Node(number: start, unom: 0, type: "нагр."));
             if (nodesEn.Count == 0) track.AddNode(new Node(number: end, unom: 0, type: "нагр."));
         }
+        
         #endregion
-
 
         #region Обработчики конкретных событий
 
