@@ -76,7 +76,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="src\DataGridTracker.cs" />
-    <Compile Include="src\Elements.cs" />
     <Compile Include="src\DBProvider.cs" />
     <Compile Include="src\Params.cs" />
     <Page Include="MainWindow.xaml">

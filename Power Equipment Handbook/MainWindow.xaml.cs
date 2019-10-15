@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -25,20 +26,29 @@ namespace Power_Equipment_Handbook
     public partial class MainWindow : Window
     {
         DataGridTracker track;
+        DBProvider db_prv;
+
+        public ObservableCollection<Line> Lines;
+        public ObservableCollection<Trans> Trans;
+        public ObservableCollection<MultiTrans> MultiTrans;
+
         public MainWindow()
         {
             InitializeComponent();
             track = new DataGridTracker(grdNodes, grdBranches);
 
-            track.AddNode(new Node(1, 110, "нагр."));
-            track.AddNode(new Node(2, 110, "нагр."));
-            track.AddBranch(new Branch(1, 2, "ЛЭП", npar: 1));
-            track.AddBranch(new Branch(1, 2, "ЛЭП", npar: 2));
+            db_prv = new DBProvider("test.db");
+            Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
+
+            Lines = new ObservableCollection<Line>();
+            Trans = new ObservableCollection<Trans>();
+            MultiTrans = new ObservableCollection<MultiTrans>();
+
+
         }
 
 
         #region Helpers
-
         /// <summary>
         /// Проверка ввода цифр
         /// </summary>
@@ -196,14 +206,164 @@ namespace Power_Equipment_Handbook
             if (nodesSt.Count == 0) track.AddNode(new Node(number: start, unom: 0, type: "нагр."));
             if (nodesEn.Count == 0) track.AddNode(new Node(number: end, unom: 0, type: "нагр."));
         }
-        
+
+        /// <summary>
+        /// Извлечение данных из базы
+        /// </summary>
+        /// <param name="type">Тип элемента ("Line" или "Trans")</param>
+        /// <param name="unom">Номинальное напряжение для отбора</param>
+        /// <param name="provider">Провайдер БД</param>
+        private void GetData(string type, int unom, DBProvider provider)
+        {
+            //Таблица Lines
+            if (type == "Line")
+            {
+                Lines.Clear();
+
+                using (var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [Lines] WHERE [Unom] = {0}", unom), provider.Connection))
+                {
+                    if (sqldata.HasRows == false) return;
+
+                    while (sqldata.Read())
+                    {
+                        Lines.Add(new Line()
+                        {
+                            Unom = sqldata["Unom"] as int?,
+                            TypeName = sqldata["TypeName"] as string,
+                            R0 = sqldata["R0"] as double?,
+                            X0 = sqldata["X0"] as double?,
+                            B0 = sqldata["B0"] as double?,
+                            G0 = sqldata["G0"] as double?,
+                            Idd = sqldata["Idd"] as double?,
+                            Source = sqldata["Source"] as string
+                        });
+                    }
+                }
+                cmbTypeName_L.ItemsSource = Lines;
+                cmbTypeName_L.DisplayMemberPath = "TypeName";
+            }
+            //Таблица Trans
+            if(type == "Trans")
+            {
+                //Двухобмоточные
+                if(cmbType_T.Text == "двух.")
+                {
+                    Trans.Clear();
+
+                    using (var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [Trans] WHERE [Unom] = {0}", unom), provider.Connection))
+                    {
+                        if (sqldata.HasRows == false) return;
+
+                        while (sqldata.Read())
+                        {
+                            Trans.Add(new Trans()
+                            {
+                                Unom = sqldata["Unom"] as int?,
+                                TypeName = sqldata["TypeName"] as string,
+                                UnomH = sqldata["UnomH"] as double?,
+                                UnomL = sqldata["UnomL"] as double?,
+                                R = sqldata["R"] as double?,
+                                X = sqldata["X"] as double?,
+                                B = sqldata["B"] as double?,
+                                G = sqldata["G"] as double?,
+                                Source = sqldata["Source"] as string
+                            });
+                        }
+                    }
+
+                    cmbTypeName_T.ItemsSource = Trans;
+                    cmbTypeName_T.DisplayMemberPath = "TypeName";
+                }
+                //Трехобмоточные и Автотрансформаторы
+                if(cmbType_T.Text == "тр./АТ")
+                {
+                    MultiTrans.Clear();
+
+                    using (var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [MultiTrans] WHERE [Unom] = {0}", unom), provider.Connection))
+                    {
+                        if (sqldata.HasRows == false) return;
+
+                        while (sqldata.Read())
+                        {
+                            MultiTrans.Add(new MultiTrans()
+                            {
+                                Unom = sqldata["Unom"] as int?,
+                                TypeName = sqldata["TypeName"] as string,
+                                UnomH = sqldata["UnomH"] as double?,
+                                UnomM = sqldata["UnomM"] as double?,
+                                UnomL = sqldata["UnomL"] as double?,
+                                RH = sqldata["RH"] as double?,
+                                RM = sqldata["RM"] as double?,
+                                RL = sqldata["RL"] as double?,
+                                XH = sqldata["XH"] as double?,
+                                XM = sqldata["XM"] as double?,
+                                XL = sqldata["XL"] as double?,
+                                B = sqldata["B"] as double?,
+                                G = sqldata["G"] as double?,
+                                Source = sqldata["Source"] as string
+                            });
+                        }
+                    }
+
+                    cmbTypeName_T.ItemsSource = MultiTrans;
+                    cmbTypeName_T.DisplayMemberPath = "TypeName";
+                } 
+            }
+        }
         #endregion
 
         #region Обработчики конкретных событий
+        private void CmbTypeName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            //Выбор марки провода для линии
+            if (cmb.Equals(cmbTypeName_L))
+            {
+                if (cmb.SelectedItem == null)
+                {
+                    txtr0_L.Clear(); txtx0_L.Clear(); txtb0_L.Clear(); txtg0_L.Clear(); txtIdd_L.Clear(); lblSource_L.DataContext = String.Empty;
+                    return;
+                }
+                if (Lines.Count == 0) return;
+
+                Line l = Lines.Where((n) => n.TypeName == (cmb.SelectedItem as Line).TypeName).First();
+
+                txtr0_L.DataContext = l; txtx0_L.DataContext = l; txtb0_L.DataContext = l; txtg0_L.DataContext = l;
+                txtIdd_L.DataContext = l; lblSource_L.DataContext = l;
+            }
+
+            //Выбор марки трансформатора
+            if (cmb.Equals(cmbTypeName_T))
+            {
+                //Двухобмоточные трансформаторы
+                if(cmbType_T.Text == "двух.")
+                {
+                    if (cmb.SelectedItem == null)
+                    {
+                        txtRH_T.Clear(); txtXH_T.Clear(); txtBH_T.Clear(); txtGH_T.Clear(); txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); lblSource_T.DataContext = String.Empty;
+                        return;
+                    }
+                    if (Trans.Count == 0) return;
+
+                    Trans t = Trans.Where((n) => n.TypeName == (cmb.SelectedItem as Trans).TypeName).First();
+
+                    txtRH_T.DataContext = t; txtXH_T.DataContext = t; txtBH_T.DataContext = t; txtGH_T.DataContext = t;
+                    txtUnomHigh_T.DataContext = t; txtUnomLowDouble_T.DataContext = t;
+                    lblSource_T.DataContext = t;
+                }
+                //Трехобмоточные и Автотрансформаторы
+                if(cmbType_T.Text == "тр./АТ")
+                {
+
+                }
+
+            }
+        }
 
         /// <summary>
         /// Обработка внешнего вида формы при изменении типа трансформатора
-        /// </summary>
+        /// </summary>    
         private void CmbType_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbType_T.SelectedValue == cmbType_T.Items[0])
@@ -222,9 +382,17 @@ namespace Power_Equipment_Handbook
                 lblEndHighNode_T.Content = "Ср. точка";
                 elUnom_T_2.Visibility = lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Hidden;
                 elUnom_T_1.Width = 65;
-            } 
+            }
         }
-        
+
+        /// <summary>
+        /// Изменение типа трансформатора
+        /// </summary>
+        private void CmbType_T_DropDownClosed(object sender, EventArgs e)
+        {
+            if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToInt32(cmbUnom_T.Text), db_prv);
+        }
+
         /// <summary>
         /// Добавить линию в список ветвей
         /// </summary>
@@ -347,6 +515,33 @@ namespace Power_Equipment_Handbook
             
         }
 
+        /// <summary>
+        /// Выгрузка дынных из базы по факту выбора номинального напряжения
+        /// </summary>
+        private void CmbUnom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cmb = (ComboBox)sender;
+
+            if (cmb.Equals(cmbUnom_L))
+            {
+                if(cmb.SelectedItem == null)
+                {
+                    Lines.Clear();
+                    return;
+                }
+                GetData("Line", Convert.ToInt32((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
+            }
+            if (cmb.Equals(cmbUnom_T))
+            {
+                if (cmb.SelectedItem == null)
+                {
+                    Trans.Clear();
+                    MultiTrans.Clear();
+                    return;
+                }
+                GetData("Trans", Convert.ToInt32((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
+            }
+        }
         #endregion
 
         //DBProvider db_prv = new DBProvider("test.db");
@@ -363,18 +558,6 @@ namespace Power_Equipment_Handbook
 
         //db_prv.Command_NonQuery(str_com, db_prv.Connection);
 
-        //Line l1 = new Line(Unom: 110, type_name: "AC-150")
-        //{
-        //    Base_params = new Base_Params(),
-        //    Line_params = new Line_Params()
-        //};
-
-        //Trans t1 = new Trans(Unom: 220, type_name: "ТРДН-4000/50");
-
-        //MultiTrans mt1 = new MultiTrans(Unom: 220, type_name: "АДЦТДНЕКСЫВЦО-500000/1000000")
-        //{
-
-        //};
 
     }
 }

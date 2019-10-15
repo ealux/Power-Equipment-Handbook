@@ -29,6 +29,7 @@ namespace Power_Equipment_Handbook.src
             this.grdNodes.ItemsSource = Nodes;
             this.grdBranches.ItemsSource = Branches;
         }
+
         public void AddNode(Node node)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
@@ -37,6 +38,7 @@ namespace Power_Equipment_Handbook.src
                                                     grdNodes.UpdateLayout();
                                                 });
         }
+
         public void AddBranch(Branch branch)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
@@ -317,6 +319,268 @@ namespace Power_Equipment_Handbook.src
             else if (this == null || other == null) return false;
             else if (type == other.type && number == other.number) return true;
             else return false;
+        }
+        #endregion
+    }
+    
+    /// <summary>
+    /// Класс линии из базы
+    /// </summary>
+    public class Line:INotifyPropertyChanged
+    {
+        private int? unom;
+        private string typename;
+        private double? r0;
+        private double? x0;
+        private double? b0;
+        private double? g0;
+        private double? idd;
+        private string source;
+
+        #region Properties
+        public int? Unom
+        {
+            get { return unom; }
+            set { SetProperty(ref unom, value); }
+        }
+        public string TypeName
+        {
+            get { return typename; }
+            set { SetProperty(ref typename, value); }
+        }
+        public double? R0
+        {
+            get { return r0; }
+            set { SetProperty(ref r0, value); }
+        }
+        public double? X0
+        {
+            get { return x0; }
+            set { SetProperty(ref x0, value); }
+        }
+        public double? B0
+        {
+            get { return b0; }
+            set { SetProperty(ref b0, value); }
+        }
+        public double? G0
+        {
+            get { return g0; }
+            set { SetProperty(ref g0, value); }
+        }
+        public string Source
+        {
+            get { return source; }
+            set { SetProperty(ref source, value); }
+        }
+        public double? Idd
+        {
+            get { return idd; }
+            set { SetProperty(ref idd, value); }
+        }
+        #endregion
+
+        public Line() { }
+
+        #region INotifyPropertyChanged interface block
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value)) return false;
+            storage = value; OnPropertyChanged(propertyName); return true;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// Класс двухобмоточного трансформатора из базы
+    /// </summary>
+    public class Trans: INotifyPropertyChanged
+    {
+        int? unom;
+        string type;
+        string typename;
+        double? unomh; double? unoml;
+        double? r; double? x; double? b; double? g;
+        string source;
+
+        #region Properties
+        public int? Unom
+        {
+            get { return unom; }
+            set { SetProperty(ref unom, value); }
+        }
+        public string Type
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
+        public string TypeName
+        {
+            get { return typename; }
+            set { SetProperty(ref typename, value); }
+        }
+        public double? UnomH
+        {
+            get { return unomh; }
+            set { SetProperty(ref unomh, value); }
+        }
+        public double? UnomL
+        {
+            get { return unoml; }
+            set { SetProperty(ref unoml, value); }
+        }
+        public double? R
+        {
+            get { return r; }
+            set { SetProperty(ref r, value); }
+        }
+        public double? X
+        {
+            get { return x; }
+            set { SetProperty(ref x, value); }
+        }
+        public double? B
+        {
+            get { return b; }
+            set { SetProperty(ref b, value); }
+        }
+        public double? G
+        {
+            get { return g; }
+            set { SetProperty(ref g, value); }
+        }
+        public string Source
+        {
+            get { return source; }
+            set { SetProperty(ref source, value); }
+        }
+        #endregion
+
+        public Trans() { }
+
+        #region INotifyPropertyChanged interface block
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value)) return false;
+            storage = value; OnPropertyChanged(propertyName); return true;
+        }
+        #endregion
+    }
+
+    /// <summary>
+    /// Класс трехобмоточного (автотрансформатора) трансформатора
+    /// </summary>
+    public class MultiTrans: INotifyPropertyChanged
+    {
+        int? unom;
+        string type;
+        string typename;
+        double? unomh; double? unomm; double? unoml;
+        double? rh; double? rm; double? rl;
+        double? xh; double? xm; double? xl;
+        double? b; double? g;
+        string source;
+
+        #region Properties
+        public int? Unom
+        {
+            get { return unom; }
+            set { SetProperty(ref unom, value); }
+        }
+        public string Type
+        {
+            get { return type; }
+            set { SetProperty(ref type, value); }
+        }
+        public string TypeName
+        {
+            get { return typename; }
+            set { SetProperty(ref typename, value); }
+        }
+        public double? UnomH
+        {
+            get { return unomh; }
+            set { SetProperty(ref unomh, value); }
+        }
+        public double? UnomM
+        {
+            get { return unomm; }
+            set { SetProperty(ref unomm, value); }
+        }
+        public double? UnomL
+        {
+            get { return unoml; }
+            set { SetProperty(ref unoml, value); }
+        }
+        public double? RH
+        {
+            get { return rh; }
+            set { SetProperty(ref rh, value); }
+        }
+        public double? RM
+        {
+            get { return rm; }
+            set { SetProperty(ref rm, value); }
+        }
+        public double? RL
+        {
+            get { return rl; }
+            set { SetProperty(ref rl, value); }
+        }
+        public double? XH
+        {
+            get { return xh; }
+            set { SetProperty(ref xh, value); }
+        }
+        public double? XM
+        {
+            get { return xm; }
+            set { SetProperty(ref xm, value); }
+        }
+        public double? XL
+        {
+            get { return xl; }
+            set { SetProperty(ref xl, value); }
+        }
+        public double? B
+        {
+            get { return b; }
+            set { SetProperty(ref b, value); }
+        }
+        public double? G
+        {
+            get { return g; }
+            set { SetProperty(ref g, value); }
+        }
+        public string Source
+        {
+            get { return source; }
+            set { SetProperty(ref source, value); }
+        }
+        #endregion
+
+        public MultiTrans() { }
+
+        #region INotifyPropertyChanged interface block
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value)) return false;
+            storage = value; OnPropertyChanged(propertyName); return true;
         }
         #endregion
     }
