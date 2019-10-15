@@ -12,7 +12,7 @@
             <RowDefinition Height="249*"/>
             <RowDefinition Height="473*"/>
         </Grid.RowDefinitions>
-        <StatusBar HorizontalAlignment="Left" Margin="0,434,0,10" Width="1194" Grid.Row="1" Grid.ColumnSpan="2">
+        <StatusBar HorizontalAlignment="Left" Margin="0,428,0,10" Width="1194" Grid.Row="1">
             <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="240" FontFamily="Showcard Gothic" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0" FontWeight="Bold" IsEnabled="False" AllowDrop="False" IsTabStop="False" Focusable="False"/>
         </StatusBar>
         <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184">
@@ -446,7 +446,7 @@
                     <TextBox x:Name="txtRegion_T" HorizontalAlignment="Left" Height="22" Margin="67,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
                     <Label x:Name="lblRegion_T" Content="Район" HorizontalAlignment="Left" Margin="66,23,0,0" VerticalAlignment="Top" Height="24" FontSize="10"/>
                     <Label Content="Источник: " VerticalAlignment="Top" Margin="7,183,58,0"/>
-                    <Label x:Name="lblSource_T" Content="{Binding Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,183,853,10" Grid.ColumnSpan="2"/>
+                    <Label x:Name="lblSource_T" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="80,183,0,0" Width="230" Height="24"/>
                 </Grid>
             </TabItem>
         </TabControl>
@@ -456,9 +456,9 @@
                     <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="369" VerticalAlignment="Top" Width="1178" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S" Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Тип" Width="*" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Номер" Width="*" Binding="{Binding Number}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Название" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Номер" Width="55" Binding="{Binding Number}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="U__ном" Width="*" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="P__н" Width="*" Binding="{Binding P_n}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="Q__н" Width="*" Binding="{Binding Q_n}" ClipboardContentBinding="{x:Null}"/>
@@ -483,7 +483,7 @@
                             <DataGridTextColumn Header="Тип" Width="50" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="N__п" Width="50" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="Марка" Width="200" Binding="{Binding TypeName}" ClipboardContentBinding="{x:Null}"/>
-                            <DataGridTextColumn Header="Название" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
+                            <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="R" Width="60" Binding="{Binding R}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="X" Width="60" Binding="{Binding X}" ClipboardContentBinding="{x:Null}"/>
                             <DataGridTextColumn Header="B" Width="60" Binding="{Binding B}" ClipboardContentBinding="{x:Null}"/>

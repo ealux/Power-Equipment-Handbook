@@ -43,10 +43,7 @@ namespace Power_Equipment_Handbook
             Lines = new ObservableCollection<Line>();
             Trans = new ObservableCollection<Trans>();
             MultiTrans = new ObservableCollection<MultiTrans>();
-
-
         }
-
 
         #region Helpers
         /// <summary>
@@ -55,10 +52,7 @@ namespace Power_Equipment_Handbook
         private void DigitChecker(object sender, TextCompositionEventArgs e)
         {
             ChangeTextBoxColor(sender, false);
-            if (!Char.IsDigit(e.Text, 0))
-            {
-                e.Handled = true;
-            }
+            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
         /// <summary>
@@ -67,13 +61,8 @@ namespace Power_Equipment_Handbook
         private void DoubleChecker(object sender, TextCompositionEventArgs e)
         {
             TextBox tb = (TextBox)sender;
-            if ((e.Text.Contains(".") || e.Text.Contains(",")) &
-                (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
-
-            if (!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0)))
-            {
-                e.Handled = true;
-            }
+            if ((e.Text.Contains(".") || e.Text.Contains(",")) & (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
+            if (!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0))) e.Handled = true;
         }
 
         /// <summary>
@@ -88,10 +77,7 @@ namespace Power_Equipment_Handbook
                 {
                     if (c.AddedLength == 0) continue;
                     tb.Select(c.Offset, c.AddedLength);
-                    if (tb.SelectedText.Contains(','))
-                    {
-                        tb.SelectedText = tb.SelectedText.Replace(',', '.');
-                    }
+                    if (tb.SelectedText.Contains(',')) tb.SelectedText = tb.SelectedText.Replace(',', '.');
                     tb.Select(c.Offset + c.AddedLength, 0);
                 }
             }
@@ -313,6 +299,9 @@ namespace Power_Equipment_Handbook
         #endregion
 
         #region Обработчики конкретных событий
+        /// <summary>
+        /// Выгрузка параметров из базы по факту выбора Сечения/Марки
+        /// </summary>
         private void CmbTypeName_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cmb = (ComboBox)sender;
@@ -341,21 +330,55 @@ namespace Power_Equipment_Handbook
                 {
                     if (cmb.SelectedItem == null)
                     {
-                        txtRH_T.Clear(); txtXH_T.Clear(); txtBH_T.Clear(); txtGH_T.Clear(); txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); lblSource_T.DataContext = String.Empty;
+                        txtRH_T.Clear(); txtXH_T.Clear(); txtBH_T.Clear(); txtGH_T.Clear(); txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); lblSource_T.Content = String.Empty;
                         return;
                     }
                     if (Trans.Count == 0) return;
 
                     Trans t = Trans.Where((n) => n.TypeName == (cmb.SelectedItem as Trans).TypeName).First();
 
-                    txtRH_T.DataContext = t; txtXH_T.DataContext = t; txtBH_T.DataContext = t; txtGH_T.DataContext = t;
-                    txtUnomHigh_T.DataContext = t; txtUnomLowDouble_T.DataContext = t;
-                    lblSource_T.DataContext = t;
+                    txtRH_T.SetBinding(TextBox.TextProperty, new Binding("R") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtXH_T.SetBinding(TextBox.TextProperty, new Binding("X") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtBH_T.SetBinding(TextBox.TextProperty, new Binding("B") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtGH_T.SetBinding(TextBox.TextProperty, new Binding("G") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    txtUnomHigh_T.SetBinding(TextBox.TextProperty, new Binding("UnomH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtUnomLow_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    lblSource_T.Content = t.Source;
                 }
                 //Трехобмоточные и Автотрансформаторы
                 if(cmbType_T.Text == "тр./АТ")
                 {
+                    if (cmb.SelectedItem == null)
+                    {
+                        txtRH_T.Clear(); txtRM_T.Clear(); txtRL_T.Clear();
+                        txtXH_T.Clear(); txtXM_T.Clear(); txtXL_T.Clear();
+                        txtBH_T.Clear(); txtGH_T.Clear();
+                        txtUnomHigh_T.Clear(); txtUnomMid_T.Clear(); txtUnomLow_T.Clear();
+                        lblSource_T.Content = String.Empty;
+                        return;
+                    }
+                    if (Trans.Count == 0) return;
 
+                    MultiTrans t = MultiTrans.Where((n) => n.TypeName == (cmb.SelectedItem as MultiTrans).TypeName).First();
+
+                    txtRH_T.SetBinding(TextBox.TextProperty, new Binding("RH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtRM_T.SetBinding(TextBox.TextProperty, new Binding("RM") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtRL_T.SetBinding(TextBox.TextProperty, new Binding("RL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    txtXH_T.SetBinding(TextBox.TextProperty, new Binding("XH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtXM_T.SetBinding(TextBox.TextProperty, new Binding("XM") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtXL_T.SetBinding(TextBox.TextProperty, new Binding("XL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    txtBH_T.SetBinding(TextBox.TextProperty, new Binding("B") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtGH_T.SetBinding(TextBox.TextProperty, new Binding("G") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    txtUnomHigh_T.SetBinding(TextBox.TextProperty, new Binding("UnomH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtUnomMid_T.SetBinding(TextBox.TextProperty, new Binding("UnomM") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtUnomLow_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+
+                    lblSource_T.Content = t.Source;
                 }
 
             }
@@ -543,21 +566,5 @@ namespace Power_Equipment_Handbook
             }
         }
         #endregion
-
-        //DBProvider db_prv = new DBProvider("test.db");
-        //Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
-
-        //string str_com = "DROP TABLE IF EXISTS [workers];"
-        //                    + "CREATE TABLE [workers] ("
-        //                    + "[id] integer PRIMARY KEY AUTOINCREMENT NOT NULL,"
-        //                    + "[name] char(100) NOT NULL,"
-        //                    + "[family] char(100) NOT NULL,"
-        //                    + "[age] int NOT NULL,"
-        //                    + "[profession] char(100) NOT NULL"
-        //                    + "); ";
-
-        //db_prv.Command_NonQuery(str_com, db_prv.Connection);
-
-
     }
 }

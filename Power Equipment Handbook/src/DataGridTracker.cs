@@ -23,30 +23,13 @@ namespace Power_Equipment_Handbook.src
 
         public DataGridTracker(DataGrid grdNodes, DataGrid grdBranches)
         {
-            this.grdNodes = grdNodes;
-            this.grdBranches = grdBranches;
-
-            this.grdNodes.ItemsSource = Nodes;
-            this.grdBranches.ItemsSource = Branches;
+            this.grdNodes = grdNodes; this.grdNodes.ItemsSource = Nodes;
+            this.grdBranches = grdBranches; this.grdBranches.ItemsSource = Branches;
         }
 
-        public void AddNode(Node node)
-        {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                                {
-                                                    Nodes.Add(node);
-                                                    grdNodes.UpdateLayout();
-                                                });
-        }
+        public void AddNode(Node node) => Application.Current.Dispatcher.BeginInvoke((Action)delegate () { Nodes.Add(node); grdNodes.UpdateLayout(); });
 
-        public void AddBranch(Branch branch)
-        {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
-                                                {
-                                                    Branches.Add(branch);
-                                                    grdBranches.UpdateLayout();
-                                                });
-        }
+        public void AddBranch(Branch branch) => Application.Current.Dispatcher.BeginInvoke((Action)delegate () { Branches.Add(branch); grdBranches.UpdateLayout(); });
     }
 
     /// <summary>
@@ -401,12 +384,12 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Trans: INotifyPropertyChanged
     {
-        int? unom;
-        string type;
-        string typename;
-        double? unomh; double? unoml;
-        double? r; double? x; double? b; double? g;
-        string source;
+        private int? unom;
+        private string type;
+        private string typename;
+        private double? unomh; private double? unoml;
+        private double? r; private double? x; private double? b; private double? g;
+        private string source;
 
         #region Properties
         public int? Unom
