@@ -40,6 +40,16 @@ namespace Power_Equipment_Handbook
             db_prv = new DBProvider("test.db");
             Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
 
+            cmbType_T.SelectedIndex = 1;
+            cmbType_T.SelectedIndex = 0;
+
+            txtStartNode_L.ItemsSource = track.Nodes; txtStartNode_L.DisplayMemberPath = "Number";
+            txtEndNode_L.ItemsSource = track.Nodes; txtEndNode_L.DisplayMemberPath = "Number";
+            txtStartNode_T.ItemsSource = track.Nodes; txtStartNode_T.DisplayMemberPath = "Number";
+            txtEndHighNode_T.ItemsSource = track.Nodes; txtEndHighNode_T.DisplayMemberPath = "Number";
+            txtEndMidNode_T.ItemsSource = track.Nodes; txtEndMidNode_T.DisplayMemberPath = "Number";
+            txtEndLowNode_T.ItemsSource = track.Nodes; txtEndLowNode_T.DisplayMemberPath = "Number";
+
             Lines = new ObservableCollection<Line>();
             Trans = new ObservableCollection<Trans>();
             MultiTrans = new ObservableCollection<MultiTrans>();
@@ -51,8 +61,13 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void DigitChecker(object sender, TextCompositionEventArgs e)
         {
-            ChangeTextBoxColor(sender, false);
-            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
+            object tb;
+
+            try { tb = (ComboBox)sender; }
+            catch (Exception) { tb = (TextBox)sender; }
+            if (tb.GetType() == typeof(ComboBox)) ChangeCmbColor(sender, false);
+            else if(tb.GetType() == typeof(TextBox)) ChangeTxtColor(sender, false);
+            if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
         /// <summary>
@@ -157,40 +172,62 @@ namespace Power_Equipment_Handbook
         /// <summary>
         /// Изменяет цвет TextBox'a в зависимости от аргумента error метода 
         /// </summary>
-        private void ChangeTextBoxColor(object sender, bool error)
+        private void ChangeTxtColor(object sender, bool error)
         {
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 TextBox tb = (TextBox)sender;
-                if (error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                if (error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                 else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
             });
+        }
 
+        /// <summary>
+        /// Изменяет цвет ComboBox'a в зависимости от аргумента error метода 
+        /// </summary>
+        private void ChangeCmbColor(object sender, bool error)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                ComboBox tb = (ComboBox)sender;
+                if (error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
+            });
         }
 
         /// <summary>
         /// Проверяет наличие аналогичной ветви и смещает номер параллельности в случае обнаружения
         /// </summary>
-        private Branch BranchChecker(Branch br)
+        private bool BranchChecker(Branch br, object cmbStart, object cmbEnd)
         {
-            NodeChecker(br);
-            var other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
-            if(other != null && other.Count > 0) br.Npar = other[0].Npar + 1;
-            return br;
+            bool result = NodeChecker(br, cmbStart, cmbEnd);
+            if (result)
+            {
+                var other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
+                if (other != null && other.Count > 0) br.Npar = other[0].Npar + 1;
+            }
+
+            return result;  
         }
         
         /// <summary>
         /// Проверка наличия узлов по параметрам ввода начала и конца ветви
         /// </summary>
-        private void NodeChecker(Branch br)
+        private bool NodeChecker(Branch br, object cmbStart, object cmbEnd)
         {
             int start = br.Start;
             int end = br.End;
 
             var nodesSt = track.Nodes.Where((n) => n.Number == start).ToList();
             var nodesEn = track.Nodes.Where((n) => n.Number == end).ToList();
-            if (nodesSt.Count == 0) track.AddNode(new Node(number: start, unom: 0, type: "нагр."));
-            if (nodesEn.Count == 0) track.AddNode(new Node(number: end, unom: 0, type: "нагр."));
+            var reverse_br = track.Branches.Where((b) => (b.Start == br.End) & (b.End == br.Start)).ToList();
+
+            if (reverse_br.Count != 0) { ChangeCmbColor(cmbStart, true); ChangeCmbColor(cmbEnd, true); return false; }
+            if (nodesSt.Count == 0) ChangeCmbColor(cmbStart, true);
+            if (nodesEn.Count == 0) ChangeCmbColor(cmbEnd, true);
+
+            if (nodesSt.Count == 0 || nodesEn.Count == 0) return false;
+            else return true;
         }
 
         /// <summary>
@@ -417,36 +454,81 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
+        /// Добавить узел в список узлов
+        /// </summary>
+        private void BtnAdd_N_Click(object sender, RoutedEventArgs e)
+        {
+            int number = default(int);
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                if (txtNumber_N.Text == "" || txtNumber_N.Text == null) { ChangeTxtColor(txtNumber_N, true); return; } else { number = int.Parse(txtNumber_N.Text); }
+                int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
+                string type = txtType_N.Text;
+                int unom = (string.IsNullOrWhiteSpace(cmbUnom_N.Text) || int.Parse(cmbUnom_N.Text) == 0) ? 0 : int.Parse(cmbUnom_N.Text);
+                string name = txtName_N.Text;
+                double p_n = (string.IsNullOrWhiteSpace(txtPn_N.Text) || double.Parse(txtPn_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtPn_N.Text, CultureInfo.InvariantCulture);
+                double q_n = (string.IsNullOrWhiteSpace(txtQn_N.Text) || double.Parse(txtQn_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQn_N.Text, CultureInfo.InvariantCulture);
+                double p_g = (string.IsNullOrWhiteSpace(txtPg_N.Text) || double.Parse(txtPg_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtPg_N.Text, CultureInfo.InvariantCulture);
+                double q_g = (string.IsNullOrWhiteSpace(txtQg_N.Text) || double.Parse(txtQg_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQg_N.Text, CultureInfo.InvariantCulture);
+                double vzd = (string.IsNullOrWhiteSpace(txtVzd_N.Text) || double.Parse(txtVzd_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtVzd_N.Text, CultureInfo.InvariantCulture);
+                double q_min = (string.IsNullOrWhiteSpace(txtQmin_N.Text) || double.Parse(txtQmin_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQmin_N.Text, CultureInfo.InvariantCulture);
+                double q_max = (string.IsNullOrWhiteSpace(txtQmax_N.Text) || double.Parse(txtQmax_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQmax_N.Text, CultureInfo.InvariantCulture);
+                double b_sh = (string.IsNullOrWhiteSpace(txtBsh_N.Text) || double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture);
+                int region = (string.IsNullOrWhiteSpace(txtRegion_N.Text) || int.Parse(txtRegion_N.Text) == 0) ? 0 : int.Parse(txtRegion_N.Text);
+
+                if (track.Nodes.Where((n) => n.Number == number).ToList().Count != 0) { ChangeTxtColor(txtNumber_N, true); return; }
+
+                track.AddNode(new Node(number: number, unom: unom, type: type,
+                                       state: state, name: name,
+                                       p_n: p_n, q_n: q_n, p_g: p_g, q_g: q_g,
+                                       vzd: vzd, q_min: q_min, q_max: q_max, b_sh: b_sh,
+                                       region: region));
+
+                Tab_Data.SelectedIndex = 0;
+            });
+        }
+
+        /// <summary>
         /// Добавить линию в список ветвей
         /// </summary>
         private void BtnAdd_L_Click(object sender, RoutedEventArgs e)
         {
             int start = default(int);
             int end = default(int);
-            if (txtStartNode_L.Text == "") { ChangeTextBoxColor(txtStartNode_L, true);} else { start = int.Parse(txtStartNode_L.Text); }
-            if (txtEndNode_L.Text == "" ) { ChangeTextBoxColor(txtEndNode_L, true);} else { end = int.Parse(txtEndNode_L.Text); }
-            if (txtStartNode_L.Text == txtEndNode_L.Text) { ChangeTextBoxColor(txtStartNode_L, true); ChangeTextBoxColor(txtEndNode_L, true); return; }
-            else { ChangeTextBoxColor(txtStartNode_L, false); ChangeTextBoxColor(txtEndNode_L, false); }
-            if (start == default(int) || end == default(int)) return;
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                if (txtStartNode_L.Text == "" || txtStartNode_L.Text == null) { ChangeCmbColor(txtStartNode_L, true); } else { start = int.Parse(txtStartNode_L.Text); }
+                if (txtEndNode_L.Text == ""  || txtEndNode_L.Text == null) { ChangeCmbColor(txtEndNode_L, true); return; } else { end = int.Parse(txtEndNode_L.Text); }
+                if (txtStartNode_L.Text == txtEndNode_L.Text) { ChangeCmbColor(txtStartNode_L, true); ChangeCmbColor(txtEndNode_L, true); return; }
+                else { ChangeCmbColor(txtStartNode_L, false); ChangeCmbColor(txtEndNode_L, false); }
 
-            int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
-            string type = "ЛЭП";
-            int npar = (string.IsNullOrWhiteSpace(txtNpar_L.Text) || int.Parse(txtNpar_L.Text) == 0) ? 0 : int.Parse(txtNpar_L.Text);
-            string typename = cmbTypeName_L.Text;
-            string name = txtName_L.Text;
-            double r = (string.IsNullOrWhiteSpace(txtR_L.Text) || double.Parse(txtR_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR_L.Text, CultureInfo.InvariantCulture);
-            double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
-            double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
-            double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
-            double ktr = 1;
-            double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
-            int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
+                if (start == default(int)) { ChangeCmbColor(txtStartNode_L, true); return; }
+                if (end == default(int)) { ChangeCmbColor(txtEndNode_L, true); return; }
 
-            track.AddBranch(BranchChecker(new Branch(start: start, end: end, type: type, 
-                                       state: state, typename:typename, name: name, npar: npar,
-                                       r: r, x: x, b: b, g: g, 
-                                       ktr: ktr, idd: idd, region: region)));
-            Tab_Data.SelectedIndex = 1;
+                int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
+                string type = "ЛЭП";
+                int npar = (string.IsNullOrWhiteSpace(txtNpar_L.Text) || int.Parse(txtNpar_L.Text) == 0) ? 0 : int.Parse(txtNpar_L.Text);
+                string typename = cmbTypeName_L.Text;
+                string name = txtName_L.Text;
+                double r = (string.IsNullOrWhiteSpace(txtR_L.Text) || double.Parse(txtR_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR_L.Text, CultureInfo.InvariantCulture);
+                double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
+                double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
+                double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
+                double ktr = 1;
+                double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
+                int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
+
+                Branch br = new Branch(start: start, end: end, type: type,
+                                           state: state, typename: typename, name: name, npar: npar,
+                                           r: r, x: x, b: b, g: g,
+                                           ktr: ktr, idd: idd, region: region);
+
+                if (BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
+                else return;
+
+                Tab_Data.SelectedIndex = 1;
+            });
+
         }
 
         /// <summary>
@@ -454,88 +536,115 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void BtnAdd_T_Click(object sender, RoutedEventArgs e)
         {
-            if (cmbType_T.Text == "двух.")
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                int start = default(int);
-                int end = default(int);
-                if (txtStartNode_T.Text == "") { ChangeTextBoxColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
-                if (txtEndHighNode_T.Text == "") { ChangeTextBoxColor(txtEndHighNode_T, true); } else { end = int.Parse(txtEndHighNode_T.Text); }
-                if (start == default(int) || end == default(int)) return;
+                if (cmbType_T.Text == "двух.")
+                {
+                    int start = default(int);
+                    int end = default(int);
+                    if (txtStartNode_T.Text == "" || txtStartNode_T.Text == null) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
+                    if (txtEndHighNode_T.Text == "" || txtEndHighNode_T.Text == null) { ChangeCmbColor(txtEndHighNode_T, true); } else { end = int.Parse(txtEndHighNode_T.Text); }
+                    if(txtStartNode_T.Text == txtEndHighNode_T.Text) { ChangeCmbColor(txtStartNode_T, true); ChangeCmbColor(txtEndHighNode_T, true);  return; }
 
-                int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
-                string type = "Тр-р";
-                int npar = 0;
-                string typename = cmbTypeName_T.Text;
-                string name = txtName_T.Text;
-                double r = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
-                double x = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
-                double b = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
-                double g = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
-                double ktr = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
-                double idd = 0;
-                int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
+                    if (start == default(int)) { ChangeCmbColor(txtStartNode_T, true); return; }
+                    if (end == default(int)) { ChangeCmbColor(txtStartNode_T, true); return; }
 
-                track.AddBranch(BranchChecker(new Branch(start: start, end: end, type: type,
-                                       state: state, typename:typename, name: name, npar: npar,
-                                       r: r, x: x, b: b, g: g,
-                                       ktr: ktr, idd: idd, region: region)));
+                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
+                    string type = "Тр-р";
+                    int npar = 0;
+                    string typename = cmbTypeName_T.Text;
+                    string name = txtName_T.Text;
+                    double r = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
+                    double x = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
+                    double b = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
+                    double g = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
+                    double ktr = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
+                    double idd = 0;
+                    int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
 
-                Tab_Data.SelectedIndex = 1;
-                return;
-            }
-            else if (cmbType_T.Text == "тр./АТ")
-            {
-                int start = default(int);
-                int endH = default(int);
-                int endM = default(int);
-                int endL = default(int);
-                if (txtStartNode_T.Text == "") { ChangeTextBoxColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
-                if (txtEndHighNode_T.Text == "") { ChangeTextBoxColor(txtEndHighNode_T, true); } else { endH = int.Parse(txtEndHighNode_T.Text); }
-                if (txtEndMidNode_T.Text == "") { ChangeTextBoxColor(txtEndMidNode_T, true); } else { endM = int.Parse(txtEndMidNode_T.Text); }
-                if (txtEndLowNode_T.Text == "") { ChangeTextBoxColor(txtEndLowNode_T, true); } else { endL = int.Parse(txtEndLowNode_T.Text); }
-                if (start == default(int) || endH == default(int) || endM == default(int) || endL == default(int)) return;
+                    Branch br = new Branch(start: start, end: end, type: type,
+                                           state: state, typename: typename, name: name, npar: npar,
+                                           r: r, x: x, b: b, g: g,
+                                           ktr: ktr, idd: idd, region: region);
 
-                int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
-                string type = "Тр-р";
-                int npar = 0;
-                string typename = cmbTypeName_T.Text;
-                string nameH = txtName_T.Text + " ВН"; string nameM = txtName_T.Text + " СН"; string nameL = txtName_T.Text + " НН";
-                //ВН
-                double rH = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
-                double xH = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
-                double bH = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
-                double gH = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
-                double ktrH = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
-                //СН
-                double rM = (string.IsNullOrWhiteSpace(txtRM_T.Text) || double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture);
-                double xM = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture);
-                double bM = 0; double gM = 0;
-                double ktrM = (string.IsNullOrWhiteSpace(txtKHM_T.Text) || double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture);
-                //НН
-                double rL = (string.IsNullOrWhiteSpace(txtRL_T.Text) || double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture);
-                double xL = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture);
-                double bL = 0; double gL = 0;
-                double ktrL = (string.IsNullOrWhiteSpace(txtKHL_T.Text) || double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture);
+                    if (BranchChecker(br, txtStartNode_T, txtEndHighNode_T) == true) track.AddBranch(br);
+                    else return;
 
-                double idd = 0;
-                int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
+                    Tab_Data.SelectedIndex = 1;
+                    return;
+                }
+                else if (cmbType_T.Text == "тр./АТ")
+                {
+                    int start = default(int);
+                    int endH = default(int);
+                    int endM = default(int);
+                    int endL = default(int);
+                    if (txtStartNode_T.Text == "" || txtStartNode_T.Text == null) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
+                    if (txtEndHighNode_T.Text == "" || txtEndHighNode_T.Text == null) { ChangeCmbColor(txtEndHighNode_T, true); } else { endH = int.Parse(txtEndHighNode_T.Text); }
+                    if (txtEndMidNode_T.Text == "" || txtEndMidNode_T.Text == null) { ChangeCmbColor(txtEndMidNode_T, true); } else { endM = int.Parse(txtEndMidNode_T.Text); }
+                    if (txtEndLowNode_T.Text == "" || txtEndLowNode_T.Text == null) { ChangeCmbColor(txtEndLowNode_T, true); } else { endL = int.Parse(txtEndLowNode_T.Text); }
 
-                track.AddBranch(BranchChecker(new Branch(start: start, end: endH, type: type,
-                                       state: state, typename: typename, name: nameH, npar: npar,
-                                       r: rH, x: xH, b: bH, g: gH,
-                                       ktr: ktrH, idd: idd, region: region)));
-                track.AddBranch(BranchChecker(new Branch(start: endH, end: endM, type: type,
-                                       state: state, typename: typename, name: nameM, npar: npar,
-                                       r: rM, x: xM, b: bM, g: gM,
-                                       ktr: ktrM, idd: idd, region: region)));
-                track.AddBranch(BranchChecker(new Branch(start: endH, end: endL, type: type,
-                                       state: state, typename: typename, name: nameL, npar: npar,
-                                       r: rL, x: xL, b: bL, g: gL,
-                                       ktr: ktrL, idd: idd, region: region)));
-                Tab_Data.SelectedIndex = 1;
-                return;
-            }
-            
+                    if (start == default(int)) { ChangeCmbColor(txtStartNode_T, true); return; }
+                    if (endH == default(int)) { ChangeCmbColor(txtEndHighNode_T, true); return; }
+                    if (endM == default(int)) { ChangeCmbColor(txtEndMidNode_T, true); return; }
+                    if (endL == default(int)) { ChangeCmbColor(txtEndLowNode_T, true); return; }
+
+                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
+                    string type = "Тр-р";
+                    int npar = 0;
+                    string typename = cmbTypeName_T.Text;
+                    string nameH = txtName_T.Text + " ВН"; string nameM = txtName_T.Text + " СН"; string nameL = txtName_T.Text + " НН";
+                    //ВН
+                    double rH = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
+                    double xH = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
+                    double bH = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
+                    double gH = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
+                    double ktrH = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
+                    //СН
+                    double rM = (string.IsNullOrWhiteSpace(txtRM_T.Text) || double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture);
+                    double xM = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture);
+                    double bM = 0; double gM = 0;
+                    double ktrM = (string.IsNullOrWhiteSpace(txtKHM_T.Text) || double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture);
+                    //НН
+                    double rL = (string.IsNullOrWhiteSpace(txtRL_T.Text) || double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture);
+                    double xL = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture);
+                    double bL = 0; double gL = 0;
+                    double ktrL = (string.IsNullOrWhiteSpace(txtKHL_T.Text) || double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture);
+
+                    double idd = 0;
+                    int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
+
+                    Branch br1 = new Branch(start: start, end: endH, type: type,
+                                           state: state, typename: typename, name: nameH, npar: npar,
+                                           r: rH, x: xH, b: bH, g: gH,
+                                           ktr: ktrH, idd: idd, region: region); 
+
+                    Branch br2 = new Branch(start: endH, end: endM, type: type,
+                                           state: state, typename: typename, name: nameM, npar: npar,
+                                           r: rM, x: xM, b: bM, g: gM,
+                                           ktr: ktrM, idd: idd, region: region);
+
+                    Branch br3 = new Branch(start: endH, end: endL, type: type,
+                                           state: state, typename: typename, name: nameL, npar: npar,
+                                           r: rL, x: xL, b: bL, g: gL,
+                                           ktr: ktrL, idd: idd, region: region);
+
+                    bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
+                    bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
+                    bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
+
+                    if (result1 ==true && result2== true && result3== true)
+                    {
+                        track.AddBranch(br1);
+                        track.AddBranch(br2);
+                        track.AddBranch(br3);
+                    }
+                    else return;
+                        
+                    Tab_Data.SelectedIndex = 1;
+                    return;
+                }
+            });
         }
 
         /// <summary>
@@ -566,5 +675,7 @@ namespace Power_Equipment_Handbook
             }
         }
         #endregion
+
+        
     }
 }

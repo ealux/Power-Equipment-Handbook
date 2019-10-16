@@ -23,34 +23,52 @@
             <TabItem Header="Node" Margin="-2,-2,-48,0">
                 <Grid Margin="0,-2,0,0">
                     <Label x:Name="lblNumber_N" Content="Номер" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,72,0,0"/>
-                    <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitChecker" MaxLength="5"/>
                     <Label x:Name="lblUnom_N" Content="U ном" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="91,72,0,0"/>
-                    <ComboBox x:Name="cmbUnom_N" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="80,98,0,0" IsEditable="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="cmbUnom_N" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="80,98,0,0" IsEditable="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker">
+                        <ListBoxItem HorizontalContentAlignment="Left">3</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">6</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">10</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">35</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">110</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">150</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">220</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">330</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">500</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">750</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">1150</ListBoxItem>
+                    </ComboBox>
                     <Label x:Name="lblType_N" Content="Тип" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="176,72,0,0"/>
-                    <ComboBox x:Name="txtType_N" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="73" Margin="155,98,0,0" HorizontalContentAlignment="Center" IsReadOnly="True" IsEditable="True" VerticalContentAlignment="Center"/>
+                    <ComboBox x:Name="txtType_N" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="73" Margin="155,98,0,0" IsReadOnly="True" IsEditable="True" VerticalContentAlignment="Center" SelectedIndex="0">
+                        <ListBoxItem HorizontalContentAlignment="Left">Нагр</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">База</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">Ген</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">Ген+</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">Ген-</ListBoxItem>
+                    </ComboBox>
                     <Label x:Name="lblName_N" Content="Дисп. наименование" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="273,72,0,0"/>
                     <TextBox x:Name="txtName_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" Margin="237,98,0,0" IsManipulationEnabled="True" MaxLines="1" VerticalContentAlignment="Center"/>
                     <Label x:Name="lblPn_N" Content="P нагр" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="457,72,0,0"/>
-                    <TextBox x:Name="txtPn_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="448,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtPn_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="448,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblQn_N" Content="Q нагр" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="527,72,0,0"/>
-                    <TextBox x:Name="txtQn_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="519,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtQn_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="519,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblPg_N" Content="P ген" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="602,72,0,0"/>
-                    <TextBox x:Name="txtPg_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="593,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtPg_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="593,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblQg_N" Content="Q ген" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="672,72,0,0"/>
-                    <TextBox x:Name="txtQg_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="664,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtQg_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="664,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblVzd_N" Content="V зд." HorizontalAlignment="Left" VerticalAlignment="Top" Margin="751,72,0,0"/>
-                    <TextBox x:Name="txtVzd_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="738,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtVzd_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="738,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblQmin_N" Content="Q min" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="821,72,0,0"/>
-                    <TextBox x:Name="txtQmin_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="812,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtQmin_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="812,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblQmax_N" Content="Q max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="891,72,0,0"/>
-                    <TextBox x:Name="txtQmax_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="883,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtQmax_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="883,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblBsh_N" Content="B шунт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="963,72,0,0"/>
-                    <TextBox x:Name="txtBsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="957,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtBsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="957,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8"/>
                     <Label x:Name="lblState_N" Content="Состояние" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,13,0,0"/>
-                    <TextBox x:Name="txtState_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,39,0,0" Text="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1"/>
+                    <TextBox x:Name="txtState_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,39,0,0" Text="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker"  MaxLines="1"/>
                     <Label x:Name="lblRegion_N" Content="Район" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="88,13,0,0"/>
-                    <TextBox x:Name="txtRegion_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="86,39,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1"/>
-                    <Button x:Name="btnAdd_N" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="1035,98,0,0" Height="22"/>
+                    <TextBox x:Name="txtRegion_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="86,39,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker"  MaxLines="1"/>
+                    <Button x:Name="btnAdd_N" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="1035,98,0,0" Height="22" Click="BtnAdd_N_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Tab_Lines" Header="Lines" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="134">
@@ -263,12 +281,7 @@
                         <ColumnDefinition Width="135*"/>
                         <ColumnDefinition Width="1049*"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox x:Name="txtStartNode_T" HorizontalAlignment="Left" Height="22" Margin="10,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" PreviewTextInput="DigitChecker" x:FieldModifier="public" IsEditable="True">
-                        <ComboBox.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Red" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
-                        </ComboBox.Resources>
-                    </ComboBox>
+                    <ComboBox x:Name="txtStartNode_T" HorizontalAlignment="Left" Height="22" Margin="10,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" PreviewTextInput="DigitChecker" x:FieldModifier="public" IsEditable="True"/>
                     <Label x:Name="lblStartNode_T" Content="Начало" HorizontalAlignment="Left" Margin="8,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" FontWeight="Bold"/>
                     <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="54,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
                         <Ellipse.RenderTransform>
@@ -329,12 +342,7 @@
                     <Label x:Name="lblEndHighNode_T" Content="Конец" HorizontalAlignment="Left" Margin="362,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1" HorizontalContentAlignment="Center" Width="56" FontWeight="Bold"/>
                     <ComboBox x:Name="cmbTypeName_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="160" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="1" SelectionChanged="CmbTypeName_SelectionChanged"/>
                     <TextBox x:Name="txtName_T" HorizontalAlignment="Left" Height="22" Margin="230,100,0,0" VerticalAlignment="Top" Width="129" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="1" />
-                    <ComboBox x:Name="txtEndHighNode_T" HorizontalAlignment="Left" Height="22" Margin="368,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" PreviewTextInput="DigitChecker" x:FieldModifier="public" Grid.Column="1" IsEditable="True">
-                        <ComboBox.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Red" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="White" />
-                        </ComboBox.Resources>
-                    </ComboBox>
+                    <ComboBox x:Name="txtEndHighNode_T" HorizontalAlignment="Left" Height="22" Margin="368,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" PreviewTextInput="DigitChecker" x:FieldModifier="public" Grid.Column="1" IsEditable="True"/>
                     <Label x:Name="lblUnomHigh_T" Content="Uном ВН" HorizontalAlignment="Left" Margin="415,74,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" Grid.Column="1"/>
                     <TextBox x:Name="txtUnomHigh_T" Text="{Binding UnomH, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="421,100,0,0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Ktr_Calculations" Grid.Column="1"/>
                     <TextBox x:Name="txtUnomLowDouble_T" Text="{Binding UnomL, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="474,100,0,0" VerticalAlignment="Top" Width="41" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Ktr_Calculations" Grid.Column="1"/>
