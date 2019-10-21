@@ -44,7 +44,7 @@ namespace Power_Equipment_Handbook.src
         private string name;
         private string typename;
         private double r; private double x; private double g; private double b;
-        private double ktr;
+        private double? ktr;
         private double idd;
         private int region;
 
@@ -104,7 +104,7 @@ namespace Power_Equipment_Handbook.src
             get => b;
             set { SetProperty(ref b, value); }
         }
-        public double Ktr
+        public double? Ktr
         {
             get => ktr;
             set { SetProperty(ref ktr, value); }
@@ -122,8 +122,8 @@ namespace Power_Equipment_Handbook.src
         #endregion
         
         public Branch() { }
-        public Branch(int start, int end, string type, int state = 0, string typename = "", string name = "", 
-                      int npar = 0, double r = 0, double x = 0, double b = 0, double g = 0, double ktr = 0,
+        public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "", 
+                      int npar = 0, double r = 0, double x = 0, double b = 0, double g = 0,
                       double idd = 0, int region = 0)
         {
             State = state;

@@ -333,6 +333,82 @@ namespace Power_Equipment_Handbook
                 } 
             }
         }
+        
+        /// <summary>
+        /// Селектор узлов для трёхобмоточных трансов
+        /// </summary>
+        private void TransEndNodeSelector(object sender, SelectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                ComboBox tb = (ComboBox)sender;
+
+                if (tb.Text == "" || tb.SelectedIndex == -1)
+                {
+                    cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = MultiTrans });
+                    cmbTypeName_T.DisplayMemberPath = "TypeName";
+                }
+
+                if (tb == txtEndMidNode_T)
+                {
+                    ObservableCollection<Node> l = new ObservableCollection<Node>();
+
+                    foreach (Node i in txtStartNode_T.ItemsSource)
+                    {
+                        if (i.Number != ((Node)e.AddedItems[0]).Number &
+                            i.Number != ((Node)txtStartNode_T.SelectedItem).Number &
+                            i.Unom != ((Node)txtStartNode_T.SelectedItem).Unom &
+                            i.Unom != ((Node)e.AddedItems[0]).Unom)
+                        {
+                            l.Add(i);
+                        }
+                    }
+                    txtEndLowNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                    txtEndLowNode_T.DisplayMemberPath = "Number";
+
+                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
+                    if (MultiTrans.Count != 0)
+                    {
+                        ObservableCollection<MultiTrans> mt;
+                        if (txtEndLowNode_T.Text == "" || txtEndLowNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
+                        else { mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
+                                                                                               (t.UnomL >= 0.8 * ((Node)txtEndLowNode_T.SelectedItem).Unom & t.UnomL <= 1.2 * ((Node)txtEndLowNode_T.SelectedItem).Unom)).ToList());}
+                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
+                        cmbTypeName_T.DisplayMemberPath = "TypeName";
+                    }
+                }
+                else if (tb == txtEndLowNode_T)
+                {
+                    ObservableCollection<Node> l = new ObservableCollection<Node>();
+
+                    foreach (Node i in txtStartNode_T.ItemsSource)
+                    {
+                        if (i.Number != ((Node)e.AddedItems[0]).Number &
+                            i.Number != ((Node)txtStartNode_T.SelectedItem).Number &
+                            i.Unom != ((Node)txtStartNode_T.SelectedItem).Unom &
+                            i.Unom != ((Node)e.AddedItems[0]).Unom)
+                        {
+                            l.Add(i);
+                        }
+                    }
+                    txtEndMidNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                    txtEndMidNode_T.DisplayMemberPath = "Number";
+
+                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
+                    if (MultiTrans.Count != 0)
+                    {
+                        ObservableCollection<MultiTrans> mt;
+                        if (txtEndMidNode_T.Text == "" || txtEndMidNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
+                        else { mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
+                                                                                               (t.UnomM >= 0.8 * ((Node)txtEndMidNode_T.SelectedItem).Unom & t.UnomM <= 1.2 * ((Node)txtEndMidNode_T.SelectedItem).Unom)).ToList()); }
+                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
+                        cmbTypeName_T.DisplayMemberPath = "TypeName";
+                    }
+                }
+            });
+        }
         #endregion
 
 
@@ -374,6 +450,8 @@ namespace Power_Equipment_Handbook
                     }
                     if (Trans.Count == 0) return;
 
+                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
                     Trans t = Trans.Where((n) => n.TypeName == (cmb.SelectedItem as Trans).TypeName).First();
 
                     txtRH_T.SetBinding(TextBox.TextProperty, new Binding("R") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
@@ -382,7 +460,7 @@ namespace Power_Equipment_Handbook
                     txtGH_T.SetBinding(TextBox.TextProperty, new Binding("G") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
 
                     txtUnomHigh_T.SetBinding(TextBox.TextProperty, new Binding("UnomH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
-                    txtUnomLow_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtUnomLowDouble_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
 
                     lblSource_T.Content = t.Source;
                 }
@@ -398,7 +476,9 @@ namespace Power_Equipment_Handbook
                         lblSource_T.Content = String.Empty;
                         return;
                     }
-                    if (Trans.Count == 0) return;
+                    if (MultiTrans.Count == 0) return;
+
+                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
 
                     MultiTrans t = MultiTrans.Where((n) => n.TypeName == (cmb.SelectedItem as MultiTrans).TypeName).First();
 
@@ -430,6 +510,9 @@ namespace Power_Equipment_Handbook
         {
             if (cmbType_T.SelectedValue == cmbType_T.Items[0])
             {
+                txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
+                cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
                 grpMid.Visibility = grpLow.Visibility = Visibility.Hidden;
                 lblKH_KML_T.Content = "Kтр ВН";
                 lblEndHighNode_T.Content = "Конец";
@@ -438,6 +521,9 @@ namespace Power_Equipment_Handbook
             } 
             else if (cmbType_T.SelectedValue == cmbType_T.Items[1])
             {
+                txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
+                cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
                 txtKH_KML_T.Text = "1";
                 grpMid.Visibility = grpLow.Visibility = Visibility.Visible;
                 lblKH_KML_T.Content = "Kтр В(Ктр С-Н)";
@@ -452,6 +538,8 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void CmbType_T_DropDownClosed(object sender, EventArgs e)
         {
+            cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+            txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
             if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToInt32(cmbUnom_T.Text), db_prv);
         }
 
@@ -525,7 +613,7 @@ namespace Power_Equipment_Handbook
                 double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
                 double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
                 double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
-                double ktr = 1;
+                double? ktr = null;
                 double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
                 int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
 
@@ -718,8 +806,176 @@ namespace Power_Equipment_Handbook
                 GetData("Trans", Convert.ToInt32((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
             }
         }
+
+        /// <summary>
+        /// Выбор стартового узла для Линии
+        /// </summary>
+        private void TxtStartNode_L_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                if (txtStartNode_L.SelectedIndex == txtStartNode_L.Items.Count - 1) return;
+                if (txtStartNode_L.SelectedIndex != -1)
+                {
+                    ObservableCollection<Node> l = new ObservableCollection<Node>();
+
+                    foreach (Node i in txtStartNode_L.ItemsSource)
+                    {
+                        if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
+                        {
+                            l.Add(i);
+                        }
+                    }
+                    txtEndNode_L.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l});
+                    txtEndNode_L.DisplayMemberPath = "Number";
+
+                    int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                    foreach (ListBoxItem i in cmbUnom_L.Items)
+                    {
+                        if (i.Content.ToString() == unom.ToString())
+                        {
+                            cmbUnom_L.SelectedItem = i;
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Выбор стартового узла для Трансформатора
+        /// </summary>
+        private void TxtStartNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                if (txtStartNode_T.SelectedIndex == txtStartNode_T.Items.Count - 1) return; 
+                if (txtStartNode_T.SelectedIndex != -1)
+                {
+
+                    if (cmbType_T.Text == "двух.")
+                    {
+                        ObservableCollection<Node> l = new ObservableCollection<Node>();
+
+                        foreach (Node i in txtStartNode_T.ItemsSource)
+                        {
+                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom != ((Node)e.AddedItems[0]).Unom)
+                            {
+                                l.Add(i);
+                            }
+                        }
+                        txtEndHighNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                        txtEndHighNode_T.DisplayMemberPath = "Number";
+
+                        int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                        foreach (ListBoxItem i in cmbUnom_T.Items)
+                        {
+                            if (i.Content.ToString() == unom.ToString())
+                            {
+                                cmbUnom_T.SelectedItem = i;
+                                return;
+                            }
+                        }
+                    }
+                    else if (cmbType_T.Text == "тр./АТ")
+                    {
+                        ObservableCollection<Node> l = new ObservableCollection<Node>();
+                        ObservableCollection<Node> l2 = new ObservableCollection<Node>();
+
+                        foreach (Node i in txtStartNode_T.ItemsSource)
+                        {
+                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
+                            {
+                                l.Add(i);
+                            }
+                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom != ((Node)e.AddedItems[0]).Unom)
+                            {
+                                l2.Add(i);
+                            }
+                        }
+                        txtEndHighNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                        txtEndHighNode_T.DisplayMemberPath = "Number";
+                        txtEndMidNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l2 });
+                        txtEndMidNode_T.DisplayMemberPath = "Number";
+                        txtEndLowNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l2 });
+                        txtEndLowNode_T.DisplayMemberPath = "Number";
+
+                        int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                        foreach (ListBoxItem i in cmbUnom_T.Items)
+                        {
+                            if (i.Content.ToString() == unom.ToString())
+                            {
+                                cmbUnom_T.SelectedItem = i;
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Селектор узлов по нижней стороне (двух.)
+        /// </summary>
+        private void TxtEndHighNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                ComboBox tb = (ComboBox)sender;
+
+                if(cmbType_T.Text == "двух.")
+                {
+                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+
+                    if (tb.Text == "" || tb.SelectedIndex == -1)
+                    {
+                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = Trans });
+                        cmbTypeName_T.DisplayMemberPath = "TypeName";
+                        return;
+                    }
+
+                    if (Trans.Count != 0)
+                    {
+                        ObservableCollection<Trans> mt = new ObservableCollection<Trans>(Trans.Where(t => t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
+                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
+                        cmbTypeName_T.DisplayMemberPath = "TypeName";
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Селектор узлов средней стороны
+        /// </summary>
+        private void TxtEndMidNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TransEndNodeSelector(sender, e);
+        }
+
+        /// <summary>
+        /// Селектор узлов низкой стороны
+        /// </summary>
+        private void TxtEndLowNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TransEndNodeSelector(sender, e);
+        }
+
+        /// <summary>
+        /// Попытка перерисовки по выделении таба
+        /// </summary>
+        private void Tab_Elements_GotFocus(object sender, RoutedEventArgs e)
+        {
+            cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
+            cmbUnom_N.SelectedItem = cmbUnom_N.SelectedItem;
+
+            txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
+            txtEndHighNode_T.SelectedItem = txtEndHighNode_T.SelectedItem;
+            txtEndMidNode_T.SelectedItem = txtEndMidNode_T.SelectedItem;
+            txtEndLowNode_T.SelectedItem = txtEndLowNode_T.SelectedItem;
+            txtStartNode_L.SelectedItem = txtStartNode_L.SelectedItem;
+            txtEndNode_L.SelectedItem = txtEndNode_L.SelectedItem;
+        }
         #endregion
 
-        
     }
 }
