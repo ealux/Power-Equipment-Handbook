@@ -335,6 +335,8 @@ namespace Power_Equipment_Handbook
         }
         #endregion
 
+
+
         #region Обработчики конкретных событий
         /// <summary>
         /// Выгрузка параметров из базы по факту выбора Сечения/Марки
@@ -485,6 +487,15 @@ namespace Power_Equipment_Handbook
                                        region: region));
 
                 Tab_Data.SelectedIndex = 0;
+
+                #region Clear controls
+                txtType_N.SelectedIndex = 0;
+                txtName_N.Clear();
+                txtPn_N.Clear(); txtQn_N.Clear(); txtPg_N.Clear(); txtQg_N.Clear();
+                txtQmin_N.Clear(); txtQmax_N.Clear(); txtVzd_N.Clear(); txtBsh_N.Clear();
+                txtRegion_N.Clear();
+                #endregion
+
             });
         }
 
@@ -527,6 +538,16 @@ namespace Power_Equipment_Handbook
                 else return;
 
                 Tab_Data.SelectedIndex = 1;
+
+                #region Clear controls
+                txtEndNode_L.SelectedIndex = -1;
+                cmbTypeName_L.SelectedIndex = -1;
+                txtName_L.Clear(); txtLength_L.Clear();
+                txtr0_L.Clear(); txtx0_L.Clear(); txtb0_L.Clear(); txtg0_L.Clear();
+                txtR_L.Clear(); txtX_L.Clear(); txtB_L.Clear(); txtG_L.Clear();
+                txtNpar_L.Clear(); txtIdd_L.Clear();
+                txtRegion_L.Clear();
+                #endregion
             });
 
         }
@@ -571,6 +592,17 @@ namespace Power_Equipment_Handbook
                     else return;
 
                     Tab_Data.SelectedIndex = 1;
+
+                    #region Clear controls
+                    txtEndHighNode_T.SelectedIndex = -1;
+                    cmbTypeName_T.SelectedIndex = -1;
+                    txtName_T.Clear();
+                    txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear();
+                    txtKH_KML_T.Clear();
+                    txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
+                    txtRegion_T.Clear();
+                    #endregion
+
                     return;
                 }
                 else if (cmbType_T.Text == "тр./АТ")
@@ -642,6 +674,18 @@ namespace Power_Equipment_Handbook
                     else return;
                         
                     Tab_Data.SelectedIndex = 1;
+
+                    #region Clear controls
+                    txtEndHighNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1;
+                    cmbTypeName_T.SelectedIndex = -1;
+                    txtName_T.Clear();
+                    txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); txtUnomMid_T.Clear(); txtUnomLow_T.Clear();
+                    txtKH_KML_T.Clear(); txtKHM_T.Clear(); txtKHL_T.Clear();
+                    txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
+                    txtRM_T.Clear(); txtXM_T.Clear(); txtRL_T.Clear(); txtXL_T.Clear();
+                    txtRegion_T.Clear();
+                    #endregion
+
                     return;
                 }
             });
