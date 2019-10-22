@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Power_Equipment_Handbook.src
 {
@@ -49,80 +43,98 @@ namespace Power_Equipment_Handbook.src
         private int region;
 
         #region Properties
+
         public int State
         {
             get { return state; }
             set { SetProperty(ref state, value); }
         }
+
         public string Type
         {
             get => type;
             set { SetProperty(ref type, value); }
         }
+
         public int Start
         {
             get => start;
             set { SetProperty(ref start, value); }
         }
+
         public int End
         {
             get => end;
             set { SetProperty(ref end, value); }
         }
+
         public int Npar
         {
             get => npar;
             set { SetProperty(ref npar, value); }
         }
+
         public string Name
         {
             get => name;
             set { SetProperty(ref name, value); }
         }
+
         public string TypeName
         {
             get => typename;
             set { SetProperty(ref typename, value); }
         }
+
         public double R
         {
             get => r;
             set { SetProperty(ref r, value); }
         }
+
         public double X
         {
             get => x;
             set { SetProperty(ref x, value); }
         }
+
         public double G
         {
             get => g;
             set { SetProperty(ref g, value); }
         }
+
         public double B
         {
             get => b;
             set { SetProperty(ref b, value); }
         }
+
         public double? Ktr
         {
             get => ktr;
             set { SetProperty(ref ktr, value); }
         }
+
         public double Idd
         {
             get => idd;
             set { SetProperty(ref idd, value); }
         }
+
         public int Region
         {
             get => region;
             set { SetProperty(ref region, value); }
         }
-        #endregion
-        
-        public Branch() { }
-        public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "", 
+
+        #endregion Properties
+
+        public Branch()
+        {
+        }
+
+        public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "",
                       int npar = 0, double r = 0, double x = 0, double b = 0, double g = 0,
                       double idd = 0, int region = 0)
         {
@@ -139,23 +151,29 @@ namespace Power_Equipment_Handbook.src
         }
 
         #region INotifyPropertyChanged interface block
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged interface block
 
         #region IEquatable interface block
+
         public new int GetHashCode()
         {
             return this.GetHashCode();
         }
+
         /// <summary>
         /// Возвращает результат сравнения Branch с другим экземпляром Branch
         /// </summary>
@@ -166,13 +184,14 @@ namespace Power_Equipment_Handbook.src
             else if (type == other.type && start == other.start && end == other.end) return true;
             else return false;
         }
-        #endregion
+
+        #endregion IEquatable interface block
     }
 
     /// <summary>
     /// Тип узла в сети
     /// </summary>
-    public class Node:INotifyPropertyChanged, IEquatable<Node>
+    public class Node : INotifyPropertyChanged, IEquatable<Node>
     {
         private int state;
         private string type;
@@ -186,82 +205,100 @@ namespace Power_Equipment_Handbook.src
         private int region;
 
         #region Properties
+
         public int State
         {
             get { return state; }
             set { SetProperty(ref state, value); }
         }
+
         public string Type
         {
             get => type;
             set { SetProperty(ref type, value); }
         }
+
         public int Number
         {
             get => number;
             set { SetProperty(ref number, value); }
         }
+
         public int Unom
         {
             get => unom;
             set { SetProperty(ref unom, value); }
         }
+
         public string Name
         {
             get => name;
             set { SetProperty(ref name, value); }
         }
+
         public double P_n
         {
             get => p_n;
             set { SetProperty(ref p_n, value); }
         }
+
         public double Q_n
         {
             get => q_n;
             set { SetProperty(ref q_n, value); }
         }
+
         public double P_g
         {
             get => p_g;
             set { SetProperty(ref p_g, value); }
         }
+
         public double Q_g
         {
             get => q_g;
             set { SetProperty(ref q_g, value); }
         }
+
         public double Vzd
         {
             get => vzd;
             set { SetProperty(ref vzd, value); }
         }
+
         public double Q_min
         {
             get => q_min;
             set { SetProperty(ref q_min, value); }
         }
+
         public double Q_max
         {
             get => q_max;
             set { SetProperty(ref q_max, value); }
         }
+
         public double B_sh
         {
             get => b_sh;
             set { SetProperty(ref b_sh, value); }
         }
+
         public int Region
         {
             get => region;
             set { SetProperty(ref region, value); }
         }
-        #endregion
 
-        public Node() { }
+        #endregion Properties
+
+        public Node()
+        {
+        }
+
         public Node(int number, int unom, string type, int state = 0, string name = "",
-                      double p_n = 0, double q_n = 0, double p_g = 0, double q_g = 0, 
-                      double vzd = 0, double q_min = 0, double q_max = 0, double b_sh = 0, 
+                      double p_n = 0, double q_n = 0, double p_g = 0, double q_g = 0,
+                      double vzd = 0, double q_min = 0, double q_max = 0, double b_sh = 0,
                       int region = 0)
         {
             State = state;
@@ -275,19 +312,24 @@ namespace Power_Equipment_Handbook.src
         }
 
         #region INotifyPropertyChanged interface block
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged interface block
 
         #region IEquatable interface block
+
         public new int GetHashCode()
         {
             return this.GetHashCode();
@@ -296,20 +338,21 @@ namespace Power_Equipment_Handbook.src
         /// <summary>
         /// Возвращает результат сравнения Node с другим экземпляром Node
         /// </summary>
-        public bool Equals(Node other) 
+        public bool Equals(Node other)
         {
             if (this == null && other == null) return true;
             else if (this == null || other == null) return false;
             else if (type == other.type && number == other.number) return true;
             else return false;
         }
-        #endregion
+
+        #endregion IEquatable interface block
     }
-    
+
     /// <summary>
     /// Класс линии из базы
     /// </summary>
-    public class Line:INotifyPropertyChanged
+    public class Line : INotifyPropertyChanged
     {
         private int? unom;
         private string typename;
@@ -321,68 +364,83 @@ namespace Power_Equipment_Handbook.src
         private string source;
 
         #region Properties
+
         public int? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
         }
+
         public string TypeName
         {
             get { return typename; }
             set { SetProperty(ref typename, value); }
         }
+
         public double? R0
         {
             get { return r0; }
             set { SetProperty(ref r0, value); }
         }
+
         public double? X0
         {
             get { return x0; }
             set { SetProperty(ref x0, value); }
         }
+
         public double? B0
         {
             get { return b0; }
             set { SetProperty(ref b0, value); }
         }
+
         public double? G0
         {
             get { return g0; }
             set { SetProperty(ref g0, value); }
         }
+
         public string Source
         {
             get { return source; }
             set { SetProperty(ref source, value); }
         }
+
         public double? Idd
         {
             get { return idd; }
             set { SetProperty(ref idd, value); }
         }
-        #endregion
 
-        public Line() { }
+        #endregion Properties
+
+        public Line()
+        {
+        }
 
         #region INotifyPropertyChanged interface block
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged interface block
     }
 
     /// <summary>
     /// Класс двухобмоточного трансформатора из базы
     /// </summary>
-    public class Trans: INotifyPropertyChanged
+    public class Trans : INotifyPropertyChanged
     {
         private int? unom;
         private string type;
@@ -392,179 +450,218 @@ namespace Power_Equipment_Handbook.src
         private string source;
 
         #region Properties
+
         public int? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
         }
+
         public string Type
         {
             get { return type; }
             set { SetProperty(ref type, value); }
         }
+
         public string TypeName
         {
             get { return typename; }
             set { SetProperty(ref typename, value); }
         }
+
         public double? UnomH
         {
             get { return unomh; }
             set { SetProperty(ref unomh, value); }
         }
+
         public double? UnomL
         {
             get { return unoml; }
             set { SetProperty(ref unoml, value); }
         }
+
         public double? R
         {
             get { return r; }
             set { SetProperty(ref r, value); }
         }
+
         public double? X
         {
             get { return x; }
             set { SetProperty(ref x, value); }
         }
+
         public double? B
         {
             get { return b; }
             set { SetProperty(ref b, value); }
         }
+
         public double? G
         {
             get { return g; }
             set { SetProperty(ref g, value); }
         }
+
         public string Source
         {
             get { return source; }
             set { SetProperty(ref source, value); }
         }
-        #endregion
 
-        public Trans() { }
+        #endregion Properties
+
+        public Trans()
+        {
+        }
 
         #region INotifyPropertyChanged interface block
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged interface block
     }
 
     /// <summary>
     /// Класс трехобмоточного (автотрансформатора) трансформатора
     /// </summary>
-    public class MultiTrans: INotifyPropertyChanged
+    public class MultiTrans : INotifyPropertyChanged
     {
-        int? unom;
-        string type;
-        string typename;
-        double? unomh; double? unomm; double? unoml;
-        double? rh; double? rm; double? rl;
-        double? xh; double? xm; double? xl;
-        double? b; double? g;
-        string source;
+        private int? unom;
+        private string type;
+        private string typename;
+        private double? unomh; private double? unomm; private double? unoml;
+        private double? rh; private double? rm; private double? rl;
+        private double? xh; private double? xm; private double? xl;
+        private double? b; private double? g;
+        private string source;
 
         #region Properties
+
         public int? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
         }
+
         public string Type
         {
             get { return type; }
             set { SetProperty(ref type, value); }
         }
+
         public string TypeName
         {
             get { return typename; }
             set { SetProperty(ref typename, value); }
         }
+
         public double? UnomH
         {
             get { return unomh; }
             set { SetProperty(ref unomh, value); }
         }
+
         public double? UnomM
         {
             get { return unomm; }
             set { SetProperty(ref unomm, value); }
         }
+
         public double? UnomL
         {
             get { return unoml; }
             set { SetProperty(ref unoml, value); }
         }
+
         public double? RH
         {
             get { return rh; }
             set { SetProperty(ref rh, value); }
         }
+
         public double? RM
         {
             get { return rm; }
             set { SetProperty(ref rm, value); }
         }
+
         public double? RL
         {
             get { return rl; }
             set { SetProperty(ref rl, value); }
         }
+
         public double? XH
         {
             get { return xh; }
             set { SetProperty(ref xh, value); }
         }
+
         public double? XM
         {
             get { return xm; }
             set { SetProperty(ref xm, value); }
         }
+
         public double? XL
         {
             get { return xl; }
             set { SetProperty(ref xl, value); }
         }
+
         public double? B
         {
             get { return b; }
             set { SetProperty(ref b, value); }
         }
+
         public double? G
         {
             get { return g; }
             set { SetProperty(ref g, value); }
         }
+
         public string Source
         {
             get { return source; }
             set { SetProperty(ref source, value); }
         }
-        #endregion
 
-        public MultiTrans() { }
+        #endregion Properties
+
+        public MultiTrans()
+        {
+        }
 
         #region INotifyPropertyChanged interface block
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
-        #endregion
+
+        #endregion INotifyPropertyChanged interface block
     }
 }

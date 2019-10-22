@@ -1,22 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
+﻿using Power_Equipment_Handbook.src;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Threading;
-using Power_Equipment_Handbook.src;
 
 namespace Power_Equipment_Handbook
 {
@@ -25,8 +17,8 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public partial class MainWindow : Window
     {
-        DataGridTracker track;
-        DBProvider db_prv;
+        private DataGridTracker track;
+        private DBProvider db_prv;
 
         public ObservableCollection<Line> Lines;
         public ObservableCollection<Trans> Trans;
@@ -56,6 +48,7 @@ namespace Power_Equipment_Handbook
         }
 
         #region Helpers
+
         /// <summary>
         /// Проверка ввода цифр
         /// </summary>
@@ -66,7 +59,7 @@ namespace Power_Equipment_Handbook
             try { tb = (ComboBox)sender; }
             catch (Exception) { tb = (TextBox)sender; }
             if (tb.GetType() == typeof(ComboBox)) ChangeCmbColor(sender, false);
-            else if(tb.GetType() == typeof(TextBox)) ChangeTxtColor(sender, false);
+            else if (tb.GetType() == typeof(TextBox)) ChangeTxtColor(sender, false);
             if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
@@ -108,9 +101,9 @@ namespace Power_Equipment_Handbook
             if (txtLength_L.Text == "") return;     //Проверка поля Длина
 
             var use = (TextBox)sender;
-            if (use.Text.StartsWith(".")) return; 
+            if (use.Text.StartsWith(".")) return;
 
-            NumberFormatInfo provider = new NumberFormatInfo() { NumberDecimalSeparator = "."};
+            NumberFormatInfo provider = new NumberFormatInfo() { NumberDecimalSeparator = "." };
 
             double L = Convert.ToDouble(txtLength_L.Text, provider);
 
@@ -123,15 +116,15 @@ namespace Power_Equipment_Handbook
                 if (use == txtr0_L) txtR_L.Text = res.ToString(); if (use == txtx0_L) txtX_L.Text = res.ToString();
                 if (use == txtb0_L) txtB_L.Text = res.ToString(); if (use == txtg0_L) txtG_L.Text = res.ToString();
             }
-            else if(use == txtLength_L)
+            else if (use == txtLength_L)
             {
-                if(txtr0_L.Text != "") txtR_L.Text = (Convert.ToDouble(txtr0_L.Text, provider) * L).ToString();
+                if (txtr0_L.Text != "") txtR_L.Text = (Convert.ToDouble(txtr0_L.Text, provider) * L).ToString();
                 if (txtx0_L.Text != "") txtX_L.Text = (Convert.ToDouble(txtx0_L.Text, provider) * L).ToString();
                 if (txtb0_L.Text != "") txtB_L.Text = (Convert.ToDouble(txtb0_L.Text, provider) * L).ToString();
                 if (txtg0_L.Text != "") txtG_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
             }
         }
-        
+
         /// <summary>
         /// Расчет коэффициентов трансформации
         /// </summary>
@@ -146,17 +139,17 @@ namespace Power_Equipment_Handbook
             if (HV.Text.StartsWith(".")) return;
             if (cmbType_T.Text == "двух.")
             {
-                if(!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(LV.Text))
+                if (!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(LV.Text))
                 {
                     if (LV.Text.StartsWith(".")) return;
                     txtKH_KML_T.Text = (Convert.ToDouble(LV.Text, CultureInfo.InvariantCulture) / Convert.ToDouble(HV.Text, CultureInfo.InvariantCulture)).ToString();
                 }
             }
-            if(cmbType_T.Text == "тр./АТ")
+            if (cmbType_T.Text == "тр./АТ")
             {
                 txtKH_KML_T.Text = "1";
 
-                if(!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(MHV.Text))
+                if (!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(MHV.Text))
                 {
                     if (MHV.Text.StartsWith(".")) return;
                     txtKHM_T.Text = (Convert.ToDouble(MHV.Text, CultureInfo.InvariantCulture) / Convert.ToDouble(HV.Text, CultureInfo.InvariantCulture)).ToString();
@@ -170,11 +163,11 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Изменяет цвет TextBox'a в зависимости от аргумента error метода 
+        /// Изменяет цвет TextBox'a в зависимости от аргумента error метода
         /// </summary>
         private void ChangeTxtColor(object sender, bool error)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 TextBox tb = (TextBox)sender;
                 if (error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
@@ -183,11 +176,11 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Изменяет цвет ComboBox'a в зависимости от аргумента error метода 
+        /// Изменяет цвет ComboBox'a в зависимости от аргумента error метода
         /// </summary>
         private void ChangeCmbColor(object sender, bool error)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
                 if (error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
@@ -203,13 +196,15 @@ namespace Power_Equipment_Handbook
             bool result = NodeChecker(br, cmbStart, cmbEnd);
             if (result)
             {
-                var other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
+                var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
+                if(other.Count > 0) return false;
+
+                other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
                 if (other != null && other.Count > 0) br.Npar = other[0].Npar + 1;
             }
-
-            return result;  
+            return result;
         }
-        
+
         /// <summary>
         /// Проверка наличия узлов по параметрам ввода начала и конца ветви
         /// </summary>
@@ -266,10 +261,10 @@ namespace Power_Equipment_Handbook
                 cmbTypeName_L.DisplayMemberPath = "TypeName";
             }
             //Таблица Trans
-            if(type == "Trans")
+            if (type == "Trans")
             {
                 //Двухобмоточные
-                if(cmbType_T.Text == "двух.")
+                if (cmbType_T.Text == "двух.")
                 {
                     Trans.Clear();
 
@@ -298,7 +293,7 @@ namespace Power_Equipment_Handbook
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
                 }
                 //Трехобмоточные и Автотрансформаторы
-                if(cmbType_T.Text == "тр./АТ")
+                if (cmbType_T.Text == "тр./АТ")
                 {
                     MultiTrans.Clear();
 
@@ -330,16 +325,16 @@ namespace Power_Equipment_Handbook
 
                     cmbTypeName_T.ItemsSource = MultiTrans;
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
-                } 
+                }
             }
         }
-        
+
         /// <summary>
         /// Селектор узлов для трёхобмоточных трансов
         /// </summary>
         private void TransEndNodeSelector(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
 
@@ -348,6 +343,8 @@ namespace Power_Equipment_Handbook
                     cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = MultiTrans });
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
                 }
+
+                if(e.AddedItems.Count == 0) return; //Проверка селектора
 
                 if (tb == txtEndMidNode_T)
                 {
@@ -371,9 +368,12 @@ namespace Power_Equipment_Handbook
                     if (MultiTrans.Count != 0)
                     {
                         ObservableCollection<MultiTrans> mt;
-                        if (txtEndLowNode_T.Text == "" || txtEndLowNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
-                        else { mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
-                                                                                               (t.UnomL >= 0.8 * ((Node)txtEndLowNode_T.SelectedItem).Unom & t.UnomL <= 1.2 * ((Node)txtEndLowNode_T.SelectedItem).Unom)).ToList());}
+                        if (txtEndLowNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
+                        else
+                        {
+                            mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
+                                                                                            (t.UnomL >= 0.8 * ((Node)txtEndLowNode_T.SelectedItem).Unom & t.UnomL <= 1.2 * ((Node)txtEndLowNode_T.SelectedItem).Unom)).ToList());
+                        }
                         cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
                         cmbTypeName_T.DisplayMemberPath = "TypeName";
                     }
@@ -401,19 +401,30 @@ namespace Power_Equipment_Handbook
                     {
                         ObservableCollection<MultiTrans> mt;
                         if (txtEndMidNode_T.Text == "" || txtEndMidNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
-                        else { mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
-                                                                                               (t.UnomM >= 0.8 * ((Node)txtEndMidNode_T.SelectedItem).Unom & t.UnomM <= 1.2 * ((Node)txtEndMidNode_T.SelectedItem).Unom)).ToList()); }
+                        else
+                        {
+                            mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
+                                                                                            (t.UnomM >= 0.8 * ((Node)txtEndMidNode_T.SelectedItem).Unom & t.UnomM <= 1.2 * ((Node)txtEndMidNode_T.SelectedItem).Unom)).ToList());
+                        }
                         cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
                         cmbTypeName_T.DisplayMemberPath = "TypeName";
                     }
                 }
             });
         }
-        #endregion
+        
+        /// <summary>
+        /// Перекрашивает в белый цвет поля узлов при выпадении списка
+        /// </summary>
+        private void DropDownNodeReflector(object sender, EventArgs e)
+        {
+            ChangeCmbColor(sender, false);
+        }
 
-
+        #endregion Helpers
 
         #region Обработчики конкретных событий
+
         /// <summary>
         /// Выгрузка параметров из базы по факту выбора Сечения/Марки
         /// </summary>
@@ -441,7 +452,7 @@ namespace Power_Equipment_Handbook
             if (cmb.Equals(cmbTypeName_T))
             {
                 //Двухобмоточные трансформаторы
-                if(cmbType_T.Text == "двух.")
+                if (cmbType_T.Text == "двух.")
                 {
                     if (cmb.SelectedItem == null)
                     {
@@ -465,7 +476,7 @@ namespace Power_Equipment_Handbook
                     lblSource_T.Content = t.Source;
                 }
                 //Трехобмоточные и Автотрансформаторы
-                if(cmbType_T.Text == "тр./АТ")
+                if (cmbType_T.Text == "тр./АТ")
                 {
                     if (cmb.SelectedItem == null)
                     {
@@ -499,13 +510,12 @@ namespace Power_Equipment_Handbook
 
                     lblSource_T.Content = t.Source;
                 }
-
             }
         }
 
         /// <summary>
         /// Обработка внешнего вида формы при изменении типа трансформатора
-        /// </summary>    
+        /// </summary>
         private void CmbType_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cmbType_T.SelectedValue == cmbType_T.Items[0])
@@ -518,7 +528,7 @@ namespace Power_Equipment_Handbook
                 lblEndHighNode_T.Content = "Конец";
                 elUnom_T_2.Visibility = lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Visible;
                 elUnom_T_1.Width = 6;
-            } 
+            }
             else if (cmbType_T.SelectedValue == cmbType_T.Items[1])
             {
                 txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
@@ -549,7 +559,7 @@ namespace Power_Equipment_Handbook
         private void BtnAdd_N_Click(object sender, RoutedEventArgs e)
         {
             int number = default(int);
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 if (txtNumber_N.Text == "" || txtNumber_N.Text == null) { ChangeTxtColor(txtNumber_N, true); return; } else { number = int.Parse(txtNumber_N.Text); }
                 int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
@@ -577,13 +587,14 @@ namespace Power_Equipment_Handbook
                 Tab_Data.SelectedIndex = 0;
 
                 #region Clear controls
+
                 txtType_N.SelectedIndex = 0;
                 txtName_N.Clear();
                 txtPn_N.Clear(); txtQn_N.Clear(); txtPg_N.Clear(); txtQg_N.Clear();
                 txtQmin_N.Clear(); txtQmax_N.Clear(); txtVzd_N.Clear(); txtBsh_N.Clear();
                 txtRegion_N.Clear();
-                #endregion
 
+                #endregion Clear controls
             });
         }
 
@@ -594,10 +605,10 @@ namespace Power_Equipment_Handbook
         {
             int start = default(int);
             int end = default(int);
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 if (txtStartNode_L.Text == "" || txtStartNode_L.Text == null) { ChangeCmbColor(txtStartNode_L, true); } else { start = int.Parse(txtStartNode_L.Text); }
-                if (txtEndNode_L.Text == ""  || txtEndNode_L.Text == null) { ChangeCmbColor(txtEndNode_L, true); return; } else { end = int.Parse(txtEndNode_L.Text); }
+                if (txtEndNode_L.Text == "" || txtEndNode_L.Text == null) { ChangeCmbColor(txtEndNode_L, true); return; } else { end = int.Parse(txtEndNode_L.Text); }
                 if (txtStartNode_L.Text == txtEndNode_L.Text) { ChangeCmbColor(txtStartNode_L, true); ChangeCmbColor(txtEndNode_L, true); return; }
                 else { ChangeCmbColor(txtStartNode_L, false); ChangeCmbColor(txtEndNode_L, false); }
 
@@ -628,6 +639,7 @@ namespace Power_Equipment_Handbook
                 Tab_Data.SelectedIndex = 1;
 
                 #region Clear controls
+
                 txtEndNode_L.SelectedIndex = -1;
                 cmbTypeName_L.SelectedIndex = -1;
                 txtName_L.Clear(); txtLength_L.Clear();
@@ -635,9 +647,9 @@ namespace Power_Equipment_Handbook
                 txtR_L.Clear(); txtX_L.Clear(); txtB_L.Clear(); txtG_L.Clear();
                 txtNpar_L.Clear(); txtIdd_L.Clear();
                 txtRegion_L.Clear();
-                #endregion
-            });
 
+                #endregion Clear controls
+            });
         }
 
         /// <summary>
@@ -645,7 +657,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void BtnAdd_T_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 if (cmbType_T.Text == "двух.")
                 {
@@ -653,7 +665,7 @@ namespace Power_Equipment_Handbook
                     int end = default(int);
                     if (txtStartNode_T.Text == "" || txtStartNode_T.Text == null) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
                     if (txtEndHighNode_T.Text == "" || txtEndHighNode_T.Text == null) { ChangeCmbColor(txtEndHighNode_T, true); } else { end = int.Parse(txtEndHighNode_T.Text); }
-                    if(txtStartNode_T.Text == txtEndHighNode_T.Text) { ChangeCmbColor(txtStartNode_T, true); ChangeCmbColor(txtEndHighNode_T, true);  return; }
+                    if (txtStartNode_T.Text == txtEndHighNode_T.Text) { ChangeCmbColor(txtStartNode_T, true); ChangeCmbColor(txtEndHighNode_T, true); return; }
 
                     if (start == default(int)) { ChangeCmbColor(txtStartNode_T, true); return; }
                     if (end == default(int)) { ChangeCmbColor(txtStartNode_T, true); return; }
@@ -682,6 +694,7 @@ namespace Power_Equipment_Handbook
                     Tab_Data.SelectedIndex = 1;
 
                     #region Clear controls
+
                     txtEndHighNode_T.SelectedIndex = -1;
                     cmbTypeName_T.SelectedIndex = -1;
                     txtName_T.Clear();
@@ -689,7 +702,8 @@ namespace Power_Equipment_Handbook
                     txtKH_KML_T.Clear();
                     txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
                     txtRegion_T.Clear();
-                    #endregion
+
+                    #endregion Clear controls
 
                     return;
                 }
@@ -737,7 +751,7 @@ namespace Power_Equipment_Handbook
                     Branch br1 = new Branch(start: start, end: endH, type: type,
                                            state: state, typename: typename, name: nameH, npar: npar,
                                            r: rH, x: xH, b: bH, g: gH,
-                                           ktr: ktrH, idd: idd, region: region); 
+                                           ktr: ktrH, idd: idd, region: region);
 
                     Branch br2 = new Branch(start: endH, end: endM, type: type,
                                            state: state, typename: typename, name: nameM, npar: npar,
@@ -753,17 +767,18 @@ namespace Power_Equipment_Handbook
                     bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
                     bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
 
-                    if (result1 ==true && result2== true && result3== true)
+                    if (result1 == true && result2 == true && result3 == true)
                     {
                         track.AddBranch(br1);
                         track.AddBranch(br2);
                         track.AddBranch(br3);
                     }
                     else return;
-                        
+
                     Tab_Data.SelectedIndex = 1;
 
                     #region Clear controls
+
                     txtEndHighNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1;
                     cmbTypeName_T.SelectedIndex = -1;
                     txtName_T.Clear();
@@ -772,7 +787,8 @@ namespace Power_Equipment_Handbook
                     txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
                     txtRM_T.Clear(); txtXM_T.Clear(); txtRL_T.Clear(); txtXL_T.Clear();
                     txtRegion_T.Clear();
-                    #endregion
+
+                    #endregion Clear controls
 
                     return;
                 }
@@ -788,7 +804,7 @@ namespace Power_Equipment_Handbook
 
             if (cmb.Equals(cmbUnom_L))
             {
-                if(cmb.SelectedItem == null)
+                if (cmb.SelectedItem == null)
                 {
                     Lines.Clear();
                     return;
@@ -812,9 +828,9 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void TxtStartNode_L_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
-                if (txtStartNode_L.SelectedIndex == txtStartNode_L.Items.Count - 1) return;
+                if (txtStartNode_L.SelectedIndex == txtStartNode_L.Items.Count - 1 | txtStartNode_L.SelectedIndex == -1) return;
                 if (txtStartNode_L.SelectedIndex != -1)
                 {
                     ObservableCollection<Node> l = new ObservableCollection<Node>();
@@ -826,7 +842,7 @@ namespace Power_Equipment_Handbook
                             l.Add(i);
                         }
                     }
-                    txtEndNode_L.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l});
+                    txtEndNode_L.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
                     txtEndNode_L.DisplayMemberPath = "Number";
 
                     int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
@@ -847,12 +863,11 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void TxtStartNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
-                if (txtStartNode_T.SelectedIndex == txtStartNode_T.Items.Count - 1) return; 
+                if (txtStartNode_T.SelectedIndex == txtStartNode_T.Items.Count - 1 | txtStartNode_T.SelectedIndex == -1) return;
                 if (txtStartNode_T.SelectedIndex != -1)
                 {
-
                     if (cmbType_T.Text == "двух.")
                     {
                         ObservableCollection<Node> l = new ObservableCollection<Node>();
@@ -919,11 +934,11 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void TxtEndHighNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
 
-                if(cmbType_T.Text == "двух.")
+                if (cmbType_T.Text == "двух.")
                 {
                     cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
 
@@ -931,8 +946,9 @@ namespace Power_Equipment_Handbook
                     {
                         cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = Trans });
                         cmbTypeName_T.DisplayMemberPath = "TypeName";
-                        return;
                     }
+
+                    if(e.AddedItems.Count == 0) return;
 
                     if (Trans.Count != 0)
                     {
@@ -965,17 +981,29 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void Tab_Elements_GotFocus(object sender, RoutedEventArgs e)
         {
-            cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-            cmbUnom_N.SelectedItem = cmbUnom_N.SelectedItem;
+            Application.Current.Dispatcher.Invoke((Action)delegate
+            {
+                int SN_T = 0; int EN_T = 0; int MN_T = 0; int LN_T = 0;
+                int SN_L = 0; int EN_L = 0;
+                int U_T = 0; int U_L = 0;
 
-            txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
-            txtEndHighNode_T.SelectedItem = txtEndHighNode_T.SelectedItem;
-            txtEndMidNode_T.SelectedItem = txtEndMidNode_T.SelectedItem;
-            txtEndLowNode_T.SelectedItem = txtEndLowNode_T.SelectedItem;
-            txtStartNode_L.SelectedItem = txtStartNode_L.SelectedItem;
-            txtEndNode_L.SelectedItem = txtEndNode_L.SelectedItem;
+                SN_T = txtStartNode_T.SelectedIndex; EN_T = txtEndHighNode_T.SelectedIndex;
+                MN_T = txtEndMidNode_T.SelectedIndex; LN_T = txtEndLowNode_T.SelectedIndex;
+
+                SN_L = txtStartNode_L.SelectedIndex; EN_L = txtEndNode_L.SelectedIndex;
+
+                U_T = cmbUnom_T.SelectedIndex; U_L = cmbUnom_L.SelectedIndex;
+
+                txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = SN_T;
+                txtEndHighNode_T.SelectedIndex = -1; txtEndHighNode_T.SelectedIndex = EN_T;
+                txtEndMidNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = MN_T;
+                txtEndLowNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = LN_T;
+
+                txtStartNode_L.SelectedIndex = -1; txtStartNode_L.SelectedIndex = SN_L;
+                txtEndNode_L.SelectedIndex = -1; txtEndNode_L.SelectedIndex = EN_L;
+            });
         }
-        #endregion
 
+        #endregion Обработчики конкретных событий
     }
 }
