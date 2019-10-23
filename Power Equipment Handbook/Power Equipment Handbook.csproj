@@ -95,6 +95,8 @@
     </ApplicationDefinition>
     <Compile Include="src\DataGridTracker.cs" />
     <Compile Include="src\DBProvider.cs" />
+    <Compile Include="src\Helpers.cs" />
+    <Compile Include="src\Log.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
