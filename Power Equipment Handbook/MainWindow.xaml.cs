@@ -42,10 +42,12 @@ namespace Power_Equipment_Handbook
             txtEndHighNode_T.ItemsSource = track.Nodes; txtEndHighNode_T.DisplayMemberPath = "Number";
             txtEndMidNode_T.ItemsSource = track.Nodes; txtEndMidNode_T.DisplayMemberPath = "Number";
             txtEndLowNode_T.ItemsSource = track.Nodes; txtEndLowNode_T.DisplayMemberPath = "Number";
+            txtStartNode_B.ItemsSource = track.Nodes; txtStartNode_B.DisplayMemberPath = "Number";
+            txtEndNode_B.ItemsSource = track.Nodes; txtEndNode_B.DisplayMemberPath = "Number";
 
             Lines = new ObservableCollection<Line>();               //Коллекция объектов Линия
             Trans = new ObservableCollection<Trans>();              //Коллекция объектов Двухобмоточный Трансформатор
-            MultiTrans = new ObservableCollection<MultiTrans>();    //Коллекция объектов Трехобмоточный Трансформатор/Автотрансформатор 
+            MultiTrans = new ObservableCollection<MultiTrans>();    //Коллекция объектов Трехобмоточный Трансформатор/Автотрансформатор
 
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
         }
@@ -230,7 +232,7 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Добавить линию в список ветвей
+        /// Добавить Линию в список ветвей
         /// </summary>
         private void BtnAdd_L_Click(object sender, RoutedEventArgs e)
         {
@@ -286,7 +288,7 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Добавить трансформатор в список ветвей
+        /// Добавить Трансформатор в список ветвей
         /// </summary>
         private void BtnAdd_T_Click(object sender, RoutedEventArgs e)
         {
@@ -429,6 +431,57 @@ namespace Power_Equipment_Handbook
 
                     return;
                 }
+            });
+        }
+
+        /// <summary>
+        /// Добавить Выключатель в список ветвей
+        /// </summary>
+        private void BtnAdd_B_Click(object sender, RoutedEventArgs e)
+        {
+            int start = default(int);
+            int end = default(int);
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            {
+                if(txtStartNode_B.Text == "" || txtStartNode_B.Text == null) { ChangeCmbColor(txtStartNode_B, true); } else { start = int.Parse(txtStartNode_B.Text); }
+                if(txtEndNode_B.Text == "" || txtEndNode_B.Text == null) { ChangeCmbColor(txtEndNode_B, true); Log.Show("Ошибка ввода узлов Выключателя!"); return; } else { end = int.Parse(txtEndNode_B.Text); }
+                if(txtStartNode_B.Text == txtEndNode_B.Text) { ChangeCmbColor(txtStartNode_B, true); ChangeCmbColor(txtEndNode_B, true); Log.Show("Узлы начала и конца совпали!"); return; }
+                else { ChangeCmbColor(txtStartNode_B, false); ChangeCmbColor(txtEndNode_B, false); }
+
+                if(start == default(int)) { ChangeCmbColor(txtStartNode_B, true); return; }
+                if(end == default(int)) { ChangeCmbColor(txtEndNode_B, true); return; }
+
+                int state = (string.IsNullOrWhiteSpace(txtState_B.Text) || int.Parse(txtState_B.Text) == 0) ? 0 : 1;
+                string type = "Выкл.";
+                //int npar = (string.IsNullOrWhiteSpace(txtNpar_L.Text) || int.Parse(txtNpar_L.Text) == 0) ? 0 : int.Parse(txtNpar_L.Text);
+                //string typename = cmbTypeName_L.Text;
+                string name = txtName_B.Text;
+                //double r = (string.IsNullOrWhiteSpace(txtR_L.Text) || double.Parse(txtR_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR_L.Text, CultureInfo.InvariantCulture);
+                //double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
+                //double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
+                //double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
+                double? ktr = null;
+                //double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
+                int region = (string.IsNullOrWhiteSpace(txtRegion_B.Text) || int.Parse(txtRegion_B.Text) == 0) ? 0 : int.Parse(txtRegion_B.Text);
+
+                Branch br = new Branch(start: start, end: end, type: type,
+                                           state: state, name: name,
+                                           ktr: ktr, region: region);
+
+                if(BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
+                else return;
+
+                Tab_Data.SelectedIndex = 1;
+
+                #region Clear controls
+
+                txtEndNode_B.SelectedIndex = -1;
+                txtName_B.Clear();
+                txtRegion_B.Clear();
+
+                Log.Clear();
+
+                #endregion Clear controls
             });
         }
 
@@ -626,7 +679,7 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Селектор узлов средней стороны
+        /// Селектор узлов средней стороны (тр./АТ)
         /// </summary>
         private void TxtEndMidNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -634,7 +687,7 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Селектор узлов низкой стороны
+        /// Селектор узлов низкой стороны (тр./АТ)
         /// </summary>
         private void TxtEndLowNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -642,9 +695,49 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Попытка перерисовки по выделении таба
+        /// Выбор стартового узла для Выключателя
         /// </summary>
-        private void Tab_Elements_GotFocus(object sender, RoutedEventArgs e) { }
+        private void TxtStartNode_B_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            {
+                if(txtStartNode_B.SelectedIndex == txtStartNode_B.Items.Count - 1 | txtStartNode_B.SelectedIndex == -1)
+                {
+                    txtEndNode_B.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = track.Nodes });
+                    txtEndNode_B.DisplayMemberPath = "Number";
+                }
+
+                if(e.AddedItems.Count == 0) return;
+
+                try { var t = (Node)e.AddedItems[0]; }
+                catch(Exception) { return; }
+
+                if(txtStartNode_B.SelectedIndex != -1)
+                {
+                    ObservableCollection<Node> l = new ObservableCollection<Node>();
+
+                    foreach(Node i in txtStartNode_B.ItemsSource)
+                    {
+                        if(i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
+                        {
+                            l.Add(i);
+                        }
+                    }
+                    txtEndNode_B.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                    txtEndNode_B.DisplayMemberPath = "Number";
+
+                    int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                    foreach(ListBoxItem i in cmbUnom_B.Items)
+                    {
+                        if(i.Content.ToString() == unom.ToString())
+                        {
+                            cmbUnom_B.SelectedItem = i;
+                            return;
+                        }
+                    }
+                }
+            });
+        }
 
         #endregion Обработчики конкретных событий
     }

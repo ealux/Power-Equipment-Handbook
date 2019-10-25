@@ -37,7 +37,11 @@ namespace Power_Equipment_Handbook.src
             {
                 this.logBox.Text = message;
 
-                if(type == LogType.Error) this.logBox.Foreground = Brushes.Red;
+                if(type == LogType.Error)
+                {
+                    this.logBox.Foreground = Brushes.Red;
+                    System.Media.SystemSounds.Exclamation.Play();
+                }
                 else this.logBox.Foreground = Brushes.Black;
             });
         }
@@ -47,6 +51,9 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public void Clear() => Application.Current.Dispatcher.Invoke((Action)delegate { this.logBox.Text = ""; });
 
+        /// <summary>
+        /// Тип сообщения в логе
+        /// </summary>
         public enum LogType
         {
             Error = 0,

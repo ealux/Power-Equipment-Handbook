@@ -19,10 +19,10 @@
         <StatusBar HorizontalAlignment="Left" Margin="0,428,0,10" Width="1194" Grid.Row="1" Grid.ColumnSpan="2">
             <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="240" FontFamily="Showcard Gothic" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0" FontWeight="Bold" IsEnabled="False" AllowDrop="False" IsTabStop="False" Focusable="False" />
             <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
-            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="921" Foreground="Red" Text="Log"/>
+            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="820" Foreground="Red" Text="Log"/>
         </StatusBar>
-        <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184" Grid.ColumnSpan="2" GotFocus="Tab_Elements_GotFocus">
-            <TabItem Header="Node" Margin="-2,-2,-48,0" GotFocus="Tab_Elements_GotFocus">
+        <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184" Grid.ColumnSpan="2">
+            <TabItem                    Header="Узел" Margin="-2,-2,-48,0">
                 <Grid Margin="0,-2,0,0">
                     <Label x:Name="lblNumber_N" Content="Номер" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,72,0,0" />
                     <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitChecker" MaxLength="5" />
@@ -73,7 +73,7 @@
                     <Button x:Name="btnAdd_N" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="1035,98,0,0" Height="22" Click="BtnAdd_N_Click" />
                 </Grid>
             </TabItem>
-            <TabItem x:Name="Tab_Lines" Header="Lines" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="134" GotFocus="Tab_Elements_GotFocus">
+            <TabItem x:Name="Tab_Lines" Header="Линия" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="134">
                 <Grid Margin="0,0,12,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="137*" />
@@ -113,7 +113,7 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="4,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
+                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="6,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
                         <Ellipse.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform ScaleY="-1" />
@@ -277,7 +277,7 @@
                     <Label Content="Источник: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,183,0,0" />
                 </Grid>
             </TabItem>
-            <TabItem x:Name="Tab_Trans" Header="Transformers" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129" GotFocus="Tab_Elements_GotFocus">
+            <TabItem x:Name="Tab_Trans" Header="Трансформатор" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="135*" />
@@ -505,9 +505,38 @@
                     <Label x:Name="lblSource_T" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="80,183,0,0" Width="230" Height="24" />
                 </Grid>
             </TabItem>
+            <TabItem x:Name="Tab_Breaker" Header="Выключатель" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129" >
+                <Grid Margin="0,-2,0,0">
+                    <ComboBox x:Name="txtStartNode_B" HorizontalAlignment="Left" Height="22" Margin="9,100,0,0" VerticalAlignment="Top" Width="46" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_B_SelectionChanged" DropDownOpened="DropDownNodeReflector" />
+                    <ComboBox x:Name="txtEndNode_B" HorizontalAlignment="Left" Height="22" Margin="67,100,0,0" VerticalAlignment="Top" Width="46" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" DropDownOpened="DropDownNodeReflector"/>
+                    <Label x:Name="lblStartNode_B" Content="Начало" HorizontalAlignment="Left" Margin="5,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
+                    <Label x:Name="lblEndNode_B" Content="Конец" HorizontalAlignment="Left" Margin="67,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
+                    <ComboBox x:Name="cmbUnom_B" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" Grid.ColumnSpan="3" SelectionChanged="CmbUnom_SelectionChanged">
+                        <ListBoxItem Content="3" />
+                        <ListBoxItem Content="6" />
+                        <ListBoxItem Content="10" />
+                        <ListBoxItem Content="35" />
+                        <ListBoxItem Content="110" />
+                        <ListBoxItem Content="150" />
+                        <ListBoxItem Content="220" />
+                        <ListBoxItem Content="330" />
+                        <ListBoxItem Content="500" />
+                        <ListBoxItem Content="750" />
+                        <ListBoxItem Content="1150" />
+                    </ComboBox>
+                    <Label x:Name="lblUnom_B" Content="Uном" HorizontalAlignment="Left" Margin="135,76,0,0" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="2" />
+                    <TextBox x:Name="txtState_B" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Text="0" />
+                    <Label x:Name="lblState_B" Content="Состояние" HorizontalAlignment="Left" Margin="-1,18,0,0" VerticalAlignment="Top" Height="24" />
+                    <TextBox x:Name="txtRegion_B" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <Label x:Name="lblRegion_B" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24" />
+                    <Label x:Name="lblName_B" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="200,76,0,0" VerticalAlignment="Top" Height="24" />
+                    <TextBox x:Name="txtName_B" HorizontalAlignment="Left" Height="22" Margin="214,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" />
+                    <Button x:Name="btnAdd_B" Margin="395,100,0,0" Content="Добавить" HorizontalAlignment="Left" Width="107" Height="22" VerticalAlignment="Top" Click="BtnAdd_B_Click" />
+                </Grid>
+            </TabItem>
         </TabControl>
         <TabControl x:Name="Tab_Data" HorizontalAlignment="Left" Grid.Row="1" Width="1194" Height="397" VerticalAlignment="Top" Margin="0,10,0,0" Grid.ColumnSpan="2">
-            <TabItem x:Name="Tab_Nodes" Header="Nodes" Background="{x:Null}">
+            <TabItem x:Name="Tab_Nodes" Header="Узлы" Background="{x:Null}">
                 <Grid>
                     <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="369" VerticalAlignment="Top" Width="1178" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA">
                         <DataGrid.Columns>
@@ -529,7 +558,7 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem x:Name="Tab_Branches" Header="Branches" Background="{x:Null}">
+            <TabItem x:Name="Tab_Branches" Header="Ветви" Background="{x:Null}">
                 <Grid>
                     <DataGrid x:Name="grdBranches" ItemsSource="{Binding}"  Height="369" VerticalAlignment="Top" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0,0,10,0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA">
                         <DataGrid.Columns>

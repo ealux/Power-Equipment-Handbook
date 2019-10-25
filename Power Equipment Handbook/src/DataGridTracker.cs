@@ -4,16 +4,20 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Power_Equipment_Handbook.src
 {
+    [XmlType("Schema Container")]
     public class DataGridTracker
     {
-        public DataGrid grdNodes { get; set; }
-        public DataGrid grdBranches { get; set; }
 
-        public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
-        public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
+        [XmlIgnore] public DataGrid grdNodes { get; set; }
+        [XmlIgnore] public DataGrid grdBranches { get; set; }
+
+        [XmlArrayItem("Nodes", Type =typeof(Node))] public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
+        [XmlArrayItem("Branches", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
 
         public DataGridTracker(DataGrid grdNodes, DataGrid grdBranches)
         {
@@ -350,7 +354,7 @@ namespace Power_Equipment_Handbook.src
     }
 
     /// <summary>
-    /// Класс линии из базы
+    /// Класс Линии из базы
     /// </summary>
     public class Line : INotifyPropertyChanged
     {
@@ -415,9 +419,7 @@ namespace Power_Equipment_Handbook.src
 
         #endregion Properties
 
-        public Line()
-        {
-        }
+        public Line() { }
 
         #region INotifyPropertyChanged interface block
 
@@ -438,7 +440,7 @@ namespace Power_Equipment_Handbook.src
     }
 
     /// <summary>
-    /// Класс двухобмоточного трансформатора из базы
+    /// Класс двухобмоточного Трансформатора из базы
     /// </summary>
     public class Trans : INotifyPropertyChanged
     {
@@ -536,7 +538,7 @@ namespace Power_Equipment_Handbook.src
     }
 
     /// <summary>
-    /// Класс трехобмоточного (автотрансформатора) трансформатора
+    /// Класс трехобмоточного (Автотрансформатора) Трансформатора из базы
     /// </summary>
     public class MultiTrans : INotifyPropertyChanged
     {
@@ -643,9 +645,7 @@ namespace Power_Equipment_Handbook.src
 
         #endregion Properties
 
-        public MultiTrans()
-        {
-        }
+        public MultiTrans() { }
 
         #region INotifyPropertyChanged interface block
 
@@ -659,6 +659,41 @@ namespace Power_Equipment_Handbook.src
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value)) return false;
+            storage = value; OnPropertyChanged(propertyName); return true;
+        }
+
+        #endregion INotifyPropertyChanged interface block
+    }
+
+    /// <summary>
+    /// Класс выключателя
+    /// </summary>
+    public class Breaker : INotifyPropertyChanged
+    {
+        private int? unom;
+
+        #region Properties
+        public int? Unom
+        {
+            get { return unom; }
+            set { SetProperty(ref unom, value); }
+        }
+        #endregion Properties
+
+        public Breaker() { }
+
+        #region INotifyPropertyChanged interface block
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if(Equals(storage, value)) return false;
             storage = value; OnPropertyChanged(propertyName); return true;
         }
 

@@ -415,11 +415,15 @@ namespace Power_Equipment_Handbook
                 return false;
             }
 
-
+            //TODO
             return true;
         }
 
         #endregion Power Network Methods
+
+        #region Save(Serialize) Methods
+        //TODO
+        #endregion
 
     }
 }
