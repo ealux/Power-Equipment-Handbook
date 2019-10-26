@@ -19,7 +19,10 @@
         <StatusBar HorizontalAlignment="Left" Margin="0,428,0,10" Width="1194" Grid.Row="1" Grid.ColumnSpan="2">
             <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Top" Width="240" FontFamily="Showcard Gothic" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.5,0" FontWeight="Bold" IsEnabled="False" AllowDrop="False" IsTabStop="False" Focusable="False" />
             <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
-            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="820" Foreground="Red" Text="Log"/>
+            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="622" Foreground="Red" Text="Log"/>
+            <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
+            <Button x:Name="btnImport" Content="Импорт" Width="140" Click="Import_Click"/>
+            <Button x:Name="btnExport" Content="Экспорт" Width="140" Click="Export_Click"/>
         </StatusBar>
         <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184" Grid.ColumnSpan="2">
             <TabItem                    Header="Узел" Margin="-2,-2,-48,0">

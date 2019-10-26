@@ -9,15 +9,18 @@ using System.Xml.Serialization;
 
 namespace Power_Equipment_Handbook.src
 {
-    [XmlType("Schema Container")]
+    [Serializable]
+    [XmlType("SchemaContainer")]
     public class DataGridTracker
     {
 
         [XmlIgnore] public DataGrid grdNodes { get; set; }
         [XmlIgnore] public DataGrid grdBranches { get; set; }
 
-        [XmlArrayItem("Nodes", Type =typeof(Node))] public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
-        [XmlArrayItem("Branches", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
+        [XmlArrayItem("Node", Type =typeof(Node))] public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
+        [XmlArrayItem("Branch", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
+
+        public DataGridTracker() { }
 
         public DataGridTracker(DataGrid grdNodes, DataGrid grdBranches)
         {
@@ -48,84 +51,107 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
+        [XmlAttribute]
         public int State
         {
             get { return state; }
             set { SetProperty(ref state, value); }
         }
 
+        [XmlAttribute]
         public string Type
         {
             get => type;
             set { SetProperty(ref type, value); }
         }
 
+        [XmlAttribute]
         public int Start
         {
             get => start;
             set { SetProperty(ref start, value); }
         }
 
+        [XmlAttribute]
         public int End
         {
             get => end;
             set { SetProperty(ref end, value); }
         }
 
+        [XmlAttribute]
         public int Npar
         {
             get => npar;
             set { SetProperty(ref npar, value); }
         }
 
+        [XmlAttribute]
         public string Name
         {
             get => name;
             set { SetProperty(ref name, value); }
         }
 
+        [XmlAttribute]
         public string TypeName
         {
             get => typename;
             set { SetProperty(ref typename, value); }
         }
 
+        [XmlAttribute]
         public double R
         {
             get => r;
             set { SetProperty(ref r, value); }
         }
 
+        [XmlAttribute]
         public double X
         {
             get => x;
             set { SetProperty(ref x, value); }
         }
 
+        [XmlAttribute]
         public double G
         {
             get => g;
             set { SetProperty(ref g, value); }
         }
 
+        [XmlAttribute]
         public double B
         {
             get => b;
             set { SetProperty(ref b, value); }
         }
 
+        [XmlIgnore]
         public double? Ktr
         {
             get => ktr;
             set { SetProperty(ref ktr, value); }
         }
 
+        #region Ktr property to Text
+        [XmlElement("Ktr")]
+        public string AgeAsText
+        {
+            get { return (Ktr.HasValue) ? Ktr.ToString() : null; }
+            set { Ktr = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
+        }
+        #endregion Ktr property to Text
+
+        [XmlAttribute]
         public double Idd
         {
             get => idd;
             set { SetProperty(ref idd, value); }
         }
 
+        [XmlAttribute]
         public int Region
         {
             get => region;
@@ -210,84 +236,98 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
+        [XmlAttribute]
         public int State
         {
             get { return state; }
             set { SetProperty(ref state, value); }
         }
 
+        [XmlAttribute]
         public string Type
         {
             get => type;
             set { SetProperty(ref type, value); }
         }
 
+        [XmlAttribute]
         public int Number
         {
             get => number;
             set { SetProperty(ref number, value); }
         }
 
+        [XmlAttribute]
         public int Unom
         {
             get => unom;
             set { SetProperty(ref unom, value); }
         }
 
+        [XmlAttribute]
         public string Name
         {
             get => name;
             set { SetProperty(ref name, value); }
         }
 
+        [XmlAttribute]
         public double P_n
         {
             get => p_n;
             set { SetProperty(ref p_n, value); }
         }
 
+        [XmlAttribute]
         public double Q_n
         {
             get => q_n;
             set { SetProperty(ref q_n, value); }
         }
 
+        [XmlAttribute]
         public double P_g
         {
             get => p_g;
             set { SetProperty(ref p_g, value); }
         }
 
+        [XmlAttribute]
         public double Q_g
         {
             get => q_g;
             set { SetProperty(ref q_g, value); }
         }
 
+        [XmlAttribute]
         public double Vzd
         {
             get => vzd;
             set { SetProperty(ref vzd, value); }
         }
 
+        [XmlAttribute]
         public double Q_min
         {
             get => q_min;
             set { SetProperty(ref q_min, value); }
         }
 
+        [XmlAttribute]
         public double Q_max
         {
             get => q_max;
             set { SetProperty(ref q_max, value); }
         }
 
+        [XmlAttribute]
         public double B_sh
         {
             get => b_sh;
             set { SetProperty(ref b_sh, value); }
         }
 
+        [XmlAttribute]
         public int Region
         {
             get => region;

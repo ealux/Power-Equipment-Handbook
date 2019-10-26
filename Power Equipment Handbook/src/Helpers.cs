@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.IO;
+using System.Xml.Serialization;
+using Microsoft.Win32;
 
 namespace Power_Equipment_Handbook
 {
@@ -421,9 +424,95 @@ namespace Power_Equipment_Handbook
 
         #endregion Power Network Methods
 
-        #region Save(Serialize) Methods
-        //TODO
-        #endregion
+        #region Save/Open (Serialize/Deserialize) Methods
+
+        /// <summary>
+        /// Экспорт данных
+        /// </summary>
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+            if(track.Nodes.Count == 0 | track.Branches.Count == 0) Log.Show("Отсутствуют узлы/ветви!");
+            else
+            {
+                SaveFileDialog sfd = new SaveFileDialog
+                {
+                    Filter = "Other Files|*.peh",       // | Rastr_rgm (*.rg2)|*.rg2",
+                    OverwritePrompt = true,
+                    AddExtension = true
+                    //InitialDirectory = "./Save/", 
+                };
+
+                if(sfd.ShowDialog() == false) return;
+
+                string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
+                string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
+
+                Serializator serializator = new Serializator(file: filename, tracker: track);       //Сериализатор
+
+                switch(extension.ToLower())
+                {
+                    case ".peh":
+                        Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
+                        serializator.toXML();
+                        break;
+
+                    //case ".rg2":
+                    //    serializator.toRG2();
+                    //    break;
+                }
+
+                Log.Show($"Успешно записано в файл: {filename}", LogClass.LogType.Information); //Информирует об записи в файл
+            }
+        }
+
+        /// <summary>
+        /// Импорт данных
+        /// </summary>
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog sfd = new OpenFileDialog
+            {
+                Filter = "Other Files|*.peh",
+                Multiselect = false
+            };
+
+            if(sfd.ShowDialog() == false) return;
+
+            string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
+            string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
+
+            Serializator serializator = new Serializator(file: filename, tracker: track);       //Сериализатор
+            DataGridTracker localTracker = new DataGridTracker();
+
+            switch(extension.ToLower())
+            {
+                case ".peh":
+                    try
+                    {
+                        localTracker = serializator.fromXML();
+
+                        track.Nodes.Clear(); track.Branches.Clear();                    //Очистка старых значений в колекциях Узлов и Ветвей
+                        Log.Show($"Извлечение данных из файла: {filename}. Процесс...", LogClass.LogType.Information);
+
+                        foreach(var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
+                        foreach(var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
+                    }
+                    catch(Exception)
+                    {
+                        Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
+                        return;
+                    }
+                    break;
+
+                //case ".rg2":
+                //    serializator.toRG2();
+                //    break;
+            }
+
+            Log.Show($"Успешно прочитан файл {filename}", LogClass.LogType.Information); //Информирует об успешном чтении файла
+        }
+
+        #endregion Save/Open (Serialize/Deserialize) Methods
 
     }
 }
