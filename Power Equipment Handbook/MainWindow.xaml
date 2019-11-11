@@ -24,11 +24,11 @@
             <Button x:Name="btnImport" Content="Импорт" Width="140" Click="Import_Click"/>
             <Button x:Name="btnExport" Content="Экспорт" Width="140" Click="Export_Click"/>
         </StatusBar>
-        <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184" Grid.ColumnSpan="2">
+        <TabControl x:Name="Tab_Elements" HorizontalAlignment="Left" Height="249" VerticalAlignment="Top" Width="1184" Grid.ColumnSpan="2" KeyDown="Tab_Elements_KeyDown">
             <TabItem                    Header="Узел" Margin="-2,-2,-48,0">
                 <Grid Margin="0,-2,0,0">
                     <Label x:Name="lblNumber_N" Content="Номер" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,72,0,0" />
-                    <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitChecker" MaxLength="5" />
+                    <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitCheckerForNodes" MaxLength="5" />
                     <Label x:Name="lblUnom_N" Content="U ном" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="91,72,0,0" />
                     <ComboBox x:Name="cmbUnom_N" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="80,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker">
                         <ListBoxItem HorizontalContentAlignment="Left">3</ListBoxItem>
@@ -70,9 +70,9 @@
                     <Label x:Name="lblBsh_N" Content="B шунт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="963,72,0,0" />
                     <TextBox x:Name="txtBsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="957,98,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
                     <Label x:Name="lblState_N" Content="Состояние" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,13,0,0" />
-                    <TextBox x:Name="txtState_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,39,0,0" Text="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker"  MaxLines="1" />
+                    <TextBox x:Name="txtState_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,39,0,0" Text="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitCheckerForNodes"  MaxLines="1" />
                     <Label x:Name="lblRegion_N" Content="Район" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="88,13,0,0" />
-                    <TextBox x:Name="txtRegion_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="86,39,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker"  MaxLines="1" />
+                    <TextBox x:Name="txtRegion_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="86,39,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitCheckerForNodes"  MaxLines="1" />
                     <Button x:Name="btnAdd_N" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="1035,98,0,0" Height="22" Click="BtnAdd_N_Click" />
                 </Grid>
             </TabItem>
@@ -267,14 +267,14 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <TextBox x:Name="txtNpar_L" HorizontalAlignment="Left" Height="22" Margin="878,71,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="3" PreviewTextInput="DigitChecker" x:FieldModifier="public" Grid.Column="2" />
+                    <TextBox x:Name="txtNpar_L" HorizontalAlignment="Left" Height="22" Margin="878,71,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="3" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Grid.Column="2" />
                     <Label x:Name="lblNpar_L" Content="Номер&#xA;парал." HorizontalAlignment="Left" Margin="875,36,0,0" VerticalAlignment="Top" Height="40" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" />
                     <TextBox x:Name="txtIdd_L" Text="{Binding Idd, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="930,71,0,0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="2" />
                     <Label x:Name="lblIdd_L" Content="Iдд, А" HorizontalAlignment="Left" Margin="930,45,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
                     <Button x:Name="btnAdd_L" Margin="869,128,0,0" Content="Добавить" HorizontalAlignment="Left" Width="107" Height="22" VerticalAlignment="Top" Grid.Column="2" Click="BtnAdd_L_Click" />
-                    <TextBox x:Name="txtState_L" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Text="0" />
+                    <TextBox x:Name="txtState_L" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Text="0" />
                     <Label x:Name="lblState_L" Content="Состояние" HorizontalAlignment="Left" Margin="-1,18,0,0" VerticalAlignment="Top" Height="24" />
-                    <TextBox x:Name="txtRegion_L" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <TextBox x:Name="txtRegion_L" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" />
                     <Label x:Name="lblRegion_L" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24" />
                     <Label x:Name="lblSource_L" Content="{Binding Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,183,839,10" Grid.ColumnSpan="3" />
                     <Label Content="Источник: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,183,0,0" />
@@ -500,9 +500,9 @@
                         </Ellipse.RenderTransform>
                     </Ellipse>
                     <Button x:Name="btnAdd_T" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="88" Grid.Column="1" Margin="948,100,0,0" Click="BtnAdd_T_Click" />
-                    <TextBox x:Name="txtState_T" HorizontalAlignment="Left" Height="22" Margin="15,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Text="0" />
+                    <TextBox x:Name="txtState_T" HorizontalAlignment="Left" Height="22" Margin="15,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Text="0" />
                     <Label x:Name="lblState_T" Content="Состояние" HorizontalAlignment="Left" Margin="4,23,0,0" VerticalAlignment="Top" Height="24" FontSize="10" />
-                    <TextBox x:Name="txtRegion_T" HorizontalAlignment="Left" Height="22" Margin="67,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <TextBox x:Name="txtRegion_T" HorizontalAlignment="Left" Height="22" Margin="67,47,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" />
                     <Label x:Name="lblRegion_T" Content="Район" HorizontalAlignment="Left" Margin="66,23,0,0" VerticalAlignment="Top" Height="24" FontSize="10" />
                     <Label Content="Источник: " VerticalAlignment="Top" Margin="7,183,58,0" />
                     <Label x:Name="lblSource_T" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.ColumnSpan="3" Margin="80,183,0,0" Width="230" Height="24" />
@@ -528,9 +528,9 @@
                         <ListBoxItem Content="1150" />
                     </ComboBox>
                     <Label x:Name="lblUnom_B" Content="Uном" HorizontalAlignment="Left" Margin="135,76,0,0" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="2" />
-                    <TextBox x:Name="txtState_B" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" Text="0" />
+                    <TextBox x:Name="txtState_B" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Text="0" />
                     <Label x:Name="lblState_B" Content="Состояние" HorizontalAlignment="Left" Margin="-1,18,0,0" VerticalAlignment="Top" Height="24" />
-                    <TextBox x:Name="txtRegion_B" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitChecker" x:FieldModifier="public" />
+                    <TextBox x:Name="txtRegion_B" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" />
                     <Label x:Name="lblRegion_B" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24" />
                     <Label x:Name="lblName_B" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="200,76,0,0" VerticalAlignment="Top" Height="24" />
                     <TextBox x:Name="txtName_B" HorizontalAlignment="Left" Height="22" Margin="214,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" />

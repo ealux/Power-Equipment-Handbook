@@ -209,7 +209,12 @@ namespace Power_Equipment_Handbook
                 double b_sh = (string.IsNullOrWhiteSpace(txtBsh_N.Text) || double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture);
                 int region = (string.IsNullOrWhiteSpace(txtRegion_N.Text) || int.Parse(txtRegion_N.Text) == 0) ? 0 : int.Parse(txtRegion_N.Text);
 
-                if (track.Nodes.Where((n) => n.Number == number).ToList().Count != 0) { ChangeTxtColor(txtNumber_N, true); return; }
+                if (track.Nodes.Where((n) => n.Number == number).ToList().Count != 0)
+                {
+                    ChangeTxtColor(txtNumber_N, true);
+                    Log.Show("Узел с заданными параметрами уже существует!");
+                    return;
+                }
 
                 track.AddNode(new Node(number: number, unom: unom, type: type,
                                        state: state, name: name,
@@ -741,8 +746,97 @@ namespace Power_Equipment_Handbook
             });
         }
 
+        /// <summary>
+        /// Отлов горячих клавиш
+        /// </summary>
+        private void Tab_Elements_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.N)) //Нажатие сочетания Ctrl+N
+            {
+                int state = 0;
+                switch(Tab_Elements.SelectedIndex)
+                {
+                    case 0: //Узлы
+                        txtType_N.SelectedIndex = 0;
+                        txtName_N.Text = "";
+                        txtPn_N.Text = "";
+                        txtQn_N.Text = "";
+                        txtPg_N.Text = "";
+                        txtQg_N.Text = "";
+                        txtVzd_N.Text = "";
+                        txtQmin_N.Text = "";
+                        txtQmax_N.Text = "";
+                        txtBsh_N.Text = "";
+                        txtRegion_N.Text = "";
+                        txtState_N.Text = "0";
+                        break;
+                    case 1: //Линии
+                        txtEndNode_L.SelectedIndex = -1;
+                        state = cmbUnom_L.SelectedIndex;
+                        cmbUnom_L.SelectedIndex = -1;
+                        cmbUnom_L.SelectedIndex = state;
+                        cmbTypeName_L.SelectedIndex = -1;
+                        txtName_L.Text = "";
+                        txtLength_L.Text = "";
+                        txtr0_L.DataContext = ""; ; txtR_L.Text = ""; ;
+                        txtx0_L.DataContext = ""; ; txtX_L.Text = ""; ;
+                        txtg0_L.DataContext = ""; ; txtG_L.Text = ""; ;
+                        txtb0_L.DataContext = ""; ; txtB_L.Text = "";
+                        txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
+                        txtState_L.Text = "0";
+                        txtRegion_L.Text = "";
+                        break;
+                    case 2: //Трансформаторы
+                        state = cmbType_T.SelectedIndex;
+                        cmbType_T.SelectedIndex = -1;
+                        cmbType_T.SelectedIndex = state;
+                        state = cmbUnom_T.SelectedIndex;
+                        cmbUnom_T.SelectedIndex = -1;
+                        cmbUnom_T.SelectedIndex = state;
+                        cmbTypeName_T.SelectedIndex = -1;
+                        txtName_T.Text = "";
+                        txtEndHighNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1;
+                        txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = ""; txtUnomLow_T.DataContext = ""; txtUnomMid_T.DataContext = "";
+                        txtKHL_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKH_KML_T.DataContext = "";
+                        txtRH_T.DataContext = ""; txtRL_T.DataContext = ""; txtRM_T.DataContext = "";
+                        txtXH_T.DataContext = ""; txtXL_T.DataContext = ""; txtXM_T.DataContext = "";
+                        txtBH_T.DataContext = ""; txtGH_T.DataContext = "";
+                        txtState_T.Text = "0";
+                        txtRegion_T.Text = "";
+                        break;
+                    case 3: //Выключатели
+                        state = cmbUnom_B.SelectedIndex;
+                        cmbUnom_B.SelectedIndex = -1;
+                        cmbUnom_B.SelectedIndex = state;
+                        txtEndNode_B.SelectedIndex = -1;
+                        txtName_B.Text = "";
+                        txtState_B.Text = "0";
+                        txtRegion_B.Text = "";
+                        break;
+                }
+            }
+            else if(e.Key == Key.Enter) // Нажатие Enter
+            {
+                switch(Tab_Elements.SelectedIndex)
+                {
+                    case 0: //Узлы
+                        BtnAdd_N_Click(btnAdd_N, new RoutedEventArgs());
+                        break;
+                    case 1: //Линии
+                        BtnAdd_L_Click(btnAdd_L, new RoutedEventArgs());
+                        break;
+                    case 2: //Трансформаторы
+                        BtnAdd_T_Click(btnAdd_T, new RoutedEventArgs());
+                        break;
+                    case 3: //Выключатели
+                        BtnAdd_B_Click(btnAdd_B, new RoutedEventArgs());
+                        break;
+                }
+            }
+        }
+
         #endregion Обработчики конкретных событий
 
-        
+
     }
 }

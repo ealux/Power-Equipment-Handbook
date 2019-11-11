@@ -211,7 +211,7 @@ namespace Power_Equipment_Handbook.src
         {
             if (this == null && other == null) return true;
             else if (this == null || other == null) return false;
-            else if (type == other.type && start == other.start && end == other.end) return true;
+            else if (type == other.type & start == other.start & end == other.end) return true;
             else return false;
         }
 
@@ -386,7 +386,7 @@ namespace Power_Equipment_Handbook.src
         {
             if (this == null && other == null) return true;
             else if (this == null || other == null) return false;
-            else if (type == other.type && number == other.number) return true;
+            else if (type == other.type & number == other.number) return true;
             else return false;
         }
 

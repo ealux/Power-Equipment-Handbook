@@ -10,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
-using System.Xml.Serialization;
 using Microsoft.Win32;
 
 namespace Power_Equipment_Handbook
@@ -23,16 +22,24 @@ namespace Power_Equipment_Handbook
         #region Helpers
 
         /// <summary>
+        /// Проверка ввода цифр для Номера Узла (вкладка узлы)
+        /// </summary>
+        private void DigitCheckerForNodes(object sender, TextCompositionEventArgs e)
+        {
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
+            TextBox tb = (TextBox)sender;
+            ChangeTxtColor(sender, false);
+            if(!char.IsDigit(e.Text, 0)) e.Handled = true;
+        }
+
+        /// <summary>
         /// Проверка ввода цифр
         /// </summary>
         private void DigitChecker(object sender, TextCompositionEventArgs e)
         {
-            object tb;
-
-            try { tb = (ComboBox)sender; }
-            catch(Exception) { tb = (TextBox)sender; }
-            if(tb.GetType() == typeof(ComboBox)) ChangeCmbColor(sender, false);
-            else if(tb.GetType() == typeof(TextBox)) ChangeTxtColor(sender, false);
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
+            ComboBox tb = (ComboBox)sender;
+            ChangeCmbColor(sender, false);
             if(!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
@@ -41,6 +48,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void DoubleChecker(object sender, TextCompositionEventArgs e)
         {
+            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
             TextBox tb = (TextBox)sender;
             if((e.Text.Contains(".") || e.Text.Contains(",")) & (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
             if(!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0))) e.Handled = true;
@@ -166,7 +174,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private bool BranchChecker(Branch br, object cmbStart, object cmbEnd)
         {
-            bool result = NodeChecker(br, cmbStart, cmbEnd);
+            bool result = true;//NodeChecker(br, cmbStart, cmbEnd);
             if(result)
             {
                 var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
@@ -427,52 +435,58 @@ namespace Power_Equipment_Handbook
         #region Save/Open (Serialize/Deserialize) Methods
 
         /// <summary>
-        /// Экспорт данных
+        /// Выгрузка данных
         /// </summary>
         private void Export_Click(object sender, RoutedEventArgs e)
         {
-            if(track.Nodes.Count == 0 | track.Branches.Count == 0) Log.Show("Отсутствуют узлы/ветви!");
-            else
+            if(track.Nodes.Count == 0 | track.Branches.Count == 0)
             {
-                SaveFileDialog sfd = new SaveFileDialog
-                {
-                    Filter = "Other Files|*.peh",       // | Rastr_rgm (*.rg2)|*.rg2",
-                    OverwritePrompt = true,
-                    AddExtension = true
-                    //InitialDirectory = "./Save/", 
-                };
-
-                if(sfd.ShowDialog() == false) return;
-
-                string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
-                string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
-
-                Serializator serializator = new Serializator(file: filename, tracker: track);       //Сериализатор
-
-                switch(extension.ToLower())
-                {
-                    case ".peh":
-                        Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
-                        serializator.toXML();
-                        break;
-
-                    //case ".rg2":
-                    //    serializator.toRG2();
-                    //    break;
-                }
-
-                Log.Show($"Успешно записано в файл: {filename}", LogClass.LogType.Information); //Информирует об записи в файл
+                Log.Show("Отсутствуют узлы/ветви!");
+                return;
             }
+
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "PEH files|*.peh| Excel (*.xlsx)|*.xlsx",       // | Rastr_rgm (*.rg2)|*.rg2",
+                OverwritePrompt = true,
+                AddExtension = true
+                //InitialDirectory = "./Save/", 
+            };
+
+            if(sfd.ShowDialog() == false) return;
+
+            string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
+            string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
+
+            UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
+
+            switch(extension)
+            {
+                case ".peh":
+                    Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
+                    serializator.toXML();
+                    break;
+                case ".xlsx":
+                    Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
+                    serializator.toXLSX();
+                    break;
+                
+                //case ".rg2":
+                //    serializator.toRG2();
+                //    break;
+            }
+
+            Log.Show($"Успешно записано в файл: {filename}", LogClass.LogType.Information); //Информирует об записи в файл
         }
 
         /// <summary>
-        /// Импорт данных
+        /// Загрузка данных
         /// </summary>
         private void Import_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog sfd = new OpenFileDialog
             {
-                Filter = "Other Files|*.peh",
+                Filter = "PEH Files|*.peh",
                 Multiselect = false
             };
 
@@ -481,7 +495,7 @@ namespace Power_Equipment_Handbook
             string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
             string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
 
-            Serializator serializator = new Serializator(file: filename, tracker: track);       //Сериализатор
+            UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
             DataGridTracker localTracker = new DataGridTracker();
 
             switch(extension.ToLower())
