@@ -174,7 +174,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private bool BranchChecker(Branch br, object cmbStart, object cmbEnd)
         {
-            bool result = true;//NodeChecker(br, cmbStart, cmbEnd);
+            bool result = NodeChecker(br, cmbStart, cmbEnd);
             if(result)
             {
                 var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();

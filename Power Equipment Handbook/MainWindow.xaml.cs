@@ -151,9 +151,6 @@ namespace Power_Equipment_Handbook
         {
             if (cmbType_T.SelectedValue == cmbType_T.Items[0])
             {
-                txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
-                cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-
                 grpMid.Visibility = grpLow.Visibility = Visibility.Hidden;
                 lblKH_KML_T.Content = "Kтр ВН";
                 lblEndHighNode_T.Content = "Конец";
@@ -162,9 +159,6 @@ namespace Power_Equipment_Handbook
             }
             else if (cmbType_T.SelectedValue == cmbType_T.Items[1])
             {
-                txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
-                cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-
                 txtKH_KML_T.Text = "1";
                 grpMid.Visibility = grpLow.Visibility = Visibility.Visible;
                 lblKH_KML_T.Content = "Kтр В(Ктр С-Н)";
@@ -179,9 +173,9 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void CmbType_T_DropDownClosed(object sender, EventArgs e)
         {
-            cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-            txtStartNode_T.SelectedItem = txtStartNode_T.SelectedItem;
-            if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToInt32(cmbUnom_T.Text), db_prv);
+            int state = txtStartNode_T.SelectedIndex;
+            txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
+            if(cmbUnom_T.Text != "") GetData("Trans", Convert.ToInt32(cmbUnom_T.Text), db_prv);
         }
 
         /// <summary>
@@ -231,6 +225,7 @@ namespace Power_Equipment_Handbook
                 txtPn_N.Clear(); txtQn_N.Clear(); txtPg_N.Clear(); txtQg_N.Clear();
                 txtQmin_N.Clear(); txtQmax_N.Clear(); txtVzd_N.Clear(); txtBsh_N.Clear();
                 txtRegion_N.Clear();
+                txtState_N.Text = "0";
 
                 Log.Clear();
 
@@ -283,10 +278,11 @@ namespace Power_Equipment_Handbook
                 txtEndNode_L.SelectedIndex = -1;
                 cmbTypeName_L.SelectedIndex = -1;
                 txtName_L.Clear(); txtLength_L.Clear();
-                txtr0_L.Clear(); txtx0_L.Clear(); txtb0_L.Clear(); txtg0_L.Clear();
+                txtr0_L.DataContext = ""; txtx0_L.DataContext = ""; txtb0_L.DataContext = ""; txtg0_L.DataContext = "";
                 txtR_L.Clear(); txtX_L.Clear(); txtB_L.Clear(); txtG_L.Clear();
-                txtNpar_L.Clear(); txtIdd_L.Clear();
+                txtNpar_L.Clear(); txtIdd_L.DataContext = "";
                 txtRegion_L.Clear();
+                txtState_L.Text = "0";
 
                 Log.Clear();
 
@@ -340,10 +336,11 @@ namespace Power_Equipment_Handbook
                     txtEndHighNode_T.SelectedIndex = -1;
                     cmbTypeName_T.SelectedIndex = -1;
                     txtName_T.Clear();
-                    txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear();
+                    txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = "";
                     txtKH_KML_T.Clear();
-                    txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
+                    txtRH_T.DataContext = ""; txtXH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.DataContext = "";
                     txtRegion_T.Clear();
+                    txtState_T.Text = "0";
 
                     Log.Clear();
 
@@ -411,7 +408,7 @@ namespace Power_Equipment_Handbook
                     bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
                     bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
 
-                    if (result1 == true && result2 == true && result3 == true)
+                    if (result1 == true & result2 == true & result3 == true)
                     {
                         track.AddBranch(br1);
                         track.AddBranch(br2);
@@ -426,11 +423,12 @@ namespace Power_Equipment_Handbook
                     txtEndHighNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1;
                     cmbTypeName_T.SelectedIndex = -1;
                     txtName_T.Clear();
-                    txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); txtUnomMid_T.Clear(); txtUnomLow_T.Clear();
-                    txtKH_KML_T.Clear(); txtKHM_T.Clear(); txtKHL_T.Clear();
-                    txtRH_T.Clear(); txtXH_T.Clear(); txtGH_T.Clear(); txtBH_T.Clear();
-                    txtRM_T.Clear(); txtXM_T.Clear(); txtRL_T.Clear(); txtXL_T.Clear();
+                    txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = ""; txtUnomMid_T.DataContext = ""; txtUnomLow_T.DataContext = "";
+                    txtKH_KML_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKHL_T.DataContext = "";
+                    txtRH_T.DataContext = ""; txtXH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.DataContext = "";
+                    txtRM_T.DataContext = ""; txtXM_T.DataContext = ""; txtRL_T.DataContext = ""; txtXL_T.DataContext = "";
                     txtRegion_T.Clear();
+                    txtState_T.Text = "0";
 
                     Log.Clear();
 
