@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Globalization;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.IO;
 using System.Xml.Serialization;
-using System.Xml;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Threading.Tasks;
 
 namespace Power_Equipment_Handbook.src
 {
@@ -40,7 +34,7 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public void toXML()
         {
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate
+            Task.Run(()=>
             {
                 XmlSerializer serializer = new XmlSerializer(type: typeof(DataGridTracker));
 
@@ -77,10 +71,12 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public void toXLSX()
         {
-            FileInfo fileInfo = new FileInfo(filename);
-
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate
+            Task.Run(()=> 
             {
+                FileInfo fileInfo = new FileInfo(filename);
+
+                if(fileInfo.Exists) fileInfo.Delete();
+
                 using(ExcelPackage p = new ExcelPackage(fileInfo))
                 {
                     var wb = p.Workbook;
@@ -90,52 +86,24 @@ namespace Power_Equipment_Handbook.src
 
                     #region Excel PreDesign
 
-                    sheetNodes.Cells[1, 1].Value = "O";
-                    sheetNodes.Cells[1, 2].Value = "S";
-                    sheetNodes.Cells[1, 3].Value = "Тип";
-                    sheetNodes.Cells[1, 4].Value = "Номер";
-                    sheetNodes.Cells[1, 5].Value = "Название";
-                    sheetNodes.Cells[1, 6].Value = "U_nom";
-                    sheetNodes.Cells[1, 7].Value = "N_схн";
-                    sheetNodes.Cells[1, 8].Value = "Район";
-                    sheetNodes.Cells[1, 9].Value = "P_н";
-                    sheetNodes.Cells[1, 10].Value = "Q_н";
-                    sheetNodes.Cells[1, 11].Value = "P_г";
-                    sheetNodes.Cells[1, 12].Value = "Q_г";
-                    sheetNodes.Cells[1, 13].Value = "V_зд";
-                    sheetNodes.Cells[1, 14].Value = "Q_min";
-                    sheetNodes.Cells[1, 15].Value = "Q_max";
-                    sheetNodes.Cells[1, 16].Value = "B_ш";
-                    sheetNodes.Cells[1, 17].Value = "V";
-                    sheetNodes.Cells[1, 18].Value = "Delta";
-                    sheetNodes.Cells[1, 19].Value = "Район2";
-                    //sheetNodes.Cells[1,1,1,19].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center; //Выравнивание по центру содержимого
-                    //sheetNodes.Cells[1, 1, 1, 19].Style.Border.BorderAround(ExcelBorderStyle.Thin);         //Отрисовка границ
-
-
-                    sheetBranches.Cells[1, 1].Value = "O";
-                    sheetBranches.Cells[1, 2].Value = "S";
-                    sheetBranches.Cells[1, 3].Value = "Тип";
-                    sheetBranches.Cells[1, 4].Value = "N_нач";
-                    sheetBranches.Cells[1, 5].Value = "N_кон";
-                    sheetBranches.Cells[1, 6].Value = "N_п";
-                    sheetBranches.Cells[1, 7].Value = "ID Группы";
-                    sheetBranches.Cells[1, 8].Value = "Название";
-                    sheetBranches.Cells[1, 9].Value = "R";
-                    sheetBranches.Cells[1, 10].Value = "X";
-                    sheetBranches.Cells[1, 11].Value = "G";
-                    sheetBranches.Cells[1, 12].Value = "B";
-                    sheetBranches.Cells[1, 13].Value = "Kт/r";
-                    sheetBranches.Cells[1, 14].Value = "N_анц";
-                    sheetBranches.Cells[1, 15].Value = "БД_нач";
-                    sheetBranches.Cells[1, 16].Value = "P_нач";
-                    sheetBranches.Cells[1, 17].Value = "Q_нач";
-                    sheetBranches.Cells[1, 18].Value = "Na";
-                    sheetBranches.Cells[1, 19].Value = "I max";
-                    sheetBranches.Cells[1, 20].Value = "I загр.";
-                    sheetBranches.Cells[1, 21].Value = "Idop_25";
-                    sheetBranches.Cells[1, 1, 1, 21].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;   //Выравнивание по центру содержимого
-                    sheetBranches.Cells[1, 1, 1, 21].Style.Border.BorderAround(ExcelBorderStyle.Thin);              //Отрисовка границ
+                    string[] lblNode = new string[] { "O", "S", "Тип", "Номер", "Название" , "U_nom", "N_схн" , "Район" , "P_н" ,
+                                                      "Q_н", "P_г", "Q_г", "V_зд", "Q_min", "Q_max", "B_ш", "V", "Delta", "Район2"};
+                    string[] lblBranch = new string[] { "O", "S", "Тип", "N_нач", "N_кон", "N_п", "ID Группы", "Название", "R", "X", "G", "B",
+                                                        "Kт/r", "N_анц", "БД_нач", "P_нач", "Q_нач", "Na", "I max", "I загр.", "Idop_25"};
+                    //Подготовка узлов
+                    for(int i = 1; i < 20; i++)
+                    {
+                        sheetNodes.Cells[1, i].Value = lblNode[i - 1];
+                        sheetNodes.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        sheetNodes.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
+                    }
+                    //Подготовка ветвей
+                    for(int i = 1; i < 22; i++)
+                    {
+                        sheetBranches.Cells[1, i].Value = lblBranch[i - 1];
+                        sheetBranches.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        sheetBranches.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
+                    }
 
                     #endregion Excel PreDesign
 
@@ -166,17 +134,11 @@ namespace Power_Equipment_Handbook.src
                         {
                             sheetNodes.Cells[i, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                             sheetNodes.Cells[i, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                            sheetNodes.Cells[i+1, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                            sheetNodes.Cells[i+1, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-
-                            if(i == 1)
-                            {
-                                sheetNodes.Cells[i, j].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                sheetNodes.Cells[i, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
-                            }
+                            sheetNodes.Cells[i + 1, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            sheetNodes.Cells[i + 1, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                         }
                     }
-
+                    //Цикл по ветвям схемы
                     for(int i = 1; i <= track.Branches.Count; i++)
                     {
                         sheetBranches.Cells[i + 1, 1].Value = String.Empty;
@@ -199,7 +161,7 @@ namespace Power_Equipment_Handbook.src
                         sheetBranches.Cells[i + 1, 18].Value = String.Empty;
                         sheetBranches.Cells[i + 1, 19].Value = String.Empty;
                         sheetBranches.Cells[i + 1, 20].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 21].Value = track.Branches[i - 1].Idd/1000;
+                        sheetBranches.Cells[i + 1, 21].Value = track.Branches[i - 1].Idd / 1000;
 
                         for(int j = 1; j < 22; j++)
                         {
@@ -207,12 +169,6 @@ namespace Power_Equipment_Handbook.src
                             sheetBranches.Cells[i, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                             sheetBranches.Cells[i + 1, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                             sheetBranches.Cells[i + 1, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-
-                            if(i == 1)
-                            {
-                                sheetBranches.Cells[i, j].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                sheetBranches.Cells[i, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
-                            }
                         }
                     }
 
