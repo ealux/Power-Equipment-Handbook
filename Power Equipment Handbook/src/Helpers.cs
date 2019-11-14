@@ -423,53 +423,53 @@ namespace Power_Equipment_Handbook
             }
 
             List<int> imutNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList(); //Список узлов
-            var branches = track.Branches.Distinct(new BranchEqualityComparer()).ToList();          //Список уникальных ветвей
+            var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b=>b.Start).ToList();          //Список уникальных ветвей
 
-            ObservableCollection<int> exNodes = new ObservableCollection<int>(imutNodes);  //Список узлов для исключения
+            List<int> exNodes = new List<int>(imutNodes);  //Список узлов для исключения
             //List<Branch> exBranches = new List<Branch>(branches);  //Список ветвей для исключения
 
-            for(int i = 0; i < imutNodes.Count; i++)
-            {
-                if(!branches.Any(b => (b.Start == imutNodes[i]) | (b.End == imutNodes[i]))) return false;
-                if(exNodes.Contains(imutNodes[i])) exNodes.Remove(imutNodes[i]);
+            //for(int i = 0; i < imutNodes.Count; i++)
+            //{
+            //if(!exNodes.Contains(imutNodes[i])) continue;
+            if(!branches.Any(b => (b.Start == imutNodes[0]) | (b.End == imutNodes[0]))) return false;
 
-                List<int> linked = new List<int>();
-                foreach(var b in branches)
+            exNodes.Remove(imutNodes[0]);
+
+            List<int> linked = new List<int>();
+            foreach(var b in branches) { if(b.Start == imutNodes[0]) linked.Add(b.End); else if(b.End == imutNodes[0]) linked.Add(b.Start); }
+
+            if(RecurseFinder(linked, ref exNodes)) return false;
+            //}
+
+            bool RecurseFinder(List<int> Linked, ref List<int> Exnodes)
+            {
+                bool flag = false;
+
+                foreach(int j in Linked)
                 {
-                    if(b.Start == imutNodes[i]) linked.Add(b.End);
-                    else if(b.End == imutNodes[i]) linked.Add(b.Start);
+                    if(Exnodes.Contains(j)) Exnodes.Remove(j);
                 }
 
-                RecurseFinder(linked);
+                if(exNodes.Count == 0) return false;
 
-                if(exNodes.Count == 0) return true;
-            }
-
-            void RecurseFinder(List<int> linked)
-            {
-                foreach(int j in linked)
+                foreach(int link in Linked)
                 {
-                    if(exNodes.Contains(j)) exNodes.Remove(j);
-                }
+                    List<int> linker = new List<int>();
 
-                if(exNodes.Count == 0) return;
-
-                List<int> linker = new List<int>();
-
-                foreach(int link in linked)
-                {
                     foreach(var b in branches)
                     {
-                        if(b.Start == link & exNodes.Contains(b.End)) linker.Add(b.End);
-                        else if(b.End == link & exNodes.Contains(b.Start)) linker.Add(b.Start);
+                        if(b.Start == link & Exnodes.Contains(b.End)) linker.Add(b.End);
+                        else if(b.End == link & Exnodes.Contains(b.Start)) linker.Add(b.Start);
                     }
 
-                    if(linker.Count != 0) RecurseFinder(new List<int>(linker));
-                    else return;
+                    if(linker.Count != 0) flag = RecurseFinder(new List<int>(linker), ref Exnodes);
+                    else flag = true;
                 }
+
+                return flag;
             }
 
-            return false;
+            return true;
         }
 
         #endregion Power Network Methods
@@ -488,11 +488,11 @@ namespace Power_Equipment_Handbook
             }
 
             //TESTER
-            Stopwatch sw = Stopwatch.StartNew(); //STOPWATCH
-            sw.Start(); //STOPWATCH
+            //Stopwatch sw = Stopwatch.StartNew(); //STOPWATCH
+            //sw.Start(); //STOPWATCH
             bool p = Connectivity();
-            sw.Stop();
-            MessageBox.Show(sw.ElapsedMilliseconds.ToString());
+            //sw.Stop();
+            //MessageBox.Show(sw.ElapsedMilliseconds.ToString());
             MessageBox.Show(p.ToString());
             //TESTER
 
