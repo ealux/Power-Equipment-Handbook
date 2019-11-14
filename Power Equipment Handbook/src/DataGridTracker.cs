@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -739,4 +740,25 @@ namespace Power_Equipment_Handbook.src
 
         #endregion INotifyPropertyChanged interface block
     }
+
+    #region IEqualityComparer interface block
+
+    /// <summary>
+    /// IEqualityComparer fo Branches
+    /// </summary>
+    class BranchEqualityComparer : IEqualityComparer<Branch>
+    {
+        public bool Equals(Branch b1, Branch b2)
+        {
+            
+            return (b1.Start == b2.Start) & (b1.End == b2.End);
+        }
+
+        public int GetHashCode(Branch obj)
+        {
+            return obj.Start.GetHashCode()^obj.End.GetHashCode()^obj.Type.GetHashCode();
+        }
+    }
+
+    #endregion IEqualityComparer interface block
 }

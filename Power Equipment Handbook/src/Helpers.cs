@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace Power_Equipment_Handbook
 {
@@ -415,19 +416,60 @@ namespace Power_Equipment_Handbook
         /// </summary>
         public bool Connectivity()
         {
-            if(track.Nodes.Count == 0)
+            if(track.Nodes.Count == 0 || track.Branches.Count == 0)
             {
-                MessageBox.Show("Отсутствуют узлы!");
-                return false;
-            }
-            if(track.Branches.Count == 0)
-            {
-                MessageBox.Show("Отсутствуют ветви!");
+                //MessageBox.Show("Отсутствуют узлы или ветви!");
                 return false;
             }
 
-            //TODO
-            return true;
+            List<int> imutNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList(); //Список узлов
+            var branches = track.Branches.Distinct(new BranchEqualityComparer()).ToList();          //Список уникальных ветвей
+
+            ObservableCollection<int> exNodes = new ObservableCollection<int>(imutNodes);  //Список узлов для исключения
+            //List<Branch> exBranches = new List<Branch>(branches);  //Список ветвей для исключения
+
+            for(int i = 0; i < imutNodes.Count; i++)
+            {
+                if(!branches.Any(b => (b.Start == imutNodes[i]) | (b.End == imutNodes[i]))) return false;
+                if(exNodes.Contains(imutNodes[i])) exNodes.Remove(imutNodes[i]);
+
+                List<int> linked = new List<int>();
+                foreach(var b in branches)
+                {
+                    if(b.Start == imutNodes[i]) linked.Add(b.End);
+                    else if(b.End == imutNodes[i]) linked.Add(b.Start);
+                }
+
+                RecurseFinder(linked);
+
+                if(exNodes.Count == 0) return true;
+            }
+
+            void RecurseFinder(List<int> linked)
+            {
+                foreach(int j in linked)
+                {
+                    if(exNodes.Contains(j)) exNodes.Remove(j);
+                }
+
+                if(exNodes.Count == 0) return;
+
+                List<int> linker = new List<int>();
+
+                foreach(int link in linked)
+                {
+                    foreach(var b in branches)
+                    {
+                        if(b.Start == link & exNodes.Contains(b.End)) linker.Add(b.End);
+                        else if(b.End == link & exNodes.Contains(b.Start)) linker.Add(b.Start);
+                    }
+
+                    if(linker.Count != 0) RecurseFinder(new List<int>(linker));
+                    else return;
+                }
+            }
+
+            return false;
         }
 
         #endregion Power Network Methods
@@ -444,6 +486,15 @@ namespace Power_Equipment_Handbook
                 Log.Show("Отсутствуют узлы/ветви!");
                 return;
             }
+
+            //TESTER
+            Stopwatch sw = Stopwatch.StartNew(); //STOPWATCH
+            sw.Start(); //STOPWATCH
+            bool p = Connectivity();
+            sw.Stop();
+            MessageBox.Show(sw.ElapsedMilliseconds.ToString());
+            MessageBox.Show(p.ToString());
+            //TESTER
 
             SaveFileDialog sfd = new SaveFileDialog
             {
