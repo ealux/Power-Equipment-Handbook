@@ -416,45 +416,38 @@ namespace Power_Equipment_Handbook
         /// </summary>
         public bool Connectivity()
         {
-            if(track.Nodes.Count == 0 || track.Branches.Count == 0)
-            {
-                //MessageBox.Show("Отсутствуют узлы или ветви!");
-                return false;
-            }
+            if(track.Nodes.Count == 0 || track.Branches.Count == 0) return false;                                   //Отсутствие узлов или ветвей
 
-            List<int> imutNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList(); //Список узлов
-            var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b=>b.Start).ToList();          //Список уникальных ветвей
+            var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b=>b.Start).ToList();      //Список уникальных ветвей
 
-            List<int> exNodes = new List<int>(imutNodes);  //Список узлов для исключения
-            //List<Branch> exBranches = new List<Branch>(branches);  //Список ветвей для исключения
+            var exNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList();                        //Список узлов для исключения
 
-            //for(int i = 0; i < imutNodes.Count; i++)
-            //{
-            //if(!exNodes.Contains(imutNodes[i])) continue;
-            if(!branches.Any(b => (b.Start == imutNodes[0]) | (b.End == imutNodes[0]))) return false;
-
-            exNodes.Remove(imutNodes[0]);
+            if(!branches.Any(b => (b.Start == exNodes[0]) | (b.End == exNodes[0]))) return false;                   //Отлов узлов-сирот (для первого узла)
 
             List<int> linked = new List<int>();
-            foreach(var b in branches) { if(b.Start == imutNodes[0]) linked.Add(b.End); else if(b.End == imutNodes[0]) linked.Add(b.Start); }
 
-            if(RecurseFinder(linked, ref exNodes)) return false;
-            //}
+            foreach(var b in branches) { if(b.Start == exNodes[0]) linked.Add(b.End); else if(b.End == exNodes[0]) linked.Add(b.Start); } //Формирование списка связности для первого узла
 
-            bool RecurseFinder(List<int> Linked, ref List<int> Exnodes)
+            exNodes.Remove(exNodes[0]); //Исключение первого узла из списка узлов (список - индикатор)
+
+            RecurseFinder(linked, ref exNodes);
+
+            if(exNodes.Count == 0) return true;
+
+            return false;
+
+            void RecurseFinder(List<int> Linked, ref List<int> Exnodes) //Рекурсивная функция обхода графа в глубину
             {
-                bool flag = false;
-
                 foreach(int j in Linked)
                 {
                     if(Exnodes.Contains(j)) Exnodes.Remove(j);
                 }
 
-                if(exNodes.Count == 0) return false;
+                if(Exnodes.Count == 0) return;
 
                 foreach(int link in Linked)
                 {
-                    List<int> linker = new List<int>();
+                    var linker = new List<int>();
 
                     foreach(var b in branches)
                     {
@@ -462,14 +455,9 @@ namespace Power_Equipment_Handbook
                         else if(b.End == link & Exnodes.Contains(b.Start)) linker.Add(b.Start);
                     }
 
-                    if(linker.Count != 0) flag = RecurseFinder(new List<int>(linker), ref Exnodes);
-                    else flag = true;
+                    if(linker.Count != 0) RecurseFinder(new List<int>(linker), ref Exnodes);
                 }
-
-                return flag;
             }
-
-            return true;
         }
 
         #endregion Power Network Methods
@@ -486,15 +474,6 @@ namespace Power_Equipment_Handbook
                 Log.Show("Отсутствуют узлы/ветви!");
                 return;
             }
-
-            //TESTER
-            //Stopwatch sw = Stopwatch.StartNew(); //STOPWATCH
-            //sw.Start(); //STOPWATCH
-            bool p = Connectivity();
-            //sw.Stop();
-            //MessageBox.Show(sw.ElapsedMilliseconds.ToString());
-            MessageBox.Show(p.ToString());
-            //TESTER
 
             SaveFileDialog sfd = new SaveFileDialog
             {

@@ -267,6 +267,8 @@
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
+                    <TextBox x:Name="txtN_L" HorizontalAlignment="Left" Height="22" Margin="901,186,0,0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="3" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Grid.Column="2" Text="1" />
+                    <Label x:Name="lblN_L" Content="Количество" HorizontalAlignment="Left" Margin="885,155,0,0" VerticalAlignment="Top" Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" />
                     <TextBox x:Name="txtNpar_L" HorizontalAlignment="Left" Height="22" Margin="878,71,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="3" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Grid.Column="2" />
                     <Label x:Name="lblNpar_L" Content="Номер&#xA;парал." HorizontalAlignment="Left" Margin="875,36,0,0" VerticalAlignment="Top" Height="40" FontSize="10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.Column="2" />
                     <TextBox x:Name="txtIdd_L" Text="{Binding Idd, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="930,71,0,0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="2" />
@@ -276,8 +278,8 @@
                     <Label x:Name="lblState_L" Content="Состояние" HorizontalAlignment="Left" Margin="-1,18,0,0" VerticalAlignment="Top" Height="24" />
                     <TextBox x:Name="txtRegion_L" HorizontalAlignment="Left" Height="22" Margin="72,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" />
                     <Label x:Name="lblRegion_L" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24" />
-                    <Label x:Name="lblSource_L" Content="{Binding Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,183,839,10" Grid.ColumnSpan="3" />
-                    <Label Content="Источник: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,183,0,0" />
+                    <Label x:Name="lblSource_L" Content="{Binding Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,185,839,8" Grid.ColumnSpan="3" />
+                    <Label Content="Источник: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,185,0,0" />
                 </Grid>
             </TabItem>
             <TabItem x:Name="Tab_Trans" Header="Трансформатор" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129">
