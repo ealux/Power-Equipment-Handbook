@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -240,7 +241,7 @@ namespace Power_Equipment_Handbook
         {
             int start = default(int);
             int end = default(int);
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 if (txtStartNode_L.Text == "" || txtStartNode_L.Text == null) { ChangeCmbColor(txtStartNode_L, true); } else { start = int.Parse(txtStartNode_L.Text); }
                 if (txtEndNode_L.Text == "" || txtEndNode_L.Text == null) { ChangeCmbColor(txtEndNode_L, true); Log.Show("Ошибка ввода узлов Линии!"); return; } else { end = int.Parse(txtEndNode_L.Text); }
@@ -263,14 +264,21 @@ namespace Power_Equipment_Handbook
                 double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
                 int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
 
-                Branch br = new Branch(start: start, end: end, type: type,
-                                           state: state, typename: typename, name: name, npar: npar,
-                                           r: r, x: x, b: b, g: g,
-                                           ktr: ktr, idd: idd, region: region);
+                int quant = (string.IsNullOrWhiteSpace(txtN_L.Text) || int.Parse(txtN_L.Text) <= 0) ? 1 : int.Parse(txtN_L.Text); //Количество вводимых ветвей
+                int i = 0;
 
-                if (BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
-                else return;
+                do
+                {
+                    Branch br = new Branch(start: start, end: end, type: type,
+                                        state: state, typename: typename, name: name, npar: npar,
+                                        r: r, x: x, b: b, g: g,
+                                        ktr: ktr, idd: idd, region: region);
+                    if(BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
+                    else return;
+                    i++;
 
+                } while(i < quant);
+                
                 Tab_Data.SelectedIndex = 1;
 
                 #region Clear controls
@@ -283,6 +291,7 @@ namespace Power_Equipment_Handbook
                 txtNpar_L.Clear(); txtIdd_L.DataContext = "";
                 txtRegion_L.Clear();
                 txtState_L.Text = "0";
+                txtN_L.Text = "1";
 
                 Log.Clear();
 
@@ -321,13 +330,20 @@ namespace Power_Equipment_Handbook
                     double idd = 0;
                     int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
 
-                    Branch br = new Branch(start: start, end: end, type: type,
+                    int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
+                    int i = 0;
+
+                    do
+                    {
+                        Branch br = new Branch(start: start, end: end, type: type,
                                            state: state, typename: typename, name: name, npar: npar,
                                            r: r, x: x, b: b, g: g,
                                            ktr: ktr, idd: idd, region: region);
+                        if(BranchChecker(br, txtStartNode_T, txtEndHighNode_T) == true) track.AddBranch(br);
+                        else return;
+                        i++;
 
-                    if (BranchChecker(br, txtStartNode_T, txtEndHighNode_T) == true) track.AddBranch(br);
-                    else return;
+                    } while(i < quant);                    
 
                     Tab_Data.SelectedIndex = 1;
 
@@ -341,6 +357,7 @@ namespace Power_Equipment_Handbook
                     txtRH_T.DataContext = ""; txtXH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.DataContext = "";
                     txtRegion_T.Clear();
                     txtState_T.Text = "0";
+                    txtN_T.Text = "1";
 
                     Log.Clear();
 
@@ -389,32 +406,41 @@ namespace Power_Equipment_Handbook
                     double idd = 0;
                     int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
 
-                    Branch br1 = new Branch(start: start, end: endH, type: type,
+                    int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
+                    int i = 0;
+
+                    do
+                    {
+
+                        Branch br1 = new Branch(start: start, end: endH, type: type,
                                            state: state, typename: typename, name: nameH, npar: npar,
                                            r: rH, x: xH, b: bH, g: gH,
                                            ktr: ktrH, idd: idd, region: region);
 
-                    Branch br2 = new Branch(start: endH, end: endM, type: type,
-                                           state: state, typename: typename, name: nameM, npar: npar,
-                                           r: rM, x: xM, b: bM, g: gM,
-                                           ktr: ktrM, idd: idd, region: region);
+                        Branch br2 = new Branch(start: endH, end: endM, type: type,
+                                               state: state, typename: typename, name: nameM, npar: npar,
+                                               r: rM, x: xM, b: bM, g: gM,
+                                               ktr: ktrM, idd: idd, region: region);
 
-                    Branch br3 = new Branch(start: endH, end: endL, type: type,
-                                           state: state, typename: typename, name: nameL, npar: npar,
-                                           r: rL, x: xL, b: bL, g: gL,
-                                           ktr: ktrL, idd: idd, region: region);
+                        Branch br3 = new Branch(start: endH, end: endL, type: type,
+                                               state: state, typename: typename, name: nameL, npar: npar,
+                                               r: rL, x: xL, b: bL, g: gL,
+                                               ktr: ktrL, idd: idd, region: region);
 
-                    bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
-                    bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
-                    bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
+                        bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
+                        bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
+                        bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
 
-                    if (result1 == true & result2 == true & result3 == true)
-                    {
-                        track.AddBranch(br1);
-                        track.AddBranch(br2);
-                        track.AddBranch(br3);
-                    }
-                    else return;
+                        if(result1 == true & result2 == true & result3 == true)
+                        {
+                            track.AddBranch(br1);
+                            track.AddBranch(br2);
+                            track.AddBranch(br3);
+                        }
+                        else return;
+                        i++;
+
+                    } while(i < quant);
 
                     Tab_Data.SelectedIndex = 1;
 
@@ -429,6 +455,7 @@ namespace Power_Equipment_Handbook
                     txtRM_T.DataContext = ""; txtXM_T.DataContext = ""; txtRL_T.DataContext = ""; txtXL_T.DataContext = "";
                     txtRegion_T.Clear();
                     txtState_T.Text = "0";
+                    txtN_T.Text = "1";
 
                     Log.Clear();
 
@@ -783,6 +810,7 @@ namespace Power_Equipment_Handbook
                         txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
                         txtState_L.Text = "0";
                         txtRegion_L.Text = "";
+                        txtN_L.Text = "1";
                         break;
                     case 2: //Трансформаторы
                         state = cmbType_T.SelectedIndex;
@@ -801,6 +829,7 @@ namespace Power_Equipment_Handbook
                         txtBH_T.DataContext = ""; txtGH_T.DataContext = "";
                         txtState_T.Text = "0";
                         txtRegion_T.Text = "";
+                        txtN_T.Text = "1";
                         break;
                     case 3: //Выключатели
                         state = cmbUnom_B.SelectedIndex;

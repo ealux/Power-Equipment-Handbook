@@ -176,14 +176,21 @@ namespace Power_Equipment_Handbook
         private bool BranchChecker(Branch br, object cmbStart, object cmbEnd)
         {
             bool result = NodeChecker(br, cmbStart, cmbEnd);
-            if(result)
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
-                var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
-                if(other.Count > 0) { Log.Show("Узлы начала и конца совпадают для ветви другого типа!"); return false; }
+                if(result)
+                {
+                    var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
+                    if(other.Count > 0)
+                    { Log.Show("Узлы начала и конца совпадают для ветви другого типа!");
+                      result = false;
+                      return;
+                    }
 
-                other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
-                if(other != null && other.Count > 0) { Log.Show("Добавлена паралельная ветвь", LogClass.LogType.Information); ; br.Npar = other[0].Npar + 1; }
-            }
+                    other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
+                    if(other != null & other.Count > 0) { Log.Show("Добавлена паралельная ветвь", LogClass.LogType.Information); ; br.Npar = other[0].Npar + 1; }
+                }
+            });
             return result;
         }
 
