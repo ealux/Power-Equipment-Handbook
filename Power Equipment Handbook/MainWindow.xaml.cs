@@ -184,7 +184,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void BtnAdd_N_Click(object sender, RoutedEventArgs e)
         {
-            int number = default(int);
+            int number = default;
             Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 if(cmbUnom_N.Text =="" || cmbUnom_N.SelectedIndex == -1) { Log.Show("Класс напряжения не выбран!"); return; }
@@ -192,7 +192,7 @@ namespace Power_Equipment_Handbook
                 if (txtNumber_N.Text == "" || txtNumber_N.Text == null) { ChangeTxtColor(txtNumber_N, true); Log.Show("Введите номер узла!"); return; } else { number = int.Parse(txtNumber_N.Text); }
                 int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
                 string type = txtType_N.Text;
-                int unom = (string.IsNullOrWhiteSpace(cmbUnom_N.Text) || int.Parse(cmbUnom_N.Text) == 0) ? 0 : int.Parse(cmbUnom_N.Text);
+                double unom = (string.IsNullOrWhiteSpace(cmbUnom_N.Text) || double.Parse(cmbUnom_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(cmbUnom_N.Text, CultureInfo.InvariantCulture);
                 string name = txtName_N.Text;
                 double p_n = (string.IsNullOrWhiteSpace(txtPn_N.Text) || double.Parse(txtPn_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtPn_N.Text, CultureInfo.InvariantCulture);
                 double q_n = (string.IsNullOrWhiteSpace(txtQn_N.Text) || double.Parse(txtQn_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQn_N.Text, CultureInfo.InvariantCulture);
@@ -239,8 +239,8 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void BtnAdd_L_Click(object sender, RoutedEventArgs e)
         {
-            int start = default(int);
-            int end = default(int);
+            int start = default;
+            int end = default;
             Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 if (txtStartNode_L.Text == "" || txtStartNode_L.Text == null) { ChangeCmbColor(txtStartNode_L, true); } else { start = int.Parse(txtStartNode_L.Text); }
@@ -248,8 +248,8 @@ namespace Power_Equipment_Handbook
                 if (txtStartNode_L.Text == txtEndNode_L.Text) { ChangeCmbColor(txtStartNode_L, true); ChangeCmbColor(txtEndNode_L, true); Log.Show("Узлы начала и конца совпали!"); return; }
                 else { ChangeCmbColor(txtStartNode_L, false); ChangeCmbColor(txtEndNode_L, false); }
 
-                if (start == default(int)) { ChangeCmbColor(txtStartNode_L, true); return; }
-                if (end == default(int)) { ChangeCmbColor(txtEndNode_L, true); return; }
+                if (start == default) { ChangeCmbColor(txtStartNode_L, true); return; }
+                if (end == default) { ChangeCmbColor(txtEndNode_L, true); return; }
 
                 int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
                 string type = "ЛЭП";
@@ -308,14 +308,14 @@ namespace Power_Equipment_Handbook
             {
                 if (cmbType_T.Text == "двух.")
                 {
-                    int start = default(int);
-                    int end = default(int);
+                    int start = default;
+                    int end = default;
                     if (txtStartNode_T.Text == "" || txtStartNode_T.Text == null) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
                     if (txtEndHighNode_T.Text == "" || txtEndHighNode_T.Text == null) { ChangeCmbColor(txtEndHighNode_T, true); } else { end = int.Parse(txtEndHighNode_T.Text); }
                     if (txtStartNode_T.Text == txtEndHighNode_T.Text) { ChangeCmbColor(txtStartNode_T, true); ChangeCmbColor(txtEndHighNode_T, true); return; }
 
-                    if (start == default(int)) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (end == default(int)) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (start == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (end == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
 
                     int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
                     string type = "Тр-р";
@@ -367,19 +367,19 @@ namespace Power_Equipment_Handbook
                 }
                 else if (cmbType_T.Text == "тр./АТ")
                 {
-                    int start = default(int);
-                    int endH = default(int);
-                    int endM = default(int);
-                    int endL = default(int);
+                    int start = default;
+                    int endH = default;
+                    int endM = default;
+                    int endL = default;
                     if (txtStartNode_T.Text == "" || txtStartNode_T.Text == null) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
                     if (txtEndHighNode_T.Text == "" || txtEndHighNode_T.Text == null) { ChangeCmbColor(txtEndHighNode_T, true); } else { endH = int.Parse(txtEndHighNode_T.Text); }
                     if (txtEndMidNode_T.Text == "" || txtEndMidNode_T.Text == null) { ChangeCmbColor(txtEndMidNode_T, true); } else { endM = int.Parse(txtEndMidNode_T.Text); }
                     if (txtEndLowNode_T.Text == "" || txtEndLowNode_T.Text == null) { ChangeCmbColor(txtEndLowNode_T, true); } else { endL = int.Parse(txtEndLowNode_T.Text); }
 
-                    if (start == default(int)) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endH == default(int)) { ChangeCmbColor(txtEndHighNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endM == default(int)) { ChangeCmbColor(txtEndMidNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endL == default(int)) { ChangeCmbColor(txtEndLowNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (start == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (endH == default) { ChangeCmbColor(txtEndHighNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (endM == default) { ChangeCmbColor(txtEndMidNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
+                    if (endL == default) { ChangeCmbColor(txtEndLowNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
 
                     int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
                     string type = "Тр-р";
@@ -471,8 +471,8 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void BtnAdd_B_Click(object sender, RoutedEventArgs e)
         {
-            int start = default(int);
-            int end = default(int);
+            int start = default;
+            int end = default;
             Application.Current.Dispatcher.Invoke((Action)delegate ()
             {
                 if(txtStartNode_B.Text == "" || txtStartNode_B.Text == null) { ChangeCmbColor(txtStartNode_B, true); } else { start = int.Parse(txtStartNode_B.Text); }
@@ -480,8 +480,8 @@ namespace Power_Equipment_Handbook
                 if(txtStartNode_B.Text == txtEndNode_B.Text) { ChangeCmbColor(txtStartNode_B, true); ChangeCmbColor(txtEndNode_B, true); Log.Show("Узлы начала и конца совпали!"); return; }
                 else { ChangeCmbColor(txtStartNode_B, false); ChangeCmbColor(txtEndNode_B, false); }
 
-                if(start == default(int)) { ChangeCmbColor(txtStartNode_B, true); return; }
-                if(end == default(int)) { ChangeCmbColor(txtEndNode_B, true); return; }
+                if(start == default) { ChangeCmbColor(txtStartNode_B, true); return; }
+                if(end == default) { ChangeCmbColor(txtEndNode_B, true); return; }
 
                 int state = (string.IsNullOrWhiteSpace(txtState_B.Text) || int.Parse(txtState_B.Text) == 0) ? 0 : 1;
                 string type = "Выкл.";
@@ -531,7 +531,10 @@ namespace Power_Equipment_Handbook
                     Lines.Clear();
                     return;
                 }
-                GetData("Line", Convert.ToInt32((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
+                if((cmb.SelectedItem as ListBoxItem).Content.ToString() == "0.4") GetData("Line", 0.4, db_prv);
+                else if ((cmb.SelectedItem as ListBoxItem).Content.ToString() == "27.5") GetData("Line", 27.5, db_prv);
+                else { GetData("Line", Convert.ToInt32((cmbUnom_L.SelectedItem as ListBoxItem).Content.ToString()), db_prv); }
+                
             }
             if (cmb.Equals(cmbUnom_T))
             {
@@ -541,7 +544,7 @@ namespace Power_Equipment_Handbook
                     MultiTrans.Clear();
                     return;
                 }
-                GetData("Trans", Convert.ToInt32((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
+                GetData("Trans", double.Parse((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
             }
         }
 
@@ -577,7 +580,7 @@ namespace Power_Equipment_Handbook
                     txtEndNode_L.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
                     txtEndNode_L.DisplayMemberPath = "Number";
 
-                    int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                    double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                     foreach (ListBoxItem i in cmbUnom_L.Items)
                     {
                         if (i.Content.ToString() == unom.ToString())
@@ -632,7 +635,7 @@ namespace Power_Equipment_Handbook
                         txtEndHighNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
                         txtEndHighNode_T.DisplayMemberPath = "Number";
 
-                        int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                        double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                         foreach (ListBoxItem i in cmbUnom_T.Items)
                         {
                             if (i.Content.ToString() == unom.ToString())
@@ -665,7 +668,7 @@ namespace Power_Equipment_Handbook
                         txtEndLowNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l2 });
                         txtEndLowNode_T.DisplayMemberPath = "Number";
 
-                        int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                        double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                         foreach (ListBoxItem i in cmbUnom_T.Items)
                         {
                             if (i.Content.ToString() == unom.ToString())
@@ -758,7 +761,7 @@ namespace Power_Equipment_Handbook
                     txtEndNode_B.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
                     txtEndNode_B.DisplayMemberPath = "Number";
 
-                    int unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
+                    double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                     foreach(ListBoxItem i in cmbUnom_B.Items)
                     {
                         if(i.Content.ToString() == unom.ToString())

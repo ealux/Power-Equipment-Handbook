@@ -227,7 +227,7 @@ namespace Power_Equipment_Handbook.src
         private int state;
         private string type;
         private int number;
-        private int unom;
+        private double unom;
         private string name;
         private double p_n; private double q_n; private double p_g; private double q_g;
         private double vzd;
@@ -259,7 +259,7 @@ namespace Power_Equipment_Handbook.src
         }
 
         [XmlAttribute]
-        public int Unom
+        public double Unom
         {
             get => unom;
             set { SetProperty(ref unom, value); }
@@ -341,7 +341,7 @@ namespace Power_Equipment_Handbook.src
         {
         }
 
-        public Node(int number, int unom, string type, int state = 0, string name = "",
+        public Node(int number, double unom, string type, int state = 0, string name = "",
                       double p_n = 0, double q_n = 0, double p_g = 0, double q_g = 0,
                       double vzd = 0, double q_min = 0, double q_max = 0, double b_sh = 0,
                       int region = 0)
@@ -399,7 +399,7 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Line : INotifyPropertyChanged
     {
-        private int? unom;
+        private double? unom;
         private string typename;
         private double? r0;
         private double? x0;
@@ -410,7 +410,7 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
-        public int? Unom
+        public double? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
@@ -485,7 +485,7 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Trans : INotifyPropertyChanged
     {
-        private int? unom;
+        private double? unom;
         private string type;
         private string typename;
         private double? unomh; private double? unoml;
@@ -494,7 +494,7 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
-        public int? Unom
+        public double? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
@@ -583,7 +583,7 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class MultiTrans : INotifyPropertyChanged
     {
-        private int? unom;
+        private double? unom;
         private string type;
         private string typename;
         private double? unomh; private double? unomm; private double? unoml;
@@ -594,7 +594,7 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
-        public int? Unom
+        public double? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }
@@ -711,10 +711,10 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Breaker : INotifyPropertyChanged
     {
-        private int? unom;
+        private double? unom;
 
         #region Properties
-        public int? Unom
+        public double? Unom
         {
             get { return unom; }
             set { SetProperty(ref unom, value); }

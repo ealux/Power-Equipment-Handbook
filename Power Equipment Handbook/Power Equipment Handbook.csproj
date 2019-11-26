@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="src\DataGridTracker.cs" />
     <Compile Include="src\DBProvider.cs" />
     <Compile Include="src\Helpers.cs" />
@@ -141,6 +142,10 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="test.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CustomToolNamespace>Power_Equipment_Handbook</CustomToolNamespace>
     </None>
   </ItemGroup>
   <ItemGroup>

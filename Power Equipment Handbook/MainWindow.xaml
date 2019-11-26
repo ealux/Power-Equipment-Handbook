@@ -30,10 +30,13 @@
                     <Label x:Name="lblNumber_N" Content="Номер" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,72,0,0" />
                     <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitCheckerForNodes" MaxLength="5" />
                     <Label x:Name="lblUnom_N" Content="U ном" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="91,72,0,0" />
-                    <ComboBox x:Name="cmbUnom_N" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="80,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitChecker">
+                    <ComboBox x:Name="cmbUnom_N" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="80,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                        <ListBoxItem HorizontalContentAlignment="Left">0.4</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">3</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">6</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">10</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">15</ListBoxItem>
+                        <ListBoxItem HorizontalContentAlignment="Left">27.5</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">35</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">110</ListBoxItem>
                         <ListBoxItem HorizontalContentAlignment="Left">150</ListBoxItem>
@@ -95,17 +98,20 @@
                         </Ellipse.RenderTransform>
                     </Ellipse>
                     <ComboBox x:Name="cmbUnom_L" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" Grid.ColumnSpan="3" SelectionChanged="CmbUnom_SelectionChanged">
-                        <ListBoxItem Content="3" />
-                        <ListBoxItem Content="6" />
-                        <ListBoxItem Content="10" />
-                        <ListBoxItem Content="35" />
-                        <ListBoxItem Content="110" />
-                        <ListBoxItem Content="150" />
-                        <ListBoxItem Content="220" />
-                        <ListBoxItem Content="330" />
-                        <ListBoxItem Content="500" />
-                        <ListBoxItem Content="750" />
-                        <ListBoxItem Content="1150" />
+                        <ListBoxItem Content="0.4"/>
+                        <ListBoxItem Content="3"/>
+                        <ListBoxItem Content="6"/>
+                        <ListBoxItem Content="10"/>
+                        <ListBoxItem Content="15"/>
+                        <ListBoxItem Content="27.5"/>
+                        <ListBoxItem Content="35"/>
+                        <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="150"/>
+                        <ListBoxItem Content="220"/>
+                        <ListBoxItem Content="330"/>
+                        <ListBoxItem Content="500"/>
+                        <ListBoxItem Content="750"/>
+                        <ListBoxItem Content="1150"/>
                     </ComboBox>
                     <ComboBox x:Name="cmbTypeName_L" HorizontalAlignment="Left" Margin="22,100,0,0" VerticalAlignment="Top" Width="134" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="2" SelectionChanged="CmbTypeName_SelectionChanged" />
                     <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="22" Margin="180,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="2" />
@@ -298,17 +304,20 @@
                         </Ellipse.RenderTransform>
                     </Ellipse>
                     <ComboBox x:Name="cmbUnom_T" HorizontalAlignment="Left" Margin="61,100,0,0" VerticalAlignment="Top" Width="53" Height="22" IsTabStop="True" RenderTransformOrigin="0.473,0.439" SelectionChanged="CmbUnom_SelectionChanged">
-                        <ListBoxItem Content="3" />
-                        <ListBoxItem Content="6" />
-                        <ListBoxItem Content="10" />
-                        <ListBoxItem Content="35" />
-                        <ListBoxItem Content="110" />
-                        <ListBoxItem Content="150" />
-                        <ListBoxItem Content="220" />
-                        <ListBoxItem Content="330" />
-                        <ListBoxItem Content="500" />
-                        <ListBoxItem Content="750" />
-                        <ListBoxItem Content="1150" />
+                        <ListBoxItem Content="0.4"/>
+                        <ListBoxItem Content="3"/>
+                        <ListBoxItem Content="6"/>
+                        <ListBoxItem Content="10"/>
+                        <ListBoxItem Content="15"/>
+                        <ListBoxItem Content="27.5"/>
+                        <ListBoxItem Content="35"/>
+                        <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="150"/>
+                        <ListBoxItem Content="220"/>
+                        <ListBoxItem Content="330"/>
+                        <ListBoxItem Content="500"/>
+                        <ListBoxItem Content="750"/>
+                        <ListBoxItem Content="1150"/>
                     </ComboBox>
                     <ComboBox x:Name="cmbType_T" HorizontalAlignment="Left" Margin="124,100,0,0" VerticalAlignment="Top" Width="60" Height="22" IsTabStop="False" Text="двух." IsReadOnly="True" SelectionChanged="CmbType_T_SelectionChanged" Grid.ColumnSpan="2" DropDownClosed="CmbType_T_DropDownClosed">
                         <ListBoxItem Content="двух." />
@@ -519,17 +528,20 @@
                     <Label x:Name="lblStartNode_B" Content="Начало" HorizontalAlignment="Left" Margin="5,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
                     <Label x:Name="lblEndNode_B" Content="Конец" HorizontalAlignment="Left" Margin="67,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
                     <ComboBox x:Name="cmbUnom_B" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" Grid.ColumnSpan="3" SelectionChanged="CmbUnom_SelectionChanged">
-                        <ListBoxItem Content="3" />
-                        <ListBoxItem Content="6" />
-                        <ListBoxItem Content="10" />
-                        <ListBoxItem Content="35" />
-                        <ListBoxItem Content="110" />
-                        <ListBoxItem Content="150" />
-                        <ListBoxItem Content="220" />
-                        <ListBoxItem Content="330" />
-                        <ListBoxItem Content="500" />
-                        <ListBoxItem Content="750" />
-                        <ListBoxItem Content="1150" />
+                        <ListBoxItem Content="0.4"/>
+                        <ListBoxItem Content="3"/>
+                        <ListBoxItem Content="6"/>
+                        <ListBoxItem Content="10"/>
+                        <ListBoxItem Content="15"/>
+                        <ListBoxItem Content="27.5"/>
+                        <ListBoxItem Content="35"/>
+                        <ListBoxItem Content="110"/>
+                        <ListBoxItem Content="150"/>
+                        <ListBoxItem Content="220"/>
+                        <ListBoxItem Content="330"/>
+                        <ListBoxItem Content="500"/>
+                        <ListBoxItem Content="750"/>
+                        <ListBoxItem Content="1150"/>
                     </ComboBox>
                     <Label x:Name="lblUnom_B" Content="Uном" HorizontalAlignment="Left" Margin="135,76,0,0" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="2" />
                     <TextBox x:Name="txtState_B" HorizontalAlignment="Left" Height="22" Margin="15,42,0,0" VerticalAlignment="Top" Width="35" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="4" PreviewTextInput="DigitCheckerForNodes" x:FieldModifier="public" Text="0" />

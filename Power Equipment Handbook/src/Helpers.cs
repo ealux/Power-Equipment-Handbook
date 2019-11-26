@@ -220,14 +220,15 @@ namespace Power_Equipment_Handbook
         /// <param name="type">Тип элемента ("Line" или "Trans")</param>
         /// <param name="unom">Номинальное напряжение для отбора</param>
         /// <param name="provider">Провайдер БД</param>
-        private void GetData(string type, int unom, DBProvider provider)
+        private void GetData(string type, double unom, DBProvider provider)
         {
             //Таблица Lines
             if(type == "Line")
             {
                 Lines.Clear();
+                string comm = $"SELECT * FROM [Lines] WHERE [Unom] = {unom}".Replace(',','.');
 
-                using(var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [Lines] WHERE [Unom] = {0}", unom), provider.Connection))
+                using(var sqldata = provider.Command_Query(comm, provider.Connection))
                 {
                     if(sqldata.HasRows == false) return;
 
@@ -235,7 +236,7 @@ namespace Power_Equipment_Handbook
                     {
                         Lines.Add(new Line()
                         {
-                            Unom = sqldata["Unom"] as int?,
+                            Unom = sqldata["Unom"] as double?,
                             TypeName = sqldata["TypeName"] as string,
                             R0 = sqldata["R0"] as double?,
                             X0 = sqldata["X0"] as double?,
@@ -256,8 +257,9 @@ namespace Power_Equipment_Handbook
                 if(cmbType_T.Text == "двух.")
                 {
                     Trans.Clear();
+                    string comm = $"SELECT * FROM [Trans] WHERE [Unom] = {unom}".Replace(',', '.');
 
-                    using(var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [Trans] WHERE [Unom] = {0}", unom), provider.Connection))
+                    using(var sqldata = provider.Command_Query(comm, provider.Connection))
                     {
                         if(sqldata.HasRows == false) return;
 
@@ -265,7 +267,7 @@ namespace Power_Equipment_Handbook
                         {
                             Trans.Add(new Trans()
                             {
-                                Unom = sqldata["Unom"] as int?,
+                                Unom = sqldata["Unom"] as double?,
                                 TypeName = sqldata["TypeName"] as string,
                                 UnomH = sqldata["UnomH"] as double?,
                                 UnomL = sqldata["UnomL"] as double?,
@@ -294,7 +296,7 @@ namespace Power_Equipment_Handbook
                         {
                             MultiTrans.Add(new MultiTrans()
                             {
-                                Unom = sqldata["Unom"] as int?,
+                                Unom = sqldata["Unom"] as double?,
                                 TypeName = sqldata["TypeName"] as string,
                                 UnomH = sqldata["UnomH"] as double?,
                                 UnomM = sqldata["UnomM"] as double?,
