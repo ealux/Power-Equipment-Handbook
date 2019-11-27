@@ -94,17 +94,21 @@ namespace Power_Equipment_Handbook.src
                     //Подготовка узлов
                     for(int i = 1; i < 20; i++)
                     {
-                        sheetNodes.Cells[1, i].Value = lblNode[i - 1];
-                        sheetNodes.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        sheetNodes.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
+                        sheetNodes.Cells[1, i].Value = lblNode[i - 1];                                              //Вставка значения
+                        sheetNodes.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;                       //Закраска ячейки
+                        sheetNodes.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);     //Закраска ячейки
                     }
                     //Подготовка ветвей
                     for(int i = 1; i < 22; i++)
                     {
-                        sheetBranches.Cells[1, i].Value = lblBranch[i - 1];
-                        sheetBranches.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        sheetBranches.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);
+                        sheetBranches.Cells[1, i].Value = lblBranch[i - 1];                                         //Вставка значения
+                        sheetBranches.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;                    //Закраска ячейки
+                        sheetBranches.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);  //Закраска ячейки
+                        
                     }
+
+                    sheetNodes.Cells[1, 1, 1, 19].AutoFilter = true;                                                //Добавка фильтра
+                    sheetBranches.Cells[1, 1, 1, 21].AutoFilter = true;                                             //Добавка фильтра
 
                     #endregion Excel PreDesign
 

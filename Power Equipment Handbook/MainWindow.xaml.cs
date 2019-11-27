@@ -176,7 +176,7 @@ namespace Power_Equipment_Handbook
         {
             int state = txtStartNode_T.SelectedIndex;
             txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
-            if(cmbUnom_T.Text != "") GetData("Trans", Convert.ToInt32(cmbUnom_T.Text), db_prv);
+            if(cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
         }
 
         /// <summary>
@@ -544,7 +544,9 @@ namespace Power_Equipment_Handbook
                     MultiTrans.Clear();
                     return;
                 }
-                GetData("Trans", double.Parse((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
+                if((cmb.SelectedItem as ListBoxItem).Content.ToString() == "0.4") GetData("Trans", 0.4, db_prv);
+                else if((cmb.SelectedItem as ListBoxItem).Content.ToString() == "27.5") GetData("Trans", 27.5, db_prv);
+                else GetData("Trans", double.Parse((cmb.SelectedItem as ListBoxItem).Content.ToString()), db_prv);
             }
         }
 
@@ -553,7 +555,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void TxtStartNode_L_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
             {
                 if (txtStartNode_L.SelectedIndex == txtStartNode_L.Items.Count - 1 | txtStartNode_L.SelectedIndex == -1)
                 {
@@ -583,7 +585,7 @@ namespace Power_Equipment_Handbook
                     double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                     foreach (ListBoxItem i in cmbUnom_L.Items)
                     {
-                        if (i.Content.ToString() == unom.ToString())
+                        if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
                         {
                             cmbUnom_L.SelectedItem = i;
                             return;
@@ -638,7 +640,7 @@ namespace Power_Equipment_Handbook
                         double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                         foreach (ListBoxItem i in cmbUnom_T.Items)
                         {
-                            if (i.Content.ToString() == unom.ToString())
+                            if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
                             {
                                 cmbUnom_T.SelectedItem = i;
                                 return;
@@ -671,7 +673,7 @@ namespace Power_Equipment_Handbook
                         double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                         foreach (ListBoxItem i in cmbUnom_T.Items)
                         {
-                            if (i.Content.ToString() == unom.ToString())
+                            if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
                             {
                                 cmbUnom_T.SelectedItem = i;
                                 return;
@@ -764,7 +766,7 @@ namespace Power_Equipment_Handbook
                     double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
                     foreach(ListBoxItem i in cmbUnom_B.Items)
                     {
-                        if(i.Content.ToString() == unom.ToString())
+                        if(double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
                         {
                             cmbUnom_B.SelectedItem = i;
                             return;

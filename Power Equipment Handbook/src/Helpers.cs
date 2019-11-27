@@ -287,8 +287,9 @@ namespace Power_Equipment_Handbook
                 if(cmbType_T.Text == "тр./АТ")
                 {
                     MultiTrans.Clear();
+                    string comm = $"SELECT * FROM [MultiTrans] WHERE [Unom] = {unom}".Replace(',', '.');
 
-                    using(var sqldata = provider.Command_Query(String.Format(@"SELECT * FROM [MultiTrans] WHERE [Unom] = {0}", unom), provider.Connection))
+                    using(var sqldata = provider.Command_Query(comm, provider.Connection))
                     {
                         if(sqldata.HasRows == false) return;
 
