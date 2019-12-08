@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.IO;
 using System.Xml.Serialization;
 using OfficeOpenXml;
@@ -13,7 +12,7 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class UniverseSerializator
     {
-        string filename;        //Абсолютный путь к файлу
+        private string filename;        //Абсолютный путь к файлу
         DataGridTracker track;  //Класс, содержащий данные с текущим состоянием таблиц Ветвей и Узлов
 
         /// <summary>

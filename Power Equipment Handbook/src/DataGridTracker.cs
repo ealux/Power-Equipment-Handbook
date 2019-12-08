@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace Power_Equipment_Handbook.src
@@ -29,9 +28,17 @@ namespace Power_Equipment_Handbook.src
             this.grdBranches = grdBranches; this.grdBranches.ItemsSource = Branches;
         }
 
-        public void AddNode(Node node) => Application.Current.Dispatcher.BeginInvoke((Action)delegate () { Nodes.Add(node); grdNodes.UpdateLayout(); });
+        /// <summary>
+        /// Добавить узел в список узлов
+        /// </summary>
+        /// <param name="node">Добавляемый узел</param>
+        public void AddNode(Node node) => Application.Current.Dispatcher?.BeginInvoke((Action)delegate{ Nodes.Add(node); grdNodes.UpdateLayout(); });
 
-        public void AddBranch(Branch branch) => Application.Current.Dispatcher.BeginInvoke((Action)delegate () { Branches.Add(branch); grdBranches.UpdateLayout(); });
+        /// <summary>
+        /// Добавить ветвь в список ветвей
+        /// </summary>
+        /// <param name="branch">Добавляемая ветвь</param>
+        public void AddBranch(Branch branch) => Application.Current.Dispatcher?.BeginInvoke((Action)delegate{ Branches.Add(branch); grdBranches.UpdateLayout(); });
     }
 
     /// <summary>
@@ -202,7 +209,7 @@ namespace Power_Equipment_Handbook.src
 
         public new int GetHashCode()
         {
-            return this.GetHashCode();
+            return ((object)this).GetHashCode();
         }
 
         /// <summary>
@@ -210,8 +217,7 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public bool Equals(Branch other)
         {
-            if (this == null && other == null) return true;
-            else if (this == null || other == null) return false;
+            if (other == null) return false;
             else if (type == other.type & start == other.start & end == other.end) return true;
             else return false;
         }
@@ -385,10 +391,9 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         public bool Equals(Node other)
         {
-            if (this == null && other == null) return true;
-            else if (this == null || other == null) return false;
-            else if (type == other.type & number == other.number) return true;
-            else return false;
+            if (other == null) return false;
+            if (type == other.type & number == other.number) return true;
+            return false;
         }
 
         #endregion IEquatable interface block
@@ -750,7 +755,7 @@ namespace Power_Equipment_Handbook.src
     {
         public bool Equals(Branch b1, Branch b2)
         {
-            
+            if (b1 == null || b2 == null) return false;
             return (b1.Start == b2.Start) & (b1.End == b2.End);
         }
 

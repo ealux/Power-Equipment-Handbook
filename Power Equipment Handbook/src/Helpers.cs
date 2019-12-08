@@ -11,14 +11,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
 using Microsoft.Win32;
-using System.Diagnostics;
 
 namespace Power_Equipment_Handbook
 {
     /// <summary>
     /// Вспомогательные методы MainWindow
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         #region Helpers
 
@@ -28,19 +27,7 @@ namespace Power_Equipment_Handbook
         private void DigitCheckerForNodes(object sender, TextCompositionEventArgs e)
         {
             if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
-            TextBox tb = (TextBox)sender;
             ChangeTxtColor(sender, false);
-            if(!char.IsDigit(e.Text, 0)) e.Handled = true;
-        }
-
-        /// <summary>
-        /// Проверка ввода цифр
-        /// </summary>
-        private void DigitChecker(object sender, TextCompositionEventArgs e)
-        {
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
-            ComboBox tb = (ComboBox)sender;
-            ChangeCmbColor(sender, false);
             if(!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
@@ -78,7 +65,6 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void Line_Calculations(object sender, TextChangedEventArgs e)
         {
-            //TODO обработчики неверного заполнения (цвета)
             DotCommaReplacer(sender: sender, e: e); //Обработка запятых
             if(txtLength_L.Text == "") return;     //Проверка поля Длина
 
@@ -112,8 +98,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void Ktr_Calculations(object sender, TextChangedEventArgs e)
         {
-            //TODO обработчики неверного заполнения(цвета)
-            DotCommaReplacer(sender: sender, e: e); //Обработка запятых
+            DotCommaReplacer(sender, e); //Обработка запятых
 
             var HV = txtUnomHigh_T; var LV = txtUnomLowDouble_T;
             var MHV = txtUnomMid_T; var LHV = txtUnomLow_T;
@@ -149,10 +134,10 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void ChangeTxtColor(object sender, bool error)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            Application.Current.Dispatcher?.Invoke(delegate()
             {
                 TextBox tb = (TextBox)sender;
-                if(error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                if(error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                 else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
             });
         }
@@ -162,10 +147,10 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void ChangeCmbColor(object sender, bool error)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            Application.Current.Dispatcher?.Invoke(delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
-                if(error == true) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                if(error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                 else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
             });
         }
@@ -176,19 +161,22 @@ namespace Power_Equipment_Handbook
         private bool BranchChecker(Branch br, object cmbStart, object cmbEnd)
         {
             bool result = NodeChecker(br, cmbStart, cmbEnd);
-            Application.Current.Dispatcher.BeginInvoke((Action)delegate ()
+            Application.Current.Dispatcher?.Invoke(delegate ()
             {
                 if(result)
                 {
                     var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
                     if(other.Count > 0)
-                    { Log.Show("Узлы начала и конца совпадают для ветви другого типа!");
-                      result = false;
-                      return;
+                    {
+                        Log.Show("Узлы начала и конца совпадают для ветви другого типа!");
+                        result = false;
+                        return;
                     }
 
                     other = track.Branches.Where((b) => b.Equals(br)).OrderByDescending((b) => b.Npar).ToList();
-                    if(other != null & other.Count > 0) { Log.Show("Добавлена паралельная ветвь", LogClass.LogType.Information); ; br.Npar = other[0].Npar + 1; }
+                    if (!(other.Count > 0)) return;
+                    Log.Show("Добавлена паралельная ветвь", LogClass.LogType.Information);
+                    br.Npar = other[0].Npar + 1;
                 }
             });
             return result;
@@ -326,13 +314,13 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void TransEndNodeSelector(object sender, SelectionChangedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            Application.Current.Dispatcher?.Invoke(delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
 
                 if(tb.Text == "" || tb.SelectedIndex == -1)
                 {
-                    cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = MultiTrans });
+                    cmbTypeName_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = MultiTrans });
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
                 }
 
@@ -355,7 +343,7 @@ namespace Power_Equipment_Handbook
                             l.Add(i);
                         }
                     }
-                    txtEndLowNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                    txtEndLowNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = l });
                     txtEndLowNode_T.DisplayMemberPath = "Number";
 
                     cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
@@ -387,7 +375,7 @@ namespace Power_Equipment_Handbook
                             l.Add(i);
                         }
                     }
-                    txtEndMidNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
+                    txtEndMidNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = l });
                     txtEndMidNode_T.DisplayMemberPath = "Number";
 
                     cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
@@ -401,7 +389,7 @@ namespace Power_Equipment_Handbook
                             mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
                                                                                             (t.UnomM >= 0.8 * ((Node)txtEndMidNode_T.SelectedItem).Unom & t.UnomM <= 1.2 * ((Node)txtEndMidNode_T.SelectedItem).Unom)).ToList());
                         }
-                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
+                        cmbTypeName_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = mt });
                         cmbTypeName_T.DisplayMemberPath = "TypeName";
                     }
                 }
@@ -536,7 +524,7 @@ namespace Power_Equipment_Handbook
             string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
 
             UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
-            DataGridTracker localTracker = new DataGridTracker();
+            DataGridTracker localTracker;
 
             switch(extension.ToLower())
             {

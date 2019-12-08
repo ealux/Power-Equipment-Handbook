@@ -90,13 +90,6 @@
                     <ComboBox x:Name="txtEndNode_L" HorizontalAlignment="Left" Height="22" Margin="67,100,0,0" VerticalAlignment="Top" Width="46" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" DropDownOpened="DropDownNodeReflector"/>
                     <Label x:Name="lblStartNode_L" Content="Начало" HorizontalAlignment="Left" Margin="5,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
                     <Label x:Name="lblEndNode_L" Content="Конец" HorizontalAlignment="Left" Margin="67,76,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="57,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="8" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <ComboBox x:Name="cmbUnom_L" HorizontalAlignment="Left" Margin="128,100,0,0" VerticalAlignment="Top" Width="55" Height="22" IsTabStop="False" Grid.ColumnSpan="3" SelectionChanged="CmbUnom_SelectionChanged">
                         <ListBoxItem Content="0.4"/>
                         <ListBoxItem Content="3"/>
@@ -115,37 +108,9 @@
                     </ComboBox>
                     <ComboBox x:Name="cmbTypeName_L" HorizontalAlignment="Left" Margin="22,100,0,0" VerticalAlignment="Top" Width="134" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="2" SelectionChanged="CmbTypeName_SelectionChanged" />
                     <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="22" Margin="180,100,0,0" VerticalAlignment="Top" Width="149" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="116,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="9" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="6,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="160,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <Label x:Name="lblUnom_L" Content="Uном" HorizontalAlignment="Left" Margin="135,76,0,0" VerticalAlignment="Top" Height="24" Grid.ColumnSpan="2" />
                     <Label x:Name="lblTypeName_L" Content="Сечение" HorizontalAlignment="Left" Margin="57,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2" />
                     <Label x:Name="lblName_L" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="166,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="334,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <TextBox x:Name="txtLength_L" HorizontalAlignment="Left" Height="22" Margin="354,100,0,0" VerticalAlignment="Top" Width="60" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="7" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Line_Calculations" Grid.Column="2" />
                     <Label x:Name="lblLength_L" Content="Длина, км" HorizontalAlignment="Left" Margin="352,76,0,0" VerticalAlignment="Top" Height="24" Grid.Column="2" />
                     <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="415,96,0,0" Stroke="Black" VerticalAlignment="Top" Width="40" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
@@ -170,56 +135,14 @@
                     </Ellipse>
                     <TextBox x:Name="txtr0_L" Text="{Binding R0, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="462,71,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Line_Calculations" Grid.Column="2" />
                     <Label x:Name="lblr0_L" Content="r0, Ом/км" HorizontalAlignment="Left" Margin="468,47,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="543,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <TextBox x:Name="txtx0_L" Text="{Binding X0, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="563,71,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Line_Calculations" Grid.Column="2" />
                     <Label x:Name="lblx0_L" Content="x0, Ом/км" HorizontalAlignment="Left" Margin="569,47,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="645,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <TextBox x:Name="txtb0_L" Text="{Binding B0, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="666,71,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Line_Calculations" Grid.Column="2" />
                     <Label x:Name="lblb0_L" Content="b0, мкрСм/км" HorizontalAlignment="Left" Margin="662,47,0,0" VerticalAlignment="Top" Height="24" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="746,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <TextBox x:Name="txtg0_L" Text="{Binding G0, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="766,71,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Line_Calculations" Grid.Column="2" />
                     <Label x:Name="lblg0_L" Content="g0, мкрСм/км" HorizontalAlignment="Left" Margin="760,45,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
                     <TextBox x:Name="txtR_L" HorizontalAlignment="Left" Height="22" Margin="462,128,0,0" VerticalAlignment="Top" Width="75" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="2" />
                     <Label x:Name="lblR_L" Content="R, Ом" HorizontalAlignment="Left" Margin="480,104,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="543,139,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="645,139,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="746,139,0,0" Stroke="Black" VerticalAlignment="Top" Width="14" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="2">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <TextBox x:Name="txtX_L" HorizontalAlignment="Left" Height="22" Margin="564,128,0,0" VerticalAlignment="Top" Width="74" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="2" />
                     <Label x:Name="lblX_L" Content="X, Ом" HorizontalAlignment="Left" Margin="582,104,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" Grid.Column="2" />
                     <TextBox x:Name="txtB_L" HorizontalAlignment="Left" Height="22" Margin="667,128,0,0" VerticalAlignment="Top" Width="74" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="2" />
@@ -296,13 +219,6 @@
                     </Grid.ColumnDefinitions>
                     <ComboBox x:Name="txtStartNode_T" HorizontalAlignment="Left" Height="22" Margin="10,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_T_SelectionChanged" DropDownOpened="DropDownNodeReflector" />
                     <Label x:Name="lblStartNode_T" Content="Начало" HorizontalAlignment="Left" Margin="8,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" FontWeight="Bold" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="54,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
                     <ComboBox x:Name="cmbUnom_T" HorizontalAlignment="Left" Margin="61,100,0,0" VerticalAlignment="Top" Width="53" Height="22" IsTabStop="True" RenderTransformOrigin="0.473,0.439" SelectionChanged="CmbUnom_SelectionChanged">
                         <ListBoxItem Content="0.4"/>
                         <ListBoxItem Content="3"/>
@@ -325,44 +241,23 @@
                     </ComboBox>
                     <Label x:Name="lblUnom_T" Content="Uном" HorizontalAlignment="Left" Margin="68,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" />
                     <Label x:Name="lblTypeName_T" Content="Марка трансформатора" HorizontalAlignment="Left" Margin="78,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1" />
-                    <Label x:Name="lblName_T" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="214,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1" />
+                    <Label x:Name="lblName_T" Content="Диспетчерское наименование" HorizontalAlignment="Left" Margin="211,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1" />
                     <Label x:Name="lblType_T" Content="Тип" HorizontalAlignment="Left" Margin="5,76,0,0" VerticalAlignment="Top" Height="24" FontSize="10" Grid.Column="1" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="116,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False">
+                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="352,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
                         <Ellipse.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform ScaleY="-1" />
                             </TransformGroup>
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="51,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="222,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="361,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
-                        <Ellipse.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform ScaleY="-1" />
-                            </TransformGroup>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
-                    <Label x:Name="lblEndHighNode_T" Content="Конец" HorizontalAlignment="Left" Margin="362,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1" HorizontalContentAlignment="Center" Width="56" FontWeight="Bold" />
+                    <Label x:Name="lblEndHighNode_T" Content="Конец" HorizontalAlignment="Left" Margin="352,75,0,0" VerticalAlignment="Top" Height="25" FontSize="10" Grid.Column="1" HorizontalContentAlignment="Center" Width="61" FontWeight="Bold" />
                     <ComboBox x:Name="cmbTypeName_T" HorizontalAlignment="Left" Margin="59,100,0,0" VerticalAlignment="Top" Width="160" Height="22" IsTabStop="False" IsEditable="True" Grid.Column="1" SelectionChanged="CmbTypeName_SelectionChanged" />
-                    <TextBox x:Name="txtName_T" HorizontalAlignment="Left" Height="22" Margin="230,100,0,0" VerticalAlignment="Top" Width="129" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="1" />
-                    <ComboBox x:Name="txtEndHighNode_T" HorizontalAlignment="Left" Height="22" Margin="368,100,0,0" VerticalAlignment="Top" Width="43" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" Grid.Column="1" SelectionChanged="TxtEndHighNode_T_SelectionChanged" DropDownOpened="DropDownNodeReflector" />
+                    <TextBox x:Name="txtName_T" HorizontalAlignment="Left" Height="22" Margin="230,100,0,0" VerticalAlignment="Top" Width="118" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" Grid.Column="1" />
+                    <ComboBox x:Name="txtEndHighNode_T" HorizontalAlignment="Left" Height="22" Margin="362,100,0,0" VerticalAlignment="Top" Width="46" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" Grid.Column="1" SelectionChanged="TxtEndHighNode_T_SelectionChanged" DropDownOpened="DropDownNodeReflector" />
                     <Label x:Name="lblUnomHigh_T" Content="Uном ВН" HorizontalAlignment="Left" Margin="415,74,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" Grid.Column="1" />
                     <TextBox x:Name="txtUnomHigh_T" Text="{Binding UnomH, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="421,100,0,0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Ktr_Calculations" Grid.Column="1" />
                     <TextBox x:Name="txtUnomLowDouble_T" Text="{Binding UnomL, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="474,100,0,0" VerticalAlignment="Top" Width="41" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="6" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="Ktr_Calculations" Grid.Column="1" />
-                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="413,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
+                    <Ellipse Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="1" Margin="411,110,0,0" Stroke="Black" VerticalAlignment="Top" Width="5" RenderTransformOrigin="0.5,0.5" IsEnabled="False" Grid.Column="1">
                         <Ellipse.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform ScaleY="-1" />
@@ -559,9 +454,9 @@
                 <Grid>
                     <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="369" VerticalAlignment="Top" Width="1178" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="S" Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="S " Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Номер" Width="55" Binding="{Binding Number}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Номер" Width="50" Binding="{Binding Number}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="U__ном" Width="*" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="P__н" Width="*" Binding="{Binding P_n}" ClipboardContentBinding="{x:Null}" />
