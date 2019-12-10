@@ -1,4 +1,5 @@
 ﻿using Power_Equipment_Handbook.src;
+using Power_Equipment_Handbook.src.windows;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -25,6 +26,8 @@ namespace Power_Equipment_Handbook
         public ObservableCollection<Trans> Trans;
         public ObservableCollection<MultiTrans> MultiTrans;
 
+        public Library lib;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -50,6 +53,8 @@ namespace Power_Equipment_Handbook
             MultiTrans = new ObservableCollection<MultiTrans>();    //Коллекция объектов Трехобмоточный Трансформатор/Автотрансформатор
 
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
+
+            lib = new Library(db_prv);
         }
         
         #region Обработчики конкретных событий
