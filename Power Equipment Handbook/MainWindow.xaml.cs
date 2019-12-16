@@ -54,7 +54,7 @@ namespace Power_Equipment_Handbook
 
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
 
-            lib = new Library(db_prv);
+            //lib = new Library(db_prv);
         }
         
         #region Обработчики конкретных событий
@@ -857,8 +857,13 @@ namespace Power_Equipment_Handbook
             }
         }
 
+
         #endregion Обработчики конкретных событий
 
-
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if(Tab_Elements.Visibility == Visibility.Collapsed) Tab_Elements.Visibility = Visibility.Visible;
+            else Tab_Elements.Visibility = Visibility.Collapsed;
+        }
     }
 }
