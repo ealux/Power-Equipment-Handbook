@@ -32,7 +32,7 @@ namespace Power_Equipment_Handbook.src
         /// Сериализация в XML-структуру с внутренним расширением *.peh
         /// </summary>
         public void toXML()
-#pragma warning restore IDE1006 // Стили именования
+        #pragma warning restore IDE1006 // Стили именования
         {
             Task.Run(()=>
             {
