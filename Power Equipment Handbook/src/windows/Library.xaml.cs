@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,22 +19,23 @@ namespace Power_Equipment_Handbook.src.windows
     {
         DBProvider db;
 
-        public Library(DBProvider dBProvider)
+        public Library(DBProvider dbProvider)
         {
             InitializeComponent();
-            this.db = dBProvider;
+            this.db = dbProvider;
 
-            string q_lines = "Select * from [Lines]";
-            string q_trans = "Select * from [Trans]";
-            string q_mtrans = "Select * from [Multitrans]";
+            LinesGrid.ItemsSource = db.Command_Query("Select * from [Lines]", db.Connection);
+            TransGrid.ItemsSource = db.Command_Query("Select * from [Trans]", db.Connection);
+            MTransGrid.ItemsSource = db.Command_Query("Select * from [Multitrans]", db.Connection);
+        }
 
-            var lines = db.Command_Query(q_lines, db.Connection);
-            var trans = db.Command_Query(q_trans, db.Connection);
-            var mtrans = db.Command_Query(q_mtrans, db.Connection);
-
-            LinesGrid.ItemsSource = lines;
-            TransGrid.ItemsSource = trans;
-            MTransGrid.ItemsSource = mtrans;
+        /// <summary>
+        /// Блокирует закрытие окна Библиотеки Оборудования
+        /// </summary>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.Hide();
+            e.Cancel = true;
         }
     }
 }

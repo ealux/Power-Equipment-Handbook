@@ -405,6 +405,23 @@ namespace Power_Equipment_Handbook
             Log.Clear();
         }
 
+        /// <summary>
+        /// Отображение окна Бибилиотеки оборудования
+        /// </summary>
+        private void Get_Library(object sender, RoutedEventArgs e)
+        {
+            if(lib != null)
+            { 
+                if(lib.IsVisible) lib.Hide();
+                else lib.Show();
+            }
+            else if (this.lib == null || !this.lib.IsVisible)
+            {
+                this.lib = new src.windows.Library(this.db_prv) { Owner = this };
+                this.lib.Show();
+            }
+        }
+
         #endregion Helpers
 
         #region Power Network Methods

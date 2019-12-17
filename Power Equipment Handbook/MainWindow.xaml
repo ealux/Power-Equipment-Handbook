@@ -495,8 +495,9 @@
             <MenuItem Header="Файл" Height="20" Width="40" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0">
                 <MenuItem Header="Импорт" Click="Import_Click"/>
                 <MenuItem Header="Экспорт" Click="Export_Click"/>
-                <MenuItem Header="Тест"/>
+                <Separator/>
             </MenuItem>
+            <MenuItem Header="Библиотека" Click="Get_Library"/>
         </Menu>
         <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,188,0,0" Click="Button_Click" Height="20"/>
     </Grid>
