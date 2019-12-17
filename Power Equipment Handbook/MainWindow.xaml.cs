@@ -53,8 +53,6 @@ namespace Power_Equipment_Handbook
             MultiTrans = new ObservableCollection<MultiTrans>();    //Коллекция объектов Трехобмоточный Трансформатор/Автотрансформатор
 
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
-
-            lib = new Library(db_prv);
         }
         
         #region Обработчики конкретных событий

@@ -555,6 +555,5 @@ namespace Power_Equipment_Handbook
         }
 
         #endregion Save/Open (Serialize/Deserialize) Methods
-
     }
 }
