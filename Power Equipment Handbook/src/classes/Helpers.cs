@@ -429,15 +429,23 @@ namespace Power_Equipment_Handbook
         /// <summary>
         /// Проверка связности схемы
         /// </summary>
-        public bool Connectivity()
+        public void Connectivity(object sender, RoutedEventArgs e)
         {
-            if(track.Nodes.Count == 0 || track.Branches.Count == 0) return false;                                   //Отсутствие узлов или ветвей
-
+            if(track.Nodes.Count == 0 || track.Branches.Count == 0)                                                 //Отсутствие узлов или ветвей
+            {
+                Log.Show("Отсутствуют узлы/ветви в схеме для проверки связанности!", LogClass.LogType.Error);
+                return;
+            }
+                                                
             var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b=>b.Start).ToList();      //Список уникальных ветвей
 
             var exNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList();                        //Список узлов для исключения
 
-            if(!branches.Any(b => (b.Start == exNodes[0]) | (b.End == exNodes[0]))) return false;                   //Отлов узлов-сирот (для первого узла)
+            if (!branches.Any(b => (b.Start == exNodes[0]) | (b.End == exNodes[0])))                                //Отлов узлов-сирот (для первого узла)
+            {
+                Log.Show("Связанность отсутствует!", LogClass.LogType.Error);
+                return;
+            }                   
 
             List<int> linked = new List<int>();
 
@@ -447,9 +455,13 @@ namespace Power_Equipment_Handbook
 
             RecurseFinder(linked, ref exNodes);
 
-            if(exNodes.Count == 0) return true;
+            if (exNodes.Count == 0)
+            {
+                Log.Show("Сеть является связанной", LogClass.LogType.Information);
+                return;
+            }
 
-            return false;
+            Log.Show("Связанность отсутствует!", LogClass.LogType.Error);
 
             void RecurseFinder(List<int> Linked, ref List<int> Exnodes) //Рекурсивная функция обхода графа в глубину
             {

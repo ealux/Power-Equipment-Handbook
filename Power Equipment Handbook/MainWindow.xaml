@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Power Equipment Handbook" Height="750" Width="1400" ScrollViewer.CanContentScroll="True" SnapsToDevicePixels="True" Icon="185072.ico" ResizeMode="CanMinimize">
-    <Grid Margin="0,0,4,-1" RenderTransformOrigin="0.505,0.357" MinWidth="1400" Height="730">
+        Title="Power Equipment Handbook" Height="800" Width="1410" ScrollViewer.CanContentScroll="True" SnapsToDevicePixels="True" Icon="185072.ico" MinHeight="800" MinWidth="1410">
+    <Grid Margin="0,0,-6,0" RenderTransformOrigin="0.505,0.357" MinWidth="1200">
         <Grid.RowDefinitions>
             <RowDefinition Height="348*"/>
             <RowDefinition Height="17*"/>
@@ -14,10 +14,10 @@
             <ColumnDefinition Width="100*"/>
             <ColumnDefinition Width="600*"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Name="MainControlsStack" Grid.Column="1" LastChildFill="True" Margin="0,25,10,0" VerticalAlignment="Stretch" Height="671">
-            <TabControl x:Name="Tab_Elements" KeyDown="Tab_Elements_KeyDown" MinWidth="1194" Width="Auto" Height="250" Margin="0,0,0,0" DockPanel.Dock="Top">
+        <DockPanel Name="MainControlsStack" Grid.Column="1" LastChildFill="True" Margin="0,25,10,0" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+            <TabControl x:Name="Tab_Elements" KeyDown="Tab_Elements_KeyDown" Width="Auto" Height="250" DockPanel.Dock="Top">
                 <TabItem Header="Узел" Margin="-2,-2,-48,0">
-                    <Grid Margin="0,-2,0,0">
+                    <Grid Margin="0,-2,0,0" Height="Auto" Width="Auto">
                         <Label x:Name="lblNumber_N" Content="Номер" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,72,0,0" />
                         <TextBox x:Name="txtNumber_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" Margin="20,98,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MaxLines="1" PreviewTextInput="DigitCheckerForNodes" MaxLength="5" />
                         <Label x:Name="lblUnom_N" Content="U ном" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="91,72,0,0" />
@@ -442,7 +442,7 @@
             </TabControl>
             <TabControl x:Name="Tab_Data" Margin="0,0,0,0" MinWidth="10" MinHeight="420">
                 <TabItem x:Name="Tab_Nodes" Header="Узлы" Background="{x:Null}" Margin="-2,0,-2,-2">
-                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA" Margin="0">
+                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA" Margin="0" Height="Auto">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S " Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
@@ -483,21 +483,21 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
-        <StackPanel Orientation="Horizontal" Margin="1,4,1,0" MaxHeight="25" Grid.Row="1" Grid.Column="1" Height="26" VerticalAlignment="Top">
+        <StackPanel Orientation="Horizontal" Margin="1,4,6,0" MaxHeight="25" Grid.Row="1" Grid.Column="1" Height="25" VerticalAlignment="Top" Width="Auto">
             <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Center" Width="245" FontFamily="Showcard Gothic" Background="White" BorderBrush="{x:Null}" FontWeight="Bold" AllowDrop="False" IsTabStop="False" Focusable="False" Margin="2,2,2,3" Foreground="Black"/>
             <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
-            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="639" Foreground="Red" Text="Log" VerticalAlignment="Center" Margin="8,6"/>
-            <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
-            <Button x:Name="btnImport" Content="Импорт" Width="140" Click="Import_Click" Margin="1"/>
-            <Button x:Name="btnExport" Content="Экспорт" Width="140" Click="Export_Click" Margin="1,0,1,1"/>
+            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="938" Foreground="Red" Text="Log" VerticalAlignment="Center" Margin="8,4,8,5"/>
         </StackPanel>
-        <Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,6,0">
             <MenuItem Header="Файл" Height="20" Width="40" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0">
                 <MenuItem Header="Импорт" Click="Import_Click"/>
                 <MenuItem Header="Экспорт" Click="Export_Click"/>
                 <Separator/>
             </MenuItem>
-            <MenuItem Header="Библиотека" Click="Get_Library"/>
+            <MenuItem Header="Инструменты" Height="20" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0" >
+                <MenuItem Header="Связность" Click="Connectivity"/>
+            </MenuItem>
+            <MenuItem Header="Справочник" Click="Get_Library"/>
         </Menu>
         <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,188,0,0" Click="Button_Click" Height="20"/>
     </Grid>
