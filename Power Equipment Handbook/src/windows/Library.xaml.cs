@@ -27,6 +27,7 @@ namespace Power_Equipment_Handbook.src.windows
             LinesGrid.ItemsSource = db.Command_Query("Select * from [Lines]", db.Connection);
             TransGrid.ItemsSource = db.Command_Query("Select * from [Trans]", db.Connection);
             MTransGrid.ItemsSource = db.Command_Query("Select * from [Multitrans]", db.Connection);
+            CablesGrid.ItemsSource = db.Command_Query("Select * from [Cables]", db.Connection);
         }
 
         /// <summary>

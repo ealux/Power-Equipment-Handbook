@@ -10,17 +10,22 @@
         <TabControl Margin="0,10,0,0">
             <TabItem Header="Линии">
                 <Grid Background="White">
-                    <DataGrid x:Name="LinesGrid" AutoGenerateColumns="True" ColumnWidth="*"/>
+                    <DataGrid x:Name="LinesGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Кабели">
+                <Grid Background="White">
+                    <DataGrid x:Name="CablesGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Трансформаторы (двух.)">
                 <Grid Background="White">
-                    <DataGrid x:Name="TransGrid" AutoGenerateColumns="True" ColumnWidth="*"/>
+                    <DataGrid x:Name="TransGrid" AutoGenerateColumns="True" ColumnWidth="Auto"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Трансформаторы (трёх. и АТ)">
                 <Grid Background="White">
-                    <DataGrid x:Name="MTransGrid" AutoGenerateColumns="True" ColumnWidth="*"/>
+                    <DataGrid x:Name="MTransGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </TabItem>
         </TabControl>

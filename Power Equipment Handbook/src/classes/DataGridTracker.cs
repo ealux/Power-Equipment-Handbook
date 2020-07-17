@@ -14,11 +14,17 @@ namespace Power_Equipment_Handbook.src
     public class DataGridTracker
     {
 
-        [XmlIgnore] public DataGrid grdNodes { get; set; }
-        [XmlIgnore] public DataGrid grdBranches { get; set; }
+        [XmlIgnore]
+        public DataGrid grdNodes { get; set; }
 
-        [XmlArrayItem("Node", Type =typeof(Node))] public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
-        [XmlArrayItem("Branch", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
+        [XmlIgnore]
+        public DataGrid grdBranches { get; set; }
+
+        [XmlArrayItem("Node", Type =typeof(Node))]
+        public ObservableCollection<Node> Nodes = new ObservableCollection<Node>();
+
+        [XmlArrayItem("Branch", Type = typeof(Branch))]
+        public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();
 
         public DataGridTracker() { }
 

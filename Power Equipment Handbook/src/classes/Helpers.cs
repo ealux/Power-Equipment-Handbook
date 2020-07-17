@@ -1,5 +1,6 @@
 ﻿using Power_Equipment_Handbook.src;
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -214,9 +215,12 @@ namespace Power_Equipment_Handbook
             if(type == "Line")
             {
                 Lines.Clear();
-                string comm = $"SELECT * FROM [Lines] WHERE [Unom] = {unom}".Replace(',','.');
+                string comm = "";
 
-                using(var sqldata = provider.Command_Query(comm, provider.Connection))
+                if (isCable == true) comm = $"SELECT * FROM [Cables] WHERE [Unom] = {unom}".Replace(',','.');
+                else comm = $"SELECT * FROM [Lines] WHERE [Unom] = {unom}".Replace(',', '.');
+
+                using (var sqldata = provider.Command_Query(comm, provider.Connection))
                 {
                     if(sqldata.HasRows == false) return;
 
@@ -408,7 +412,7 @@ namespace Power_Equipment_Handbook
         /// <summary>
         /// Отображение окна Бибилиотеки оборудования
         /// </summary>
-        private void Get_Library(object sender, RoutedEventArgs e)
+        private async void Get_Library(object sender, RoutedEventArgs e)
         {
             if(lib != null)
             { 

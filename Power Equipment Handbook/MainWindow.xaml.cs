@@ -28,6 +28,8 @@ namespace Power_Equipment_Handbook
 
         public Library lib;
 
+        public bool isCable { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -47,12 +49,16 @@ namespace Power_Equipment_Handbook
             txtStartNode_B.ItemsSource = track.Nodes; txtStartNode_B.DisplayMemberPath = "Number";
             txtEndNode_B.ItemsSource = track.Nodes; txtEndNode_B.DisplayMemberPath = "Number";
 
+            chk_Line_Cable.DataContext = this;
+
 
             Lines = new ObservableCollection<Line>();               //Коллекция объектов Линия
             Trans = new ObservableCollection<Trans>();              //Коллекция объектов Двухобмоточный Трансформатор
             MultiTrans = new ObservableCollection<MultiTrans>();    //Коллекция объектов Трехобмоточный Трансформатор/Автотрансформатор
 
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
+
+            isCable = false;
 
         }
         
@@ -857,6 +863,16 @@ namespace Power_Equipment_Handbook
         }
 
 
+        /// <summary>
+        /// Смена режима кабель/линия
+        /// </summary>
+        private void Chk_Line_Cable_Checked(object sender, RoutedEventArgs e)
+        {
+            CmbUnom_SelectionChanged(this.cmbUnom_L, null);
+            if (isCable) chk_Line_Cable.Content = "Кабель";
+            else chk_Line_Cable.Content = "Линия";
+        }
+
         #endregion Обработчики конкретных событий
 
 
@@ -866,5 +882,7 @@ namespace Power_Equipment_Handbook
             if(Tab_Elements.Visibility == Visibility.Collapsed) Tab_Elements.Visibility = Visibility.Visible;
             else Tab_Elements.Visibility = Visibility.Collapsed;
         }
+
+        
     }
 }
