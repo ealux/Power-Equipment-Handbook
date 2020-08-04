@@ -5,6 +5,72 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Power Equipment Handbook" Height="800" Width="1410" ScrollViewer.CanContentScroll="True" SnapsToDevicePixels="True" Icon="185072.ico" MinHeight="800" MinWidth="1410">
+    
+    <Window.Resources>
+        <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="OnChecking">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="25"/>
+                                </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                            <Storyboard x:Key="OnUnchecking">
+                                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
+                                    <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+                                </DoubleAnimationUsingKeyFrames>
+                                <ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                    <SplineThicknessKeyFrame KeyTime="00:00:00.3000000" Value="1,1,1,1"/>
+                                </ThicknessAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+
+                        <StackPanel x:Name="dockPanel" Orientation="Vertical">
+                            <ContentPresenter HorizontalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" ContentTemplate="{TemplateBinding ContentTemplate}" RecognizesAccessKey="True" VerticalAlignment="Center"/>
+                            <Grid Margin="5,2,5,5" Width="50" Background="White">
+                                <TextBlock Text="К" TextWrapping="Wrap" FontWeight="DemiBold" FontSize="12" HorizontalAlignment="Right" Margin="0,2,8.5,2"/>
+                                <TextBlock Text="Л" HorizontalAlignment="Left" Margin="8.5,2,0,2" FontSize="12" FontWeight="DemiBold" TextWrapping="Wrap"/>
+                                <Border HorizontalAlignment="Left" x:Name="slider" Width="23" BorderThickness="1.5,1.5,1.5,1.5" CornerRadius="3,3,3,3" RenderTransformOrigin="0.5,0.5" Margin="1,1,1,1">
+                                    <Border.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                            <SkewTransform AngleX="0" AngleY="0"/>
+                                            <RotateTransform Angle="0"/>
+                                            <TranslateTransform X="0" Y="0"/>
+                                        </TransformGroup>
+                                    </Border.RenderTransform>
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FFABADB3" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard"/>
+                                </Trigger.ExitActions>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
+                                </Trigger.EnterActions>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="0,0,-6,0" RenderTransformOrigin="0.505,0.357" MinWidth="1200">
         <Grid.RowDefinitions>
             <RowDefinition Height="348*"/>
@@ -200,7 +266,7 @@
                         <Label x:Name="lblRegion_L" Content="Район" HorizontalAlignment="Left" Margin="67,18,0,0" VerticalAlignment="Top" Height="24" />
                         <Label x:Name="lblSource_L" Content="{Binding Source, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,185,839,8" Grid.ColumnSpan="3" />
                         <Label Content="Источник: " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="7,185,0,0" />
-                        <CheckBox x:Name="chk_Line_Cable"  Content="Линия" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Margin="43,41,0,0" IsChecked="{Binding Path=isCable, Mode=TwoWay}" Click="Chk_Line_Cable_Checked"/>
+                        <CheckBox x:Name="chk_Line_Cable" Style="{DynamicResource CheckBoxStyle1}" Content="Линия" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Margin="56,24,0,0" IsChecked="{Binding Path=isCable, Mode=TwoWay}" Click="Chk_Line_Cable_Checked"/>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="Tab_Trans" Header="Трансформатор" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129">

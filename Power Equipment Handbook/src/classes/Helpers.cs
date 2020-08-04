@@ -412,7 +412,7 @@ namespace Power_Equipment_Handbook
         /// <summary>
         /// Отображение окна Бибилиотеки оборудования
         /// </summary>
-        private async void Get_Library(object sender, RoutedEventArgs e)
+        private void Get_Library(object sender, RoutedEventArgs e)
         {
             if(lib != null)
             { 
