@@ -76,7 +76,7 @@ namespace Power_Equipment_Handbook
             {
                 if (cmb.SelectedItem == null)
                 {
-                    txtr0_L.Clear(); txtx0_L.Clear(); txtb0_L.Clear(); txtg0_L.Clear(); txtIdd_L.Clear(); lblSource_L.DataContext = String.Empty;
+                    txtr0_L.Clear(); txtx0_L.Clear(); txtb0_L.Clear(); txtg0_L.Clear(); txtIdd_L.Clear();
                     return;
                 }
                 if (Lines.Count == 0) return;
@@ -84,7 +84,7 @@ namespace Power_Equipment_Handbook
                 Line l = Lines.First(n => n.TypeName == ((Line) cmb.SelectedItem).TypeName);
 
                 txtr0_L.DataContext = l; txtx0_L.DataContext = l; txtb0_L.DataContext = l; txtg0_L.DataContext = l;
-                txtIdd_L.DataContext = l; lblSource_L.DataContext = l;
+                txtIdd_L.DataContext = l;
             }
 
             //Выбор марки трансформатора
@@ -267,6 +267,10 @@ namespace Power_Equipment_Handbook
                 double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
                 double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
                 double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
+                double r0 = (string.IsNullOrWhiteSpace(txtR0_L.Text) || double.Parse(txtR0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR0_L.Text, CultureInfo.InvariantCulture);
+                double x0 = (string.IsNullOrWhiteSpace(txtX0_L.Text) || double.Parse(txtX0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX0_L.Text, CultureInfo.InvariantCulture);
+                double b0 = (string.IsNullOrWhiteSpace(txtB0_L.Text) || double.Parse(txtB0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB0_L.Text, CultureInfo.InvariantCulture);
+                double g0 = (string.IsNullOrWhiteSpace(txtG0_L.Text) || double.Parse(txtG0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG0_L.Text, CultureInfo.InvariantCulture);
                 double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
                 int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
 
@@ -276,8 +280,9 @@ namespace Power_Equipment_Handbook
                 do
                 {
                     Branch br = new Branch(start: start, end: end, type: type,
-                                        state: state, typename: typename, name: name, npar: npar,
+                                        state: state, typename: typename, name: name, npar: npar+i,
                                         r: r, x: x, b: b, g: g,
+                                        r0: r0, x0: x0, b0: b0, g0: g0,
                                         ktr: null, idd: idd, region: region);
                     if(BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
                     else return;
@@ -294,6 +299,7 @@ namespace Power_Equipment_Handbook
                 txtName_L.Clear(); txtLength_L.Clear();
                 txtr0_L.DataContext = ""; txtx0_L.DataContext = ""; txtb0_L.DataContext = ""; txtg0_L.DataContext = "";
                 txtR_L.Clear(); txtX_L.Clear(); txtB_L.Clear(); txtG_L.Clear();
+                txtR0_L.Clear(); txtX0_L.Clear(); txtB0_L.Clear(); txtG0_L.Clear();
                 txtNpar_L.Clear(); txtIdd_L.DataContext = "";
                 txtRegion_L.Clear();
                 txtState_L.Text = "0";
@@ -342,8 +348,9 @@ namespace Power_Equipment_Handbook
                     do
                     {
                         Branch br = new Branch(start: start, end: end, type: type,
-                                           state: state, typename: typename, name: name, npar: npar,
+                                           state: state, typename: typename, name: name, npar: npar+i,
                                            r: r, x: x, b: b, g: g,
+                                           r0: r, x0: x, b0: b, g0: g,
                                            ktr: ktr, idd: idd, region: region);
                         if(BranchChecker(br, txtStartNode_T, txtEndHighNode_T) == true) track.AddBranch(br);
                         else return;
@@ -419,16 +426,19 @@ namespace Power_Equipment_Handbook
                         Branch br1 = new Branch(start: start, end: endH, type: type,
                                            state: state, typename: typename, name: nameH, npar: npar,
                                            r: rH, x: xH, b: bH, g: gH,
+                                           r0: rH, x0: xH, b0: bH, g0: gH,
                                            ktr: ktrH, idd: idd, region: region);
 
                         Branch br2 = new Branch(start: endH, end: endM, type: type,
                                                state: state, typename: typename, name: nameM, npar: npar,
                                                r: rM, x: xM, b: bM, g: gM,
+                                               r0: rM, x0: xM, b0: bM, g0: gM,
                                                ktr: ktrM, idd: idd, region: region);
 
                         Branch br3 = new Branch(start: endH, end: endL, type: type,
                                                state: state, typename: typename, name: nameL, npar: npar,
                                                r: rL, x: xL, b: bL, g: gL,
+                                               r0: rL, x0: xL, b0: bL, g0: gL,
                                                ktr: ktrL, idd: idd, region: region);
 
                         bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
@@ -803,10 +813,10 @@ namespace Power_Equipment_Handbook
                         cmbTypeName_L.SelectedIndex = -1;
                         txtName_L.Text = "";
                         txtLength_L.Text = "";
-                        txtr0_L.DataContext = ""; ; txtR_L.Text = ""; ;
-                        txtx0_L.DataContext = ""; ; txtX_L.Text = ""; ;
-                        txtg0_L.DataContext = ""; ; txtG_L.Text = ""; ;
-                        txtb0_L.DataContext = ""; ; txtB_L.Text = "";
+                        txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
+                        txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
+                        txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
+                        txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
                         txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
                         txtState_L.Text = "0";
                         txtRegion_L.Text = "";
@@ -869,8 +879,49 @@ namespace Power_Equipment_Handbook
         private void Chk_Line_Cable_Checked(object sender, RoutedEventArgs e)
         {
             CmbUnom_SelectionChanged(this.cmbUnom_L, null);
-            if (isCable) chk_Line_Cable.Content = "Кабель";
-            else chk_Line_Cable.Content = "Линия";
+            if (isCable)
+            {
+                chk_Line_Cable.Content = "Кабель";
+                cmbGroundWire_L.Visibility = Visibility.Hidden;
+                lblGroundWireName_L.Visibility = Visibility.Hidden;
+                txtEndNode_L.SelectedIndex = -1;
+                var state = cmbUnom_L.SelectedIndex;
+                cmbUnom_L.SelectedIndex = -1;
+                cmbUnom_L.SelectedIndex = state;
+                cmbTypeName_L.SelectedIndex = -1;
+                txtName_L.Text = "";
+                txtLength_L.Text = "";
+                txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
+                txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
+                txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
+                txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
+                txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
+                txtState_L.Text = "0";
+                txtRegion_L.Text = "";
+                txtN_L.Text = "1";
+            }
+            else
+            {
+                chk_Line_Cable.Content = "Линия";
+                cmbGroundWire_L.Visibility = Visibility.Visible;
+                lblGroundWireName_L.Visibility = Visibility.Visible;
+                cmbGroundWire_L.SelectedIndex = 0;
+                txtEndNode_L.SelectedIndex = -1;
+                var state = cmbUnom_L.SelectedIndex;
+                cmbUnom_L.SelectedIndex = -1;
+                cmbUnom_L.SelectedIndex = state;
+                cmbTypeName_L.SelectedIndex = -1;
+                txtName_L.Text = "";
+                txtLength_L.Text = "";
+                txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
+                txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
+                txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
+                txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
+                txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
+                txtState_L.Text = "0";
+                txtRegion_L.Text = "";
+                txtN_L.Text = "1";
+            }
         }
 
         #endregion Обработчики конкретных событий

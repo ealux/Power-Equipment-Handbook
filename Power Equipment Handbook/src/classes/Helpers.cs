@@ -69,29 +69,104 @@ namespace Power_Equipment_Handbook
             DotCommaReplacer(sender: sender, e: e); //Обработка запятых
             if(txtLength_L.Text == "") return;     //Проверка поля Длина
 
+            Line_Calculations_Internal(sender);
+        }
+
+        /// <summary>
+        /// Расчет параметров Линии по Длине и Удельным парамертрам (внутренняя реализация)
+        /// </summary>
+        private void Line_Calculations_Internal(object sender)
+        {
             var use = (TextBox)sender;
-            if(use.Text.StartsWith(".")) return;
+            if (use.Text.StartsWith(".")) return;
 
             NumberFormatInfo provider = new NumberFormatInfo() { NumberDecimalSeparator = "." };
 
+            double x_null_ratio = 1;
+            switch (cmbGroundWire_L.SelectedIndex)
+            {
+                case 0:
+                    x_null_ratio = 3.5;
+                    break;
+                case 1:
+                    x_null_ratio = 3.0;
+                    break;
+                case 2:
+                    x_null_ratio = 2.0;
+                    break;
+                case 3:
+                    x_null_ratio = 5.5;
+                    break;
+                case 4:
+                    x_null_ratio = 4.7;
+                    break;
+                case 5:
+                    x_null_ratio = 3.0;
+                    break;
+            }
+
             double L = Convert.ToDouble(txtLength_L.Text, provider);
 
-            if(use != txtLength_L)
+            if (use != txtLength_L)
             {
                 double res;
-                if(use.Text != "") res = Convert.ToDouble(use.Text, provider) * L;
+                if (use.Text != "") res = Convert.ToDouble(use.Text, provider) * L;
                 else return;
 
-                if(use == txtr0_L) txtR_L.Text = res.ToString(); if(use == txtx0_L) txtX_L.Text = res.ToString();
-                if(use == txtb0_L) txtB_L.Text = res.ToString(); if(use == txtg0_L) txtG_L.Text = res.ToString();
+                if (use == txtr0_L)
+                {
+                    txtR_L.Text = res.ToString();
+                    if (isCable == false) txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) + 0.15) * L).ToString();
+                    else if (isCable == true) txtR0_L.Text = (res * 10).ToString();
+                }
+                if (use == txtx0_L)
+                {
+                    txtX_L.Text = res.ToString();
+                    if (isCable == false) txtX0_L.Text = (res * x_null_ratio).ToString();
+                    else if (isCable == true) txtX0_L.Text = (res * 4).ToString();
+                }
+                if (use == txtb0_L)
+                {
+                    txtB_L.Text = res.ToString();
+                    txtB0_L.Text = (res * 0.575).ToString();
+                }
+                if (use == txtg0_L)
+                {
+                    txtG_L.Text = res.ToString();
+                    txtG0_L.Text = res.ToString();
+                }
+
             }
-            else if(use == txtLength_L)
+            else if (use == txtLength_L)
             {
-                if(txtr0_L.Text != "") txtR_L.Text = (Convert.ToDouble(txtr0_L.Text, provider) * L).ToString();
-                if(txtx0_L.Text != "") txtX_L.Text = (Convert.ToDouble(txtx0_L.Text, provider) * L).ToString();
-                if(txtb0_L.Text != "") txtB_L.Text = (Convert.ToDouble(txtb0_L.Text, provider) * L).ToString();
-                if(txtg0_L.Text != "") txtG_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
+                if (txtr0_L.Text != "") txtR_L.Text = (Convert.ToDouble(txtr0_L.Text, provider) * L).ToString();
+                if (txtx0_L.Text != "") txtX_L.Text = (Convert.ToDouble(txtx0_L.Text, provider) * L).ToString();
+                if (txtb0_L.Text != "") txtB_L.Text = (Convert.ToDouble(txtb0_L.Text, provider) * L).ToString();
+                if (txtg0_L.Text != "") txtG_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
+
+                if (isCable == false) //Если линия
+                {
+                    if (txtr0_L.Text != "") txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) + 0.15) * L).ToString();
+                    if (txtx0_L.Text != "") txtX0_L.Text = ((Convert.ToDouble(txtx0_L.Text, provider) * x_null_ratio) * L).ToString();
+                    if (txtb0_L.Text != "") txtB0_L.Text = ((Convert.ToDouble(txtb0_L.Text, provider) * 0.575) * L).ToString();
+                    if (txtg0_L.Text != "") txtG0_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
+                }
+                else if (isCable == true) //Если кабель
+                {
+                    if (txtr0_L.Text != "") txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) * 10) * L).ToString();
+                    if (txtx0_L.Text != "") txtX0_L.Text = ((Convert.ToDouble(txtx0_L.Text, provider) * 4) * L).ToString();
+                    if (txtb0_L.Text != "") txtB0_L.Text = ((Convert.ToDouble(txtb0_L.Text, provider) * 0.575) * L).ToString();
+                    if (txtg0_L.Text != "") txtG0_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
+                }
             }
+        }
+
+        /// <summary>
+        /// Выбор типа грозотросса
+        /// </summary>
+        private void CmbGroundedWire_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (txtx0_L != null) Line_Calculations_Internal(txtx0_L);
         }
 
         /// <summary>

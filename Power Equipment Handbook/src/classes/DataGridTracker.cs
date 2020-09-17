@@ -59,6 +59,7 @@ namespace Power_Equipment_Handbook.src
         private string name;
         private string typename;
         private double r; private double x; private double g; private double b;
+        private double r0; private double x0; private double g0; private double b0;
         private double? ktr;
         private double idd;
         private int region;
@@ -141,6 +142,33 @@ namespace Power_Equipment_Handbook.src
             get => b;
             set { SetProperty(ref b, value); }
         }
+        [XmlAttribute]
+        public double R0
+        {
+            get => r0;
+            set { SetProperty(ref r0, value); }
+        }
+
+        [XmlAttribute]
+        public double X0
+        {
+            get => x0;
+            set { SetProperty(ref x0, value); }
+        }
+
+        [XmlAttribute]
+        public double G0
+        {
+            get => g0;
+            set { SetProperty(ref g0, value); }
+        }
+
+        [XmlAttribute]
+        public double B0
+        {
+            get => b0;
+            set { SetProperty(ref b0, value); }
+        }
 
         [XmlIgnore]
         public double? Ktr
@@ -179,7 +207,9 @@ namespace Power_Equipment_Handbook.src
         }
 
         public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "",
-                      int npar = 0, double r = 0, double x = 0, double b = 0, double g = 0,
+                      int npar = 0, 
+                      double r = 0, double x = 0, double b = 0, double g = 0,
+                      double r0 = 0, double x0 = 0, double b0 = 0, double g0 = 0,
                       double idd = 0, int region = 0)
         {
             State = state;
@@ -189,6 +219,7 @@ namespace Power_Equipment_Handbook.src
             Npar = npar;
             TypeName = typename; Name = name;
             R = r; X = x; B = b; G = g;
+            R0 = r0; X0 = x0; B0 = b0; G0 = g0;
             Ktr = ktr;
             Idd = idd;
             Region = region;
