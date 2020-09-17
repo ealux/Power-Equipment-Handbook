@@ -105,7 +105,7 @@ namespace Power_Equipment_Handbook
                     break;
             }
 
-            double L = Convert.ToDouble(txtLength_L.Text, provider);
+            double L = txtLength_L.Text != "" ? Convert.ToDouble(txtLength_L.Text, provider) : 0.0;
 
             if (use != txtLength_L)
             {
