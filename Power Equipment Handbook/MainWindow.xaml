@@ -382,7 +382,7 @@
                         </Ellipse>
                         <TextBox x:Name="txtGH_T" Text="{Binding G, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="22" Margin="869,100,0,0" VerticalAlignment="Top" Width="74" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" MaxLength="10" PreviewTextInput="DoubleChecker" x:FieldModifier="public" TextChanged="DotCommaReplacer" Grid.Column="1" TabIndex="2147483647" />
                         <Label x:Name="lblGH_T" Content="G ВН, мкрСм" HorizontalAlignment="Left" Margin="872,74,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" Grid.Column="1" />
-                        <GroupBox x:Name="grpMid" Header="Средняя обмотка" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="378" FontSize="10" Margin="355,-2,0,0" BorderBrush="#FFB5BBBF" Grid.Column="1" Visibility="Visible">
+                        <GroupBox x:Name="grpMid" Header="Средняя обмотка" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="378" FontSize="10" Margin="357,-2,0,0" BorderBrush="#FFB5BBBF" Grid.Column="1" Visibility="Visible">
                             <Grid x:Name="gridMid" Margin="0,10,-2,-5">
                                 <Label x:Name="lblEndMidNode_T" Content="Конец СН" HorizontalAlignment="Left" Margin="-4,-4,0,0" VerticalAlignment="Top" Height="24" FontSize="10" />
                                 <Label x:Name="lblUnomMid_T_Copy" Content="Uном СН" HorizontalAlignment="Left" Margin="53,-6,0,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" />
@@ -424,7 +424,7 @@
                                 <Label x:Name="lblXM_T" Content="X СН, Ом" HorizontalAlignment="Left" Margin="291,-6,-6,0" VerticalAlignment="Top" Height="26" RenderTransformOrigin="1.035,0.573" FontSize="10" />
                             </Grid>
                         </GroupBox>
-                        <GroupBox x:Name="grpLow" Header="Низшая обмотка" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="378" FontSize="10" Margin="355,132,0,0" BorderBrush="#FFB5BBBF" Grid.Column="1" Visibility="Visible">
+                        <GroupBox x:Name="grpLow" Header="Низшая обмотка" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="378" FontSize="10" Margin="357,132,0,0" BorderBrush="#FFB5BBBF" Grid.Column="1" Visibility="Visible">
                             <Grid x:Name="grdLow" Margin="0,5,-2,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="194*" />
