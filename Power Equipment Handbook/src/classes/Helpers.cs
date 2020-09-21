@@ -321,7 +321,7 @@ namespace Power_Equipment_Handbook
             if(type == "Trans")
             {
                 //Двухобмоточные
-                if(cmbType_T.Text == "двух.")
+                if(cmbType_T.Text == "двух." & cmbType_T.SelectedIndex == 0)
                 {
                     Trans.Clear();
                     string comm = $"SELECT * FROM [Trans] WHERE [Unom] = {unom}".Replace(',', '.');
@@ -332,6 +332,9 @@ namespace Power_Equipment_Handbook
 
                         while(sqldata.Read())
                         {
+                            var snom_loc = sqldata["Snom"] as double?;
+                            var unom_loc = sqldata["UnomH"] as double?;
+
                             Trans.Add(new Trans()
                             {
                                 Unom = sqldata["Unom"] as double?,
@@ -342,7 +345,8 @@ namespace Power_Equipment_Handbook
                                 X = sqldata["X"] as double?,
                                 B = sqldata["B"] as double?,
                                 G = sqldata["G"] as double?,
-                                Source = sqldata["Source"] as string
+                                Source = sqldata["Source"] as string,
+                                Inom = (snom_loc / unom_loc / Math.Sqrt(3)).HasValue ? (double?)Math.Round((double)(snom_loc / unom_loc / Math.Sqrt(3)), 2) : null
                             });
                         }
                     }
@@ -351,7 +355,7 @@ namespace Power_Equipment_Handbook
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
                 }
                 //Трехобмоточные и Автотрансформаторы
-                if(cmbType_T.Text == "тр./АТ")
+                if(cmbType_T.Text == "тр./АТ" & cmbType_T.SelectedIndex == 1)
                 {
                     MultiTrans.Clear();
                     string comm = $"SELECT * FROM [MultiTrans] WHERE [Unom] = {unom}".Replace(',', '.');
@@ -362,6 +366,11 @@ namespace Power_Equipment_Handbook
 
                         while(sqldata.Read())
                         {
+                            var snom_loc = sqldata["Snom"] as double?;
+                            var unomh_loc = sqldata["UnomH"] as double?;
+                            var unomm_loc = sqldata["UnomM"] as double?;
+                            var unoml_loc = sqldata["UnomL"] as double?;
+
                             MultiTrans.Add(new MultiTrans()
                             {
                                 Unom = sqldata["Unom"] as double?,
@@ -377,7 +386,10 @@ namespace Power_Equipment_Handbook
                                 XL = sqldata["XL"] as double?,
                                 B = sqldata["B"] as double?,
                                 G = sqldata["G"] as double?,
-                                Source = sqldata["Source"] as string
+                                Source = sqldata["Source"] as string,
+                                Inomh = (snom_loc / unomh_loc / Math.Sqrt(3)).HasValue ? (double?)Math.Round((double)(snom_loc / unomh_loc / Math.Sqrt(3)), 2) : null,
+                                Inomm = (snom_loc / unomm_loc / Math.Sqrt(3)).HasValue ? (double?)Math.Round((double)(snom_loc / unomm_loc / Math.Sqrt(3)), 2) : null,
+                                Inoml = (snom_loc / unoml_loc / Math.Sqrt(3)).HasValue ? (double?)Math.Round((double)(snom_loc / unoml_loc / Math.Sqrt(3)), 2) : null
                             });
                         }
                     }

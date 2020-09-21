@@ -530,6 +530,7 @@ namespace Power_Equipment_Handbook.src
         private double? unom;
         private string type;
         private string typename;
+        private double? inom;
         private double? unomh; private double? unoml;
         private double? r; private double? x; private double? b; private double? g;
         private string source;
@@ -552,6 +553,12 @@ namespace Power_Equipment_Handbook.src
         {
             get { return typename; }
             set { SetProperty(ref typename, value); }
+        }
+
+        public double? Inom
+        {
+            get { return inom; }
+            set { SetProperty(ref inom, value); }
         }
 
         public double? UnomH
@@ -628,6 +635,7 @@ namespace Power_Equipment_Handbook.src
         private double? unom;
         private string type;
         private string typename;
+        private double? inomh, inomm, inoml;
         private double? unomh; private double? unomm; private double? unoml;
         private double? rh; private double? rm; private double? rl;
         private double? xh; private double? xm; private double? xl;
@@ -652,6 +660,24 @@ namespace Power_Equipment_Handbook.src
         {
             get { return typename; }
             set { SetProperty(ref typename, value); }
+        }
+
+        public double? Inomh
+        {
+            get { return inomh; }
+            set { SetProperty(ref inomh, value); }
+        }
+
+        public double? Inomm
+        {
+            get { return inomm; }
+            set { SetProperty(ref inomm, value); }
+        }
+
+        public double? Inoml
+        {
+            get { return inoml; }
+            set { SetProperty(ref inoml, value); }
         }
 
         public double? UnomH

@@ -95,7 +95,8 @@ namespace Power_Equipment_Handbook
                 {
                     if (cmb.SelectedItem == null)
                     {
-                        txtRH_T.Clear(); txtXH_T.Clear(); txtBH_T.Clear(); txtGH_T.Clear(); txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); lblSource_T.Content = String.Empty;
+                        txtRH_T.Clear(); txtXH_T.Clear(); txtBH_T.Clear(); txtGH_T.Clear(); txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear();
+                        txtIddH_T.Clear();
                         return;
                     }
                     if (Trans.Count == 0) return;
@@ -108,11 +109,10 @@ namespace Power_Equipment_Handbook
                     txtXH_T.SetBinding(TextBox.TextProperty, new Binding("X") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                     txtBH_T.SetBinding(TextBox.TextProperty, new Binding("B") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                     txtGH_T.SetBinding(TextBox.TextProperty, new Binding("G") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtIddH_T.SetBinding(TextBox.TextProperty, new Binding("Inom") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
 
                     txtUnomHigh_T.SetBinding(TextBox.TextProperty, new Binding("UnomH") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                     txtUnomLowDouble_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
-
-                    lblSource_T.Content = t.Source;
                 }
                 //Трехобмоточные и Автотрансформаторы
                 if (cmbType_T.Text == "тр./АТ")
@@ -123,7 +123,7 @@ namespace Power_Equipment_Handbook
                         txtXH_T.Clear(); txtXM_T.Clear(); txtXL_T.Clear();
                         txtBH_T.Clear(); txtGH_T.Clear();
                         txtUnomHigh_T.Clear(); txtUnomMid_T.Clear(); txtUnomLow_T.Clear();
-                        lblSource_T.Content = String.Empty;
+                        txtIddH_T.Clear(); txtIddM_T.Clear(); txtIddL_T.Clear();
                         return;
                     }
                     if (MultiTrans.Count == 0) return;
@@ -147,7 +147,9 @@ namespace Power_Equipment_Handbook
                     txtUnomMid_T.SetBinding(TextBox.TextProperty, new Binding("UnomM") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                     txtUnomLow_T.SetBinding(TextBox.TextProperty, new Binding("UnomL") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
 
-                    lblSource_T.Content = t.Source;
+                    txtIddH_T.SetBinding(TextBox.TextProperty, new Binding("Inomh") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtIddM_T.SetBinding(TextBox.TextProperty, new Binding("Inomm") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
+                    txtIddL_T.SetBinding(TextBox.TextProperty, new Binding("Inoml") { Source = t, Mode = BindingMode.OneWay, UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged });
                 }
             }
         }
@@ -157,23 +159,44 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void CmbType_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbType_T.SelectedValue == cmbType_T.Items[0])
-            {
-                grpMid.Visibility = grpLow.Visibility = Visibility.Hidden;
-                lblKH_KML_T.Content = "Kтр ВН";
-                lblEndHighNode_T.Content = "Конец";
-                elUnom_T_2.Visibility = lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Visible;
-                elUnom_T_1.Width = 6;
-            }
-            else if (cmbType_T.SelectedValue == cmbType_T.Items[1])
-            {
-                txtKH_KML_T.Text = "1";
-                grpMid.Visibility = grpLow.Visibility = Visibility.Visible;
-                lblKH_KML_T.Content = "Kтр В(Ктр С-Н)";
-                lblEndHighNode_T.Content = "Ср. точка";
-                elUnom_T_2.Visibility = lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Hidden;
-                elUnom_T_1.Width = 65;
-            }
+            Application.Current.Dispatcher?.Invoke(delegate ()
+            {            
+                if ((e.AddedItems.Count != 0) && ((ListBoxItem)e.AddedItems[0] == cmbType_T.Items[0]))
+                {
+                    cmbType_T.SelectedItem = cmbType_T.Items[0];
+
+                    int state = txtStartNode_T.SelectedIndex;
+                    int state_unom = cmbUnom_T.SelectedIndex;
+
+                    txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
+                    cmbUnom_T.SelectedItem = null; cmbUnom_T.SelectedIndex = state_unom;
+
+                    txtKH_KML_T.Clear();
+                    grpMid.Visibility = grpLow.Visibility = Visibility.Hidden;
+                    lblKH_KML_T.Content = "Kтр ВН";
+                    lblEndHighNode_T.Content = "Конец";
+                    lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Visible;
+                }
+                else if ((e.AddedItems.Count != 0) && ((ListBoxItem)e.AddedItems[0] == cmbType_T.Items[1]))
+                {
+                    cmbType_T.SelectedItem = cmbType_T.Items[1];
+
+                    int state = txtStartNode_T.SelectedIndex;
+                    int state_unom = cmbUnom_T.SelectedIndex;
+
+                    txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
+                    cmbUnom_T.SelectedItem = null; cmbUnom_T.SelectedIndex = state_unom;
+
+                    txtKH_KML_T.Text = "1";
+                    txtKHL_T.Clear(); txtKHM_T.Clear();
+                    grpMid.Visibility = grpLow.Visibility = Visibility.Visible;
+                    lblKH_KML_T.Content = "Kтр В(Ктр С-Н)";
+                    lblEndHighNode_T.Content = "Ср. точка";
+                    lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Hidden;                    
+                }
+
+                if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
+            });
         }
 
         /// <summary>
@@ -181,9 +204,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void CmbType_T_DropDownClosed(object sender, EventArgs e)
         {
-            int state = txtStartNode_T.SelectedIndex;
-            txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
-            if(cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
+            if(e != null) if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
         }
 
         /// <summary>
@@ -339,7 +360,7 @@ namespace Power_Equipment_Handbook
                     double b = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
                     double g = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
                     double ktr = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
-                    double idd = 0;
+                    double idd = (string.IsNullOrWhiteSpace(txtIddH_T.Text) || double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture);
                     int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
 
                     int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
@@ -371,6 +392,7 @@ namespace Power_Equipment_Handbook
                     txtRegion_T.Clear();
                     txtState_T.Text = "0";
                     txtN_T.Text = "1";
+                    txtIddH_T.Clear();
 
                     Log.Clear();
 
@@ -403,18 +425,20 @@ namespace Power_Equipment_Handbook
                     double bH = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
                     double gH = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
                     double ktrH = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
+                    double iddH = (string.IsNullOrWhiteSpace(txtIddH_T.Text) || double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture);
                     //СН
                     double rM = (string.IsNullOrWhiteSpace(txtRM_T.Text) || double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture);
                     double xM = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture);
                     double bM = 0; double gM = 0;
                     double ktrM = (string.IsNullOrWhiteSpace(txtKHM_T.Text) || double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture);
+                    double iddM = (string.IsNullOrWhiteSpace(txtIddM_T.Text) || double.Parse(txtIddM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddM_T.Text, CultureInfo.InvariantCulture);
                     //НН
                     double rL = (string.IsNullOrWhiteSpace(txtRL_T.Text) || double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture);
                     double xL = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture);
                     double bL = 0; double gL = 0;
                     double ktrL = (string.IsNullOrWhiteSpace(txtKHL_T.Text) || double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture);
+                    double iddL = (string.IsNullOrWhiteSpace(txtIddL_T.Text) || double.Parse(txtIddL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddL_T.Text, CultureInfo.InvariantCulture);
 
-                    double idd = 0;
                     int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
 
                     int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
@@ -427,19 +451,19 @@ namespace Power_Equipment_Handbook
                                            state: state, typename: typename, name: nameH, npar: npar,
                                            r: rH, x: xH, b: bH, g: gH,
                                            r0: rH, x0: xH, b0: bH, g0: gH,
-                                           ktr: ktrH, idd: idd, region: region);
+                                           ktr: ktrH, idd: iddH, region: region);
 
                         Branch br2 = new Branch(start: endH, end: endM, type: type,
                                                state: state, typename: typename, name: nameM, npar: npar,
                                                r: rM, x: xM, b: bM, g: gM,
                                                r0: rM, x0: xM, b0: bM, g0: gM,
-                                               ktr: ktrM, idd: idd, region: region);
+                                               ktr: ktrM, idd: iddM, region: region);
 
                         Branch br3 = new Branch(start: endH, end: endL, type: type,
                                                state: state, typename: typename, name: nameL, npar: npar,
                                                r: rL, x: xL, b: bL, g: gL,
                                                r0: rL, x0: xL, b0: bL, g0: gL,
-                                               ktr: ktrL, idd: idd, region: region);
+                                               ktr: ktrL, idd: iddL, region: region);
 
                         bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
                         bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
@@ -470,6 +494,7 @@ namespace Power_Equipment_Handbook
                     txtRegion_T.Clear();
                     txtState_T.Text = "0";
                     txtN_T.Text = "1";
+                    txtIddH_T.Clear(); txtIddM_T.Clear(); txtIddL_T.Clear();
 
                     Log.Clear();
 
@@ -527,32 +552,35 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void CmbUnom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox cmb = (ComboBox)sender;
+            Application.Current.Dispatcher?.Invoke((Action)delegate ()
+            { 
+                ComboBox cmb = (ComboBox)sender;
 
-            if (cmb.Equals(cmbUnom_L))
-            {
-                if (cmb.SelectedItem == null)
+                if (cmb.Equals(cmbUnom_L))
                 {
-                    Lines.Clear();
-                    return;
-                }
-                if(((ListBoxItem) cmb.SelectedItem).Content.ToString() == "0.4") GetData("Line", 0.4, db_prv);
-                else if (((ListBoxItem) cmb.SelectedItem).Content.ToString() == "27.5") GetData("Line", 27.5, db_prv);
-                else { GetData("Line", Convert.ToInt32(((ListBoxItem) cmbUnom_L.SelectedItem).Content.ToString()), db_prv); }
+                    if (cmb.SelectedItem == null)
+                    {
+                        Lines.Clear();
+                        return;
+                    }
+                    if(((ListBoxItem) cmb.SelectedItem).Content.ToString() == "0.4") GetData("Line", 0.4, db_prv);
+                    else if (((ListBoxItem) cmb.SelectedItem).Content.ToString() == "27.5") GetData("Line", 27.5, db_prv);
+                    else { GetData("Line", Convert.ToInt32(((ListBoxItem) cmbUnom_L.SelectedItem).Content.ToString()), db_prv); }
                 
-            }
-            if (cmb.Equals(cmbUnom_T))
-            {
-                if (cmb.SelectedItem == null)
-                {
-                    Trans.Clear();
-                    MultiTrans.Clear();
-                    return;
                 }
-                if(((ListBoxItem) cmb.SelectedItem).Content.ToString() == "0.4") GetData("Trans", 0.4, db_prv);
-                else if(((ListBoxItem) cmb.SelectedItem).Content.ToString() == "27.5") GetData("Trans", 27.5, db_prv);
-                else GetData("Trans", double.Parse(((ListBoxItem) cmb.SelectedItem).Content.ToString()), db_prv);
-            }
+                if (cmb.Equals(cmbUnom_T))
+                {
+                    if (cmb.SelectedItem == null)
+                    {
+                        Trans.Clear();
+                        MultiTrans.Clear();
+                        return;
+                    }
+                    if (((ListBoxItem)cmb.SelectedItem).Content.ToString() == "0.4") GetData("Trans", 0.4, db_prv);
+                    else if (((ListBoxItem)cmb.SelectedItem).Content.ToString() == "27.5") GetData("Trans", 27.5, db_prv);
+                    else GetData("Trans", double.Parse(((ListBoxItem)cmb.SelectedItem).Content.ToString()), db_prv);
+                }
+            });
         }
 
         /// <summary>
@@ -824,7 +852,7 @@ namespace Power_Equipment_Handbook
                         break;
                     case 2: //Трансформаторы
                         state = cmbType_T.SelectedIndex;
-                        cmbType_T.SelectedIndex = -1;
+                        cmbType_T.SelectedItem = null;
                         cmbType_T.SelectedIndex = state;
                         state = cmbUnom_T.SelectedIndex;
                         cmbUnom_T.SelectedIndex = -1;
@@ -833,13 +861,16 @@ namespace Power_Equipment_Handbook
                         txtName_T.Text = "";
                         txtEndHighNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1;
                         txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = ""; txtUnomLow_T.DataContext = ""; txtUnomMid_T.DataContext = "";
-                        txtKHL_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKH_KML_T.DataContext = "";
-                        txtRH_T.DataContext = ""; txtRL_T.DataContext = ""; txtRM_T.DataContext = "";
-                        txtXH_T.DataContext = ""; txtXL_T.DataContext = ""; txtXM_T.DataContext = "";
-                        txtBH_T.DataContext = ""; txtGH_T.DataContext = "";
+                        txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); txtUnomLow_T.Clear(); txtUnomMid_T.Clear();
+                        txtKHL_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKH_KML_T.DataContext = ""; txtKHL_T.Clear(); txtKHM_T.Clear(); txtKH_KML_T.Clear();
+                        txtRH_T.DataContext = ""; txtRL_T.DataContext = ""; txtRM_T.DataContext = ""; txtRH_T.Clear(); txtRL_T.Clear(); txtRM_T.Clear();
+                        txtXH_T.DataContext = ""; txtXL_T.DataContext = ""; txtXM_T.DataContext = ""; txtXH_T.Clear(); txtXL_T.Clear(); txtXM_T.Clear();
+                        txtBH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.Clear(); txtGH_T.Clear();
                         txtState_T.Text = "0";
                         txtRegion_T.Text = "";
                         txtN_T.Text = "1";
+                        txtIddH_T.DataContext = ""; txtIddM_T.DataContext = ""; txtIddL_T.DataContext = "";
+                        txtIddH_T.Clear(); txtIddM_T.Clear(); txtIddL_T.Clear();
                         break;
                     case 3: //Выключатели
                         state = cmbUnom_B.SelectedIndex;
