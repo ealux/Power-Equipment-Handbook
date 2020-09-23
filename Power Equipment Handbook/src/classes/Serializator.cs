@@ -88,8 +88,11 @@ namespace Power_Equipment_Handbook.src
 
                     string[] lblNode = new string[] { "O", "S", "Тип", "Номер", "Название" , "U_nom", "N_схн" , "Район" , "P_н" ,
                                                       "Q_н", "P_г", "Q_г", "V_зд", "Q_min", "Q_max", "B_ш", "V", "Delta", "Район2"};
-                    string[] lblBranch = new string[] { "O", "S", "Тип", "N_нач", "N_кон", "N_п", "ID Группы", "Название", "R", "X", "G", "B",
-                                                        "Kт/r", "N_анц", "БД_нач", "P_нач", "Q_нач", "Na", "I max", "I загр.", "Idop_25"};
+                    string[] lblBranch = new string[] { "O", "S", "Тип", "N_нач", "N_кон", 
+                                                        "N_п", "ID Группы", "Название", 
+                                                        "R", "X", "G", "B", "R0", "X0", "G0", "B0",
+                                                        "Kт/r", "N_анц", "БД_нач", "P_нач", "Q_нач", 
+                                                        "Na", "I max", "I загр.", "Idop_25"};
                     //Подготовка узлов
                     for(int i = 1; i < 20; i++)
                     {
@@ -98,7 +101,7 @@ namespace Power_Equipment_Handbook.src
                         sheetNodes.Cells[1, i].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Green);     //Закраска ячейки
                     }
                     //Подготовка ветвей
-                    for(int i = 1; i < 22; i++)
+                    for(int i = 1; i < 26; i++)
                     {
                         sheetBranches.Cells[1, i].Value = lblBranch[i - 1];                                         //Вставка значения
                         sheetBranches.Cells[1, i].Style.Fill.PatternType = ExcelFillStyle.Solid;                    //Закраска ячейки
@@ -107,7 +110,7 @@ namespace Power_Equipment_Handbook.src
                     }
 
                     sheetNodes.Cells[1, 1, 1, 19].AutoFilter = true;                                                //Добавка фильтра
-                    sheetBranches.Cells[1, 1, 1, 21].AutoFilter = true;                                             //Добавка фильтра
+                    sheetBranches.Cells[1, 1, 1, 25].AutoFilter = true;                                             //Добавка фильтра
 
                     #endregion Excel PreDesign
 
@@ -157,17 +160,21 @@ namespace Power_Equipment_Handbook.src
                         sheetBranches.Cells[i + 1, 10].Value = track.Branches[i - 1].X;
                         sheetBranches.Cells[i + 1, 11].Value = track.Branches[i - 1].G;
                         sheetBranches.Cells[i + 1, 12].Value = track.Branches[i - 1].B;
-                        sheetBranches.Cells[i + 1, 13].Value = track.Branches[i - 1].Ktr == null ? String.Empty : track.Branches[i - 1].Ktr.ToString(); //Check
-                        sheetBranches.Cells[i + 1, 14].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 15].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 16].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 17].Value = String.Empty;
+                        sheetBranches.Cells[i + 1, 13].Value = track.Branches[i - 1].R0;
+                        sheetBranches.Cells[i + 1, 14].Value = track.Branches[i - 1].X0;
+                        sheetBranches.Cells[i + 1, 15].Value = track.Branches[i - 1].G0;
+                        sheetBranches.Cells[i + 1, 16].Value = track.Branches[i - 1].B0;
+                        sheetBranches.Cells[i + 1, 17].Value = track.Branches[i - 1].Ktr == null ? String.Empty : track.Branches[i - 1].Ktr.ToString(); //Check
                         sheetBranches.Cells[i + 1, 18].Value = String.Empty;
                         sheetBranches.Cells[i + 1, 19].Value = String.Empty;
                         sheetBranches.Cells[i + 1, 20].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 21].Value = track.Branches[i - 1].Idd / 1000;
+                        sheetBranches.Cells[i + 1, 21].Value = String.Empty;
+                        sheetBranches.Cells[i + 1, 22].Value = String.Empty;
+                        sheetBranches.Cells[i + 1, 23].Value = String.Empty;
+                        sheetBranches.Cells[i + 1, 24].Value = String.Empty;
+                        sheetBranches.Cells[i + 1, 25].Value = track.Branches[i - 1].Idd / 1000;
 
-                        for(int j = 1; j < 22; j++)
+                        for(int j = 1; j < 26; j++)
                         {
                             sheetBranches.Cells[i, j].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                             sheetBranches.Cells[i, j].Style.Border.BorderAround(ExcelBorderStyle.Thin);

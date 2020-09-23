@@ -71,16 +71,41 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="0,0,-6,0" RenderTransformOrigin="0.505,0.357" MinWidth="1200">
+    <Grid x:Name="gridGlobal" Margin="0,0,-6,0" RenderTransformOrigin="0.505,0.357" MinWidth="1200">
         <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
             <RowDefinition Height="348*"/>
             <RowDefinition Height="17*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="600*"/>
+            <ColumnDefinition Width="195*" MinWidth="150"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="950*" MinWidth="1200"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Name="MainControlsStack" Grid.Column="1" LastChildFill="True" Margin="0,25,10,0" VerticalAlignment="Stretch" Height="Auto" Width="Auto">
+        <Menu Height="20" VerticalAlignment="Top" Margin="0,0,6,0" Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="Файл" Height="20" Width="40" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0">
+                <MenuItem Header="Импорт" Click="Import_Click"/>
+                <MenuItem Header="Экспорт" Click="Export_Click"/>
+                <Separator/>
+            </MenuItem>
+            <MenuItem Header="Инструменты" Height="20" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0" >
+                <MenuItem Header="Связность" Click="Connectivity"/>
+            </MenuItem>
+            <MenuItem Header="Справочник" Click="Get_Library"/>
+        </Menu>
+        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="5,2,0,0" Click="Button_Click" Height="20" Grid.Column="0" Grid.Row="1"/>
+        <TabControl x:Name="Tab_Side" DockPanel.Dock="Left" Margin="5,25,0,0" Grid.Column="0" Grid.Row="1">
+            <TabItem Header="Схемы">
+
+            </TabItem>
+            <TabItem Header="Инструменты">
+
+            </TabItem>
+        </TabControl>
+        <GridSplitter x:Name="spliterGridGlobal" VerticalAlignment="Stretch" Margin="2,5,2,5" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Width="2.5" Background="#FF9B9797" MouseDoubleClick="GridSplitter_MouseDoubleClick" ToolTipService.InitialShowDelay="250"> <!--ToolTip="">-->
+            <GridSplitter.ToolTip><TextBlock>Двн.щелч.: Скрыть/Раскрыть боуовую панель</TextBlock></GridSplitter.ToolTip>
+        </GridSplitter>
+        <DockPanel Height="Auto" Name="MainControlsStack" LastChildFill="True" Margin="0,5,10,0" Width="Auto" Grid.Column="2" Grid.Row="1" MinWidth="950">
             <TabControl x:Name="Tab_Elements" KeyDown="Tab_Elements_KeyDown" Width="Auto" Height="250" DockPanel.Dock="Top">
                 <TabItem Header="Узел" Margin="-2,-2,-48,0">
                     <Grid Margin="0,-2,0,0" Height="Auto" Width="Auto">
@@ -398,22 +423,11 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
-        <StackPanel Orientation="Horizontal" Margin="1,4,6,0" MaxHeight="25" Grid.Row="1" Grid.Column="1" Height="25" VerticalAlignment="Top" Width="Auto">
-            <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Center" Width="245" FontFamily="Showcard Gothic" Background="White" BorderBrush="{x:Null}" FontWeight="Bold" AllowDrop="False" IsTabStop="False" Focusable="False" Margin="2,2,2,3" Foreground="Black"/>
-            <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC"/>
-            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="938" Foreground="Red" Text="Log" VerticalAlignment="Center" Margin="8,4,8,5"/>
+        <StackPanel Orientation="Horizontal" Margin="1,0,10,6" MaxHeight="25" Grid.Row="2" Width="Auto" Grid.ColumnSpan="3" Height="25" VerticalAlignment="Bottom">
+            <TextBox x:Name="Status_Text" HorizontalAlignment="Left" Height="20" Grid.Column="0" TextWrapping="Wrap" Text="Состояние подключения: " VerticalAlignment="Center" Width="245" FontFamily="Showcard Gothic" Background="White" BorderBrush="{x:Null}" FontWeight="Bold" AllowDrop="False" IsTabStop="False" Focusable="False" Margin="2,2,2,3" Foreground="Black"/>
+            <GridSplitter Height="22" Width="1" RenderTransformOrigin="-1.75,0.489" Background="#FFACACAC" Margin="7.5,2,0,1" IsEnabled="False"/>
+            <TextBlock x:Name="txtLog" TextWrapping="Wrap" Width="938" Foreground="Red" Text="Log" VerticalAlignment="Center" Margin="8,4,8,5" Grid.Column="2"/>
         </StackPanel>
-        <Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,6,0">
-            <MenuItem Header="Файл" Height="20" Width="40" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0">
-                <MenuItem Header="Импорт" Click="Import_Click"/>
-                <MenuItem Header="Экспорт" Click="Export_Click"/>
-                <Separator/>
-            </MenuItem>
-            <MenuItem Header="Инструменты" Height="20" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0" >
-                <MenuItem Header="Связность" Click="Connectivity"/>
-            </MenuItem>
-            <MenuItem Header="Справочник" Click="Get_Library"/>
-        </Menu>
-        <Button Content="Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="70,188,0,0" Click="Button_Click" Height="20"/>
+        
     </Grid>
 </Window>

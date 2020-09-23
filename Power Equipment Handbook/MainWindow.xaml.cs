@@ -1,6 +1,7 @@
 ﻿using Power_Equipment_Handbook.src;
 using Power_Equipment_Handbook.src.windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public partial class MainWindow
     {
+        private readonly string MainTitle = "Power Equipment Handbook";
+
+        private List<DataGridTracker> tracks;
         private DataGridTracker track;
         private DBProvider db_prv;
 
@@ -29,11 +33,13 @@ namespace Power_Equipment_Handbook
         public Library lib;
 
         public bool isCable { get; set; }
+        private GridLength SideWidth { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             track = new DataGridTracker(grdNodes, grdBranches);
+            tracks = new List<DataGridTracker>();
 
             db_prv = new DBProvider("test.db");                     //Инициализация подключения к встроенной БД оборудования
             Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
@@ -965,6 +971,28 @@ namespace Power_Equipment_Handbook
             else Tab_Elements.Visibility = Visibility.Collapsed;
         }
 
-        
+        /// <summary>
+        /// Сокрытие/Открытие сайдбара с двойного щелчка
+        /// </summary>
+        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if(Tab_Side.Visibility != Visibility.Collapsed)
+            {
+                this.SideWidth = this.gridGlobal.ColumnDefinitions[0].Width;
+                this.gridGlobal.ColumnDefinitions[0].MinWidth = 0;
+                this.gridGlobal.ColumnDefinitions[0].MaxWidth = 0;
+                this.spliterGridGlobal.Cursor = Cursors.ScrollE;
+                this.gridGlobal.ColumnDefinitions[0].Width = new GridLength(0, GridUnitType.Star);
+                Tab_Side.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                this.gridGlobal.ColumnDefinitions[0].MinWidth = 150;
+                this.gridGlobal.ColumnDefinitions[0].MaxWidth = Single.MaxValue;
+                this.gridGlobal.ColumnDefinitions[0].Width = this.SideWidth;
+                this.spliterGridGlobal.Cursor = Cursors.SizeWE;
+                Tab_Side.Visibility = Visibility.Visible;
+            }
+        }
     }
 }
