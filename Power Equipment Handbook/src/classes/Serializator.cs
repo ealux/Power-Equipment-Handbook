@@ -26,7 +26,7 @@ namespace Power_Equipment_Handbook.src
             this.track = tracker;
         }
 
-        #region *.pen (xml) serializator behevior
+        #region *.peh (xml) serializator behevior
 
         /// <summary>
         /// Сериализация в XML-структуру с внутренним расширением *.peh

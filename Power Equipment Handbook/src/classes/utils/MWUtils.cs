@@ -1,13 +1,9 @@
 ﻿using Power_Equipment_Handbook.src;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
@@ -57,150 +53,6 @@ namespace Power_Equipment_Handbook
                     tb.Select(c.Offset, c.AddedLength);
                     if(tb.SelectedText.Contains(',')) tb.SelectedText = tb.SelectedText.Replace(',', '.');
                     tb.Select(c.Offset + c.AddedLength, 0);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Расчет параметров Линии по Длине и Удельным парамертрам (автоподстановка)
-        /// </summary>
-        private void Line_Calculations(object sender, TextChangedEventArgs e)
-        {
-            DotCommaReplacer(sender: sender, e: e); //Обработка запятых
-            if(txtLength_L.Text == "") return;     //Проверка поля Длина
-
-            Line_Calculations_Internal(sender);
-        }
-
-        /// <summary>
-        /// Расчет параметров Линии по Длине и Удельным парамертрам (внутренняя реализация)
-        /// </summary>
-        private void Line_Calculations_Internal(object sender)
-        {
-            var use = (TextBox)sender;
-            if (use.Text.StartsWith(".")) return;
-
-            NumberFormatInfo provider = new NumberFormatInfo() { NumberDecimalSeparator = "." };
-
-            double x_null_ratio = 1;
-            switch (cmbGroundWire_L.SelectedIndex)
-            {
-                case 0:
-                    x_null_ratio = 3.5;
-                    break;
-                case 1:
-                    x_null_ratio = 3.0;
-                    break;
-                case 2:
-                    x_null_ratio = 2.0;
-                    break;
-                case 3:
-                    x_null_ratio = 5.5;
-                    break;
-                case 4:
-                    x_null_ratio = 4.7;
-                    break;
-                case 5:
-                    x_null_ratio = 3.0;
-                    break;
-            }
-
-            double L = txtLength_L.Text != "" ? Convert.ToDouble(txtLength_L.Text, provider) : 0.0;
-
-            if (use != txtLength_L)
-            {
-                double res;
-                if (use.Text != "") res = Convert.ToDouble(use.Text, provider) * L;
-                else return;
-
-                if (use == txtr0_L)
-                {
-                    txtR_L.Text = res.ToString();
-                    if (isCable == false) txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) + 0.15) * L).ToString();
-                    else if (isCable == true) txtR0_L.Text = (res * 10).ToString();
-                }
-                if (use == txtx0_L)
-                {
-                    txtX_L.Text = res.ToString();
-                    if (isCable == false) txtX0_L.Text = (res * x_null_ratio).ToString();
-                    else if (isCable == true) txtX0_L.Text = (res * 4).ToString();
-                }
-                if (use == txtb0_L)
-                {
-                    txtB_L.Text = res.ToString();
-                    txtB0_L.Text = (res * 0.575).ToString();
-                }
-                if (use == txtg0_L)
-                {
-                    txtG_L.Text = res.ToString();
-                    txtG0_L.Text = res.ToString();
-                }
-
-            }
-            else if (use == txtLength_L)
-            {
-                if (txtr0_L.Text != "") txtR_L.Text = (Convert.ToDouble(txtr0_L.Text, provider) * L).ToString();
-                if (txtx0_L.Text != "") txtX_L.Text = (Convert.ToDouble(txtx0_L.Text, provider) * L).ToString();
-                if (txtb0_L.Text != "") txtB_L.Text = (Convert.ToDouble(txtb0_L.Text, provider) * L).ToString();
-                if (txtg0_L.Text != "") txtG_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
-
-                if (isCable == false) //Если линия
-                {
-                    if (txtr0_L.Text != "") txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) + 0.15) * L).ToString();
-                    if (txtx0_L.Text != "") txtX0_L.Text = ((Convert.ToDouble(txtx0_L.Text, provider) * x_null_ratio) * L).ToString();
-                    if (txtb0_L.Text != "") txtB0_L.Text = ((Convert.ToDouble(txtb0_L.Text, provider) * 0.575) * L).ToString();
-                    if (txtg0_L.Text != "") txtG0_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
-                }
-                else if (isCable == true) //Если кабель
-                {
-                    if (txtr0_L.Text != "") txtR0_L.Text = ((Convert.ToDouble(txtr0_L.Text, provider) * 10) * L).ToString();
-                    if (txtx0_L.Text != "") txtX0_L.Text = ((Convert.ToDouble(txtx0_L.Text, provider) * 4) * L).ToString();
-                    if (txtb0_L.Text != "") txtB0_L.Text = ((Convert.ToDouble(txtb0_L.Text, provider) * 0.575) * L).ToString();
-                    if (txtg0_L.Text != "") txtG0_L.Text = (Convert.ToDouble(txtg0_L.Text, provider) * L).ToString();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Выбор типа грозотросса
-        /// </summary>
-        private void CmbGroundedWire_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (txtx0_L != null) Line_Calculations_Internal(txtx0_L);
-        }
-
-        /// <summary>
-        /// Расчет коэффициентов трансформации
-        /// </summary>
-        private void Ktr_Calculations(object sender, TextChangedEventArgs e)
-        {
-            DotCommaReplacer(sender, e); //Обработка запятых
-
-            var HV = txtUnomHigh_T; var LV = txtUnomLowDouble_T;
-            var MHV = txtUnomMid_T; var LHV = txtUnomLow_T;
-
-            if(HV.Text.StartsWith(".")) return;
-            if(cmbType_T.Text == "двух.")
-            {
-                if(!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(LV.Text))
-                {
-                    if(LV.Text.StartsWith(".")) return;
-                    txtKH_KML_T.Text = (Convert.ToDouble(LV.Text, CultureInfo.InvariantCulture) / Convert.ToDouble(HV.Text, CultureInfo.InvariantCulture)).ToString();
-                }
-            }
-            if(cmbType_T.Text == "тр./АТ")
-            {
-                txtKH_KML_T.Text = "1";
-
-                if(!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(MHV.Text))
-                {
-                    if(MHV.Text.StartsWith(".")) return;
-                    txtKHM_T.Text = (Convert.ToDouble(MHV.Text, CultureInfo.InvariantCulture) / Convert.ToDouble(HV.Text, CultureInfo.InvariantCulture)).ToString();
-                }
-                if(!string.IsNullOrEmpty(HV.Text) & !string.IsNullOrEmpty(LHV.Text))
-                {
-                    if(LHV.Text.StartsWith(".")) return;
-                    txtKHL_T.Text = (Convert.ToDouble(LHV.Text, CultureInfo.InvariantCulture) / Convert.ToDouble(HV.Text, CultureInfo.InvariantCulture)).ToString();
                 }
             }
         }
@@ -401,93 +253,6 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Селектор узлов для трёхобмоточных трансов
-        /// </summary>
-        private void TransEndNodeSelector(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher?.Invoke(delegate ()
-            {
-                ComboBox tb = (ComboBox)sender;
-
-                if(tb.Text == "" || tb.SelectedIndex == -1)
-                {
-                    cmbTypeName_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = MultiTrans });
-                    cmbTypeName_T.DisplayMemberPath = "TypeName";
-                }
-
-                if(e.AddedItems.Count == 0) return; //Проверка селектора
-
-                try { var t = (Node)e.AddedItems[0]; }
-                catch(Exception) { return; }
-
-                if(tb == txtEndMidNode_T)
-                {
-                    ObservableCollection<Node> l = new ObservableCollection<Node>();
-
-                    foreach(Node i in txtStartNode_T.ItemsSource)
-                    {
-                        if(i.Number != ((Node)e.AddedItems[0]).Number &
-                            i.Number != ((Node)txtStartNode_T.SelectedItem).Number &
-                            i.Unom != ((Node)txtStartNode_T.SelectedItem).Unom &
-                            i.Unom != ((Node)e.AddedItems[0]).Unom)
-                        {
-                            l.Add(i);
-                        }
-                    }
-                    txtEndLowNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = l });
-                    txtEndLowNode_T.DisplayMemberPath = "Number";
-
-                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-
-                    if(MultiTrans.Count != 0)
-                    {
-                        ObservableCollection<MultiTrans> mt;
-                        if(txtEndLowNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
-                        else
-                        {
-                            mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomM >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomM <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
-                                                                                            (t.UnomL >= 0.8 * ((Node)txtEndLowNode_T.SelectedItem).Unom & t.UnomL <= 1.2 * ((Node)txtEndLowNode_T.SelectedItem).Unom)).ToList());
-                        }
-                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
-                        cmbTypeName_T.DisplayMemberPath = "TypeName";
-                    }
-                }
-                else if(tb == txtEndLowNode_T)
-                {
-                    ObservableCollection<Node> l = new ObservableCollection<Node>();
-
-                    foreach(Node i in txtStartNode_T.ItemsSource)
-                    {
-                        if(i.Number != ((Node)e.AddedItems[0]).Number &
-                            i.Number != ((Node)txtStartNode_T.SelectedItem).Number &
-                            i.Unom != ((Node)txtStartNode_T.SelectedItem).Unom &
-                            i.Unom != ((Node)e.AddedItems[0]).Unom)
-                        {
-                            l.Add(i);
-                        }
-                    }
-                    txtEndMidNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = l });
-                    txtEndMidNode_T.DisplayMemberPath = "Number";
-
-                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-
-                    if(MultiTrans.Count != 0)
-                    {
-                        ObservableCollection<MultiTrans> mt;
-                        if(txtEndMidNode_T.Text == "" || txtEndMidNode_T.SelectedIndex == -1) mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
-                        else
-                        {
-                            mt = new ObservableCollection<MultiTrans>(MultiTrans.Where(t => (t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom) &
-                                                                                            (t.UnomM >= 0.8 * ((Node)txtEndMidNode_T.SelectedItem).Unom & t.UnomM <= 1.2 * ((Node)txtEndMidNode_T.SelectedItem).Unom)).ToList());
-                        }
-                        cmbTypeName_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = mt });
-                        cmbTypeName_T.DisplayMemberPath = "TypeName";
-                    }
-                }
-            });
-        }
-
-        /// <summary>
         /// Перекрашивает в белый цвет поля узлов при выпадении списка
         /// </summary>
         private void DropDownNodeReflector(object sender, EventArgs e)
@@ -512,6 +277,29 @@ namespace Power_Equipment_Handbook
                 this.lib.Show();
             }
         }
+
+        #region Утилиты
+
+        /// <summary>
+        /// Отчистка полей узлов
+        /// </summary>
+        private void ClearNodes()
+        {
+            txtType_N.SelectedIndex = 0;
+            txtName_N.Text = "";
+            txtPn_N.Text = "";
+            txtQn_N.Text = "";
+            txtPg_N.Text = "";
+            txtQg_N.Text = "";
+            txtVzd_N.Text = "";
+            txtQmin_N.Text = "";
+            txtQmax_N.Text = "";
+            txtBsh_N.Text = "";
+            txtRegion_N.Text = "";
+            txtState_N.Text = "0";
+        }
+
+        #endregion Утилиты
 
         #endregion Helpers
 

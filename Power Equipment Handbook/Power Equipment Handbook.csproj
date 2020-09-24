@@ -93,9 +93,12 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="src\classes\DataGridTracker.cs" />
     <Compile Include="src\classes\DBProvider.cs" />
-    <Compile Include="src\classes\Helpers.cs" />
+    <Compile Include="src\classes\utils\MWUtils.cs" />
     <Compile Include="src\classes\Log.cs" />
     <Compile Include="src\classes\Serializator.cs" />
+    <Compile Include="src\classes\utils\BreakerUtils.cs" />
+    <Compile Include="src\classes\utils\LinesUtils.cs" />
+    <Compile Include="src\classes\utils\TransUtils.cs" />
     <Compile Include="src\windows\Library.xaml.cs">
       <DependentUpon>Library.xaml</DependentUpon>
     </Compile>

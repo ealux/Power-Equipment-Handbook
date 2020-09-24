@@ -35,6 +35,11 @@ namespace Power_Equipment_Handbook
         public bool isCable { get; set; }
         private GridLength SideWidth { get; set; }
 
+
+
+        /// <summary>
+        /// Конструктор главного окна 
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -46,17 +51,16 @@ namespace Power_Equipment_Handbook
 
             cmbType_T.SelectedIndex = 1; cmbType_T.SelectedIndex = 0;
 
-            txtStartNode_L.ItemsSource = track.Nodes; txtStartNode_L.DisplayMemberPath = "Number";
-            txtEndNode_L.ItemsSource = track.Nodes; txtEndNode_L.DisplayMemberPath = "Number";
-            txtStartNode_T.ItemsSource = track.Nodes; txtStartNode_T.DisplayMemberPath = "Number";
-            txtEndHighNode_T.ItemsSource = track.Nodes; txtEndHighNode_T.DisplayMemberPath = "Number";
-            txtEndMidNode_T.ItemsSource = track.Nodes; txtEndMidNode_T.DisplayMemberPath = "Number";
-            txtEndLowNode_T.ItemsSource = track.Nodes; txtEndLowNode_T.DisplayMemberPath = "Number";
-            txtStartNode_B.ItemsSource = track.Nodes; txtStartNode_B.DisplayMemberPath = "Number";
-            txtEndNode_B.ItemsSource = track.Nodes; txtEndNode_B.DisplayMemberPath = "Number";
+            txtStartNode_L.ItemsSource = track.Nodes; 
+            txtEndNode_L.ItemsSource = track.Nodes;
+            txtStartNode_T.ItemsSource = track.Nodes;
+            txtEndHighNode_T.ItemsSource = track.Nodes;
+            txtEndMidNode_T.ItemsSource = track.Nodes;
+            txtEndLowNode_T.ItemsSource = track.Nodes;
+            txtStartNode_B.ItemsSource = track.Nodes;
+            txtEndNode_B.ItemsSource = track.Nodes;
 
             chk_Line_Cable.DataContext = this;
-
 
             Lines = new ObservableCollection<Line>();               //Коллекция объектов Линия
             Trans = new ObservableCollection<Trans>();              //Коллекция объектов Двухобмоточный Трансформатор
@@ -65,8 +69,8 @@ namespace Power_Equipment_Handbook
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
 
             isCable = false;
-
         }
+
         
         #region Обработчики конкретных событий
 
@@ -161,59 +165,6 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Обработка внешнего вида формы при изменении типа трансформатора
-        /// </summary>
-        private void CmbType_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher?.Invoke(delegate ()
-            {            
-                if ((e.AddedItems.Count != 0) && ((ListBoxItem)e.AddedItems[0] == cmbType_T.Items[0]))
-                {
-                    cmbType_T.SelectedItem = cmbType_T.Items[0];
-
-                    int state = txtStartNode_T.SelectedIndex;
-                    int state_unom = cmbUnom_T.SelectedIndex;
-
-                    txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
-                    cmbUnom_T.SelectedItem = null; cmbUnom_T.SelectedIndex = state_unom;
-
-                    txtKH_KML_T.Clear();
-                    grpMid.Visibility = grpLow.Visibility = Visibility.Hidden;
-                    lblKH_KML_T.Content = "Kтр ВН";
-                    lblEndHighNode_T.Content = "Конец";
-                    lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Visible;
-                }
-                else if ((e.AddedItems.Count != 0) && ((ListBoxItem)e.AddedItems[0] == cmbType_T.Items[1]))
-                {
-                    cmbType_T.SelectedItem = cmbType_T.Items[1];
-
-                    int state = txtStartNode_T.SelectedIndex;
-                    int state_unom = cmbUnom_T.SelectedIndex;
-
-                    txtStartNode_T.SelectedIndex = -1; txtStartNode_T.SelectedIndex = state;
-                    cmbUnom_T.SelectedItem = null; cmbUnom_T.SelectedIndex = state_unom;
-
-                    txtKH_KML_T.Text = "1";
-                    txtKHL_T.Clear(); txtKHM_T.Clear();
-                    grpMid.Visibility = grpLow.Visibility = Visibility.Visible;
-                    lblKH_KML_T.Content = "Kтр В(Ктр С-Н)";
-                    lblEndHighNode_T.Content = "Ср. точка";
-                    lblUnomLowDouble_T.Visibility = txtUnomLowDouble_T.Visibility = Visibility.Hidden;                    
-                }
-
-                if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
-            });
-        }
-
-        /// <summary>
-        /// Изменение типа трансформатора
-        /// </summary>
-        private void CmbType_T_DropDownClosed(object sender, EventArgs e)
-        {
-            if(e != null) if (cmbUnom_T.Text != "") GetData("Trans", Convert.ToDouble(cmbUnom_T.Text, CultureInfo.InvariantCulture), db_prv);
-        }
-
-        /// <summary>
         /// Добавить узел в список узлов
         /// </summary>
         private void BtnAdd_N_Click(object sender, RoutedEventArgs e)
@@ -255,298 +206,7 @@ namespace Power_Equipment_Handbook
 
                 #region Clear controls
 
-                txtType_N.SelectedIndex = 0;
-                txtName_N.Clear();
-                txtPn_N.Clear(); txtQn_N.Clear(); txtPg_N.Clear(); txtQg_N.Clear();
-                txtQmin_N.Clear(); txtQmax_N.Clear(); txtVzd_N.Clear(); txtBsh_N.Clear();
-                txtRegion_N.Clear();
-                txtState_N.Text = "0";
-
-                Log.Clear();
-
-                #endregion Clear controls
-            });
-        }
-
-        /// <summary>
-        /// Добавить Линию в список ветвей
-        /// </summary>
-        private void BtnAdd_L_Click(object sender, RoutedEventArgs e)
-        {
-            int start = default;
-            int end = default;
-            Application.Current.Dispatcher?.BeginInvoke((Action)delegate ()
-            {
-                if (txtStartNode_L.Text == "" || txtStartNode_L.Text == null) { ChangeCmbColor(txtStartNode_L, true); } else { start = int.Parse(txtStartNode_L.Text); }
-                if (txtEndNode_L.Text == "" || txtEndNode_L.Text == null) { ChangeCmbColor(txtEndNode_L, true); Log.Show("Ошибка ввода узлов Линии!"); return; } else { end = int.Parse(txtEndNode_L.Text); }
-                if (txtStartNode_L.Text == txtEndNode_L.Text) { ChangeCmbColor(txtStartNode_L, true); ChangeCmbColor(txtEndNode_L, true); Log.Show("Узлы начала и конца совпали!"); return; }
-                else { ChangeCmbColor(txtStartNode_L, false); ChangeCmbColor(txtEndNode_L, false); }
-
-                if (start == default) { ChangeCmbColor(txtStartNode_L, true); return; }
-                if (end == default) { ChangeCmbColor(txtEndNode_L, true); return; }
-
-                int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
-                string type = "ЛЭП";
-                int npar = (string.IsNullOrWhiteSpace(txtNpar_L.Text) || int.Parse(txtNpar_L.Text) == 0) ? 0 : int.Parse(txtNpar_L.Text);
-                string typename = cmbTypeName_L.Text;
-                string name = txtName_L.Text;
-                double r = (string.IsNullOrWhiteSpace(txtR_L.Text) || double.Parse(txtR_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR_L.Text, CultureInfo.InvariantCulture);
-                double x = (string.IsNullOrWhiteSpace(txtX_L.Text) || double.Parse(txtX_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX_L.Text, CultureInfo.InvariantCulture);
-                double b = (string.IsNullOrWhiteSpace(txtB_L.Text) || double.Parse(txtB_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB_L.Text, CultureInfo.InvariantCulture);
-                double g = (string.IsNullOrWhiteSpace(txtG_L.Text) || double.Parse(txtG_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG_L.Text, CultureInfo.InvariantCulture);
-                double r0 = (string.IsNullOrWhiteSpace(txtR0_L.Text) || double.Parse(txtR0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtR0_L.Text, CultureInfo.InvariantCulture);
-                double x0 = (string.IsNullOrWhiteSpace(txtX0_L.Text) || double.Parse(txtX0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtX0_L.Text, CultureInfo.InvariantCulture);
-                double b0 = (string.IsNullOrWhiteSpace(txtB0_L.Text) || double.Parse(txtB0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtB0_L.Text, CultureInfo.InvariantCulture);
-                double g0 = (string.IsNullOrWhiteSpace(txtG0_L.Text) || double.Parse(txtG0_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtG0_L.Text, CultureInfo.InvariantCulture);
-                double idd = (string.IsNullOrWhiteSpace(txtIdd_L.Text) || double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIdd_L.Text, CultureInfo.InvariantCulture);
-                int region = (string.IsNullOrWhiteSpace(txtRegion_L.Text) || int.Parse(txtRegion_L.Text) == 0) ? 0 : int.Parse(txtRegion_L.Text);
-
-                int quant = (string.IsNullOrWhiteSpace(txtN_L.Text) || int.Parse(txtN_L.Text) <= 0) ? 1 : int.Parse(txtN_L.Text); //Количество вводимых ветвей
-                int i = 0;
-
-                do
-                {
-                    Branch br = new Branch(start: start, end: end, type: type,
-                                        state: state, typename: typename, name: name, npar: npar+i,
-                                        r: r, x: x, b: b, g: g,
-                                        r0: r0, x0: x0, b0: b0, g0: g0,
-                                        ktr: null, idd: idd, region: region);
-                    if(BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
-                    else return;
-                    i++;
-
-                } while(i < quant);
-                
-                Tab_Data.SelectedIndex = 1;
-
-                #region Clear controls
-
-                txtEndNode_L.SelectedIndex = -1;
-                cmbTypeName_L.SelectedIndex = -1;
-                txtName_L.Clear(); txtLength_L.Clear();
-                txtr0_L.DataContext = ""; txtx0_L.DataContext = ""; txtb0_L.DataContext = ""; txtg0_L.DataContext = "";
-                txtR_L.Clear(); txtX_L.Clear(); txtB_L.Clear(); txtG_L.Clear();
-                txtR0_L.Clear(); txtX0_L.Clear(); txtB0_L.Clear(); txtG0_L.Clear();
-                txtNpar_L.Clear(); txtIdd_L.DataContext = "";
-                txtRegion_L.Clear();
-                txtState_L.Text = "0";
-                txtN_L.Text = "1";
-
-                Log.Clear();
-
-                #endregion Clear controls
-            });
-        }
-
-        /// <summary>
-        /// Добавить Трансформатор в список ветвей
-        /// </summary>
-        private void BtnAdd_T_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Dispatcher?.Invoke((Action)delegate ()
-            {
-                if (cmbType_T.Text == "двух.")
-                {
-                    int start = default;
-                    int end = default;
-                    if (string.IsNullOrEmpty(txtStartNode_T.Text)) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
-                    if (string.IsNullOrEmpty(txtEndHighNode_T.Text)) { ChangeCmbColor(txtEndHighNode_T, true); } else { end = int.Parse(txtEndHighNode_T.Text); }
-                    if (txtStartNode_T.Text == txtEndHighNode_T.Text) { ChangeCmbColor(txtStartNode_T, true); ChangeCmbColor(txtEndHighNode_T, true); return; }
-
-                    if (start == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (end == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-
-                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
-                    string type = "Тр-р";
-                    int npar = 0;
-                    string typename = cmbTypeName_T.Text;
-                    string name = txtName_T.Text;
-                    double r = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
-                    double x = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
-                    double b = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
-                    double g = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
-                    double ktr = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
-                    double idd = (string.IsNullOrWhiteSpace(txtIddH_T.Text) || double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture);
-                    int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
-
-                    int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
-                    int i = 0;
-
-                    do
-                    {
-                        Branch br = new Branch(start: start, end: end, type: type,
-                                           state: state, typename: typename, name: name, npar: npar+i,
-                                           r: r, x: x, b: b, g: g,
-                                           r0: r, x0: x, b0: b, g0: g,
-                                           ktr: ktr, idd: idd, region: region);
-                        if(BranchChecker(br, txtStartNode_T, txtEndHighNode_T) == true) track.AddBranch(br);
-                        else return;
-                        i++;
-
-                    } while(i < quant);                    
-
-                    Tab_Data.SelectedIndex = 1;
-
-                    #region Clear controls
-
-                    txtEndHighNode_T.SelectedIndex = -1;
-                    cmbTypeName_T.SelectedIndex = -1;
-                    txtName_T.Clear();
-                    txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = "";
-                    txtKH_KML_T.Clear();
-                    txtRH_T.DataContext = ""; txtXH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.DataContext = "";
-                    txtRegion_T.Clear();
-                    txtState_T.Text = "0";
-                    txtN_T.Text = "1";
-                    txtIddH_T.Clear();
-
-                    Log.Clear();
-
-                    #endregion Clear controls
-                }
-                else if (cmbType_T.Text == "тр./АТ")
-                {
-                    int start = default;
-                    int endH = default;
-                    int endM = default;
-                    int endL = default;
-                    if (string.IsNullOrEmpty(txtStartNode_T.Text)) { ChangeCmbColor(txtStartNode_T, true); } else { start = int.Parse(txtStartNode_T.Text); }
-                    if (string.IsNullOrEmpty(txtEndHighNode_T.Text)) { ChangeCmbColor(txtEndHighNode_T, true); } else { endH = int.Parse(txtEndHighNode_T.Text); }
-                    if (string.IsNullOrEmpty(txtEndMidNode_T.Text)) { ChangeCmbColor(txtEndMidNode_T, true); } else { endM = int.Parse(txtEndMidNode_T.Text); }
-                    if (string.IsNullOrEmpty(txtEndLowNode_T.Text)) { ChangeCmbColor(txtEndLowNode_T, true); } else { endL = int.Parse(txtEndLowNode_T.Text); }
-
-                    if (start == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endH == default) { ChangeCmbColor(txtEndHighNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endM == default) { ChangeCmbColor(txtEndMidNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-                    if (endL == default) { ChangeCmbColor(txtEndLowNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
-
-                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
-                    string type = "Тр-р";
-                    int npar = 0;
-                    string typename = cmbTypeName_T.Text;
-                    string nameH = txtName_T.Text + " ВН"; string nameM = txtName_T.Text + " СН"; string nameL = txtName_T.Text + " НН";
-                    //ВН
-                    double rH = (string.IsNullOrWhiteSpace(txtRH_T.Text) || double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRH_T.Text, CultureInfo.InvariantCulture);
-                    double xH = (string.IsNullOrWhiteSpace(txtXH_T.Text) || double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXH_T.Text, CultureInfo.InvariantCulture);
-                    double bH = (string.IsNullOrWhiteSpace(txtBH_T.Text) || double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBH_T.Text, CultureInfo.InvariantCulture);
-                    double gH = (string.IsNullOrWhiteSpace(txtGH_T.Text) || double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGH_T.Text, CultureInfo.InvariantCulture);
-                    double ktrH = (string.IsNullOrWhiteSpace(txtKH_KML_T.Text) || double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKH_KML_T.Text, CultureInfo.InvariantCulture);
-                    double iddH = (string.IsNullOrWhiteSpace(txtIddH_T.Text) || double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddH_T.Text, CultureInfo.InvariantCulture);
-                    //СН
-                    double rM = (string.IsNullOrWhiteSpace(txtRM_T.Text) || double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRM_T.Text, CultureInfo.InvariantCulture);
-                    double xM = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXM_T.Text, CultureInfo.InvariantCulture);
-                    double bM = 0; double gM = 0;
-                    double ktrM = (string.IsNullOrWhiteSpace(txtKHM_T.Text) || double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHM_T.Text, CultureInfo.InvariantCulture);
-                    double iddM = (string.IsNullOrWhiteSpace(txtIddM_T.Text) || double.Parse(txtIddM_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddM_T.Text, CultureInfo.InvariantCulture);
-                    //НН
-                    double rL = (string.IsNullOrWhiteSpace(txtRL_T.Text) || double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtRL_T.Text, CultureInfo.InvariantCulture);
-                    double xL = (string.IsNullOrWhiteSpace(txtXM_T.Text) || double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtXL_T.Text, CultureInfo.InvariantCulture);
-                    double bL = 0; double gL = 0;
-                    double ktrL = (string.IsNullOrWhiteSpace(txtKHL_T.Text) || double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtKHL_T.Text, CultureInfo.InvariantCulture);
-                    double iddL = (string.IsNullOrWhiteSpace(txtIddL_T.Text) || double.Parse(txtIddL_T.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtIddL_T.Text, CultureInfo.InvariantCulture);
-
-                    int region = (string.IsNullOrWhiteSpace(txtRegion_T.Text) || int.Parse(txtRegion_T.Text) == 0) ? 0 : int.Parse(txtRegion_T.Text);
-
-                    int quant = (string.IsNullOrWhiteSpace(txtN_T.Text) || int.Parse(txtN_T.Text) <= 0) ? 1 : int.Parse(txtN_T.Text); //Количество вводимых ветвей
-                    int i = 0;
-
-                    do
-                    {
-
-                        Branch br1 = new Branch(start: start, end: endH, type: type,
-                                           state: state, typename: typename, name: nameH, npar: npar,
-                                           r: rH, x: xH, b: bH, g: gH,
-                                           r0: rH, x0: xH, b0: bH, g0: gH,
-                                           ktr: ktrH, idd: iddH, region: region);
-
-                        Branch br2 = new Branch(start: endH, end: endM, type: type,
-                                               state: state, typename: typename, name: nameM, npar: npar,
-                                               r: rM, x: xM, b: bM, g: gM,
-                                               r0: rM, x0: xM, b0: bM, g0: gM,
-                                               ktr: ktrM, idd: iddM, region: region);
-
-                        Branch br3 = new Branch(start: endH, end: endL, type: type,
-                                               state: state, typename: typename, name: nameL, npar: npar,
-                                               r: rL, x: xL, b: bL, g: gL,
-                                               r0: rL, x0: xL, b0: bL, g0: gL,
-                                               ktr: ktrL, idd: iddL, region: region);
-
-                        bool result1 = BranchChecker(br1, txtStartNode_T, txtEndHighNode_T);
-                        bool result2 = BranchChecker(br2, txtEndHighNode_T, txtEndMidNode_T);
-                        bool result3 = BranchChecker(br3, txtEndHighNode_T, txtEndLowNode_T);
-
-                        if(result1 == true & result2 == true & result3 == true)
-                        {
-                            track.AddBranch(br1);
-                            track.AddBranch(br2);
-                            track.AddBranch(br3);
-                        }
-                        else return;
-                        i++;
-
-                    } while(i < quant);
-
-                    Tab_Data.SelectedIndex = 1;
-
-                    #region Clear controls
-
-                    txtEndHighNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1;
-                    cmbTypeName_T.SelectedIndex = -1;
-                    txtName_T.Clear();
-                    txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = ""; txtUnomMid_T.DataContext = ""; txtUnomLow_T.DataContext = "";
-                    txtKH_KML_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKHL_T.DataContext = "";
-                    txtRH_T.DataContext = ""; txtXH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.DataContext = "";
-                    txtRM_T.DataContext = ""; txtXM_T.DataContext = ""; txtRL_T.DataContext = ""; txtXL_T.DataContext = "";
-                    txtRegion_T.Clear();
-                    txtState_T.Text = "0";
-                    txtN_T.Text = "1";
-                    txtIddH_T.Clear(); txtIddM_T.Clear(); txtIddL_T.Clear();
-
-                    Log.Clear();
-
-                    #endregion Clear controls
-
-                }
-            });
-        }
-
-        /// <summary>
-        /// Добавить Выключатель в список ветвей
-        /// </summary>
-        private void BtnAdd_B_Click(object sender, RoutedEventArgs e)
-        {
-            int start = default;
-            int end = default;
-            Application.Current.Dispatcher?.Invoke((Action)delegate ()
-            {
-                if(string.IsNullOrEmpty(txtStartNode_B.Text)) { ChangeCmbColor(txtStartNode_B, true); } else { start = int.Parse(txtStartNode_B.Text); }
-                if(string.IsNullOrEmpty(txtEndNode_B.Text)) { ChangeCmbColor(txtEndNode_B, true); Log.Show("Ошибка ввода узлов Выключателя!"); return; } else { end = int.Parse(txtEndNode_B.Text); }
-                if(txtStartNode_B.Text == txtEndNode_B.Text) { ChangeCmbColor(txtStartNode_B, true); ChangeCmbColor(txtEndNode_B, true); Log.Show("Узлы начала и конца совпали!"); return; }
-                else { ChangeCmbColor(txtStartNode_B, false); ChangeCmbColor(txtEndNode_B, false); }
-
-                if(start == default) { ChangeCmbColor(txtStartNode_B, true); return; }
-                if(end == default) { ChangeCmbColor(txtEndNode_B, true); return; }
-
-                int state = (string.IsNullOrWhiteSpace(txtState_B.Text) || int.Parse(txtState_B.Text) == 0) ? 0 : 1;
-                string type = "Выкл.";
-                string name = txtName_B.Text;
-                int region = (string.IsNullOrWhiteSpace(txtRegion_B.Text) || int.Parse(txtRegion_B.Text) == 0) ? 0 : int.Parse(txtRegion_B.Text);
-
-                Branch br = new Branch(start: start, end: end, type: type,
-                                           state: state, name: name,
-                                           ktr: null, region: region);
-
-                if(BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
-                else return;
-
-                Tab_Data.SelectedIndex = 1;
-
-                #region Clear controls
-
-                txtEndNode_B.SelectedIndex = -1;
-                txtName_B.Clear();
-                txtRegion_B.Clear();
-
+                ClearNodes();
                 Log.Clear();
 
                 #endregion Clear controls
@@ -590,302 +250,25 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Выбор стартового узла для Линии
-        /// </summary>
-        private void TxtStartNode_L_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher?.BeginInvoke((Action)delegate ()
-            {
-                if (txtStartNode_L.SelectedIndex == txtStartNode_L.Items.Count - 1 | txtStartNode_L.SelectedIndex == -1)
-                {
-                    txtEndNode_L.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = Lines });
-                    txtEndNode_L.DisplayMemberPath = "Number";
-                }
-
-                if(e.AddedItems.Count == 0) return;
-
-                try { var t = (Node)e.AddedItems[0]; }
-                catch(Exception) { return; }
-
-                if (txtStartNode_L.SelectedIndex != -1)
-                {
-                    ObservableCollection<Node> l = new ObservableCollection<Node>();
-
-                    foreach (Node i in txtStartNode_L.ItemsSource)
-                    {
-                        if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
-                        {
-                            l.Add(i);
-                        }
-                    }
-                    txtEndNode_L.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = l });
-                    txtEndNode_L.DisplayMemberPath = "Number";
-
-                    double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
-                    foreach (ListBoxItem i in cmbUnom_L.Items)
-                    {
-                        if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
-                        {
-                            cmbUnom_L.SelectedItem = i;
-                            return;
-                        }
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Выбор стартового узла для Трансформатора
-        /// </summary>
-        private void TxtStartNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher?.Invoke((Action)delegate ()
-            {
-                if(txtStartNode_T.SelectedIndex == txtStartNode_T.Items.Count - 1 | txtStartNode_T.SelectedIndex == -1)
-                {
-                    if(cmbType_T.Text == "двух.")
-                    {
-                        txtEndHighNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = Trans });
-                        txtEndHighNode_T.DisplayMemberPath = "Number";
-                    }
-                    else if(cmbType_T.Text == "тр./АТ")
-                    {
-                        txtEndHighNode_T.SetBinding(ItemsControl.ItemsSourceProperty, new Binding() { Source = MultiTrans });
-                        txtEndHighNode_T.DisplayMemberPath = "Number";
-                    }
-                }
-
-                if(e.AddedItems.Count == 0) return;
-
-                try { var t = (Node)e.AddedItems[0]; }
-                catch(Exception) { return; }
-
-                if (txtStartNode_T.SelectedIndex != -1)
-                {
-                    if (cmbType_T.Text == "двух.")
-                    {
-                        ObservableCollection<Node> l = new ObservableCollection<Node>();
-
-                        foreach (Node i in txtStartNode_T.ItemsSource)
-                        {
-                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom != ((Node)e.AddedItems[0]).Unom)
-                            {
-                                l.Add(i);
-                            }
-                        }
-                        txtEndHighNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
-                        txtEndHighNode_T.DisplayMemberPath = "Number";
-
-                        double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
-                        foreach (ListBoxItem i in cmbUnom_T.Items)
-                        {
-                            if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
-                            {
-                                cmbUnom_T.SelectedItem = i;
-                                return;
-                            }
-                        }
-                    }
-                    else if (cmbType_T.Text == "тр./АТ")
-                    {
-                        ObservableCollection<Node> l = new ObservableCollection<Node>();
-                        ObservableCollection<Node> l2 = new ObservableCollection<Node>();
-
-                        foreach (Node i in txtStartNode_T.ItemsSource)
-                        {
-                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
-                            {
-                                l.Add(i);
-                            }
-                            if (i.Number != ((Node)e.AddedItems[0]).Number & i.Unom != ((Node)e.AddedItems[0]).Unom)
-                            {
-                                l2.Add(i);
-                            }
-                        }
-                        txtEndHighNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
-                        txtEndHighNode_T.DisplayMemberPath = "Number";
-                        txtEndMidNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l2 });
-                        txtEndMidNode_T.DisplayMemberPath = "Number";
-                        txtEndLowNode_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l2 });
-                        txtEndLowNode_T.DisplayMemberPath = "Number";
-
-                        double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
-                        foreach (ListBoxItem i in cmbUnom_T.Items)
-                        {
-                            if (double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
-                            {
-                                cmbUnom_T.SelectedItem = i;
-                                return;
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Селектор узлов по нижней стороне (двух.)
-        /// </summary>
-        private void TxtEndHighNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
-            {
-                ComboBox tb = (ComboBox)sender;
-
-                if (cmbType_T.Text == "двух.")
-                {
-                    cmbUnom_T.SelectedItem = cmbUnom_T.SelectedItem;
-
-                    if (tb.Text == "" || tb.SelectedIndex == -1)
-                    {
-                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = Trans });
-                        cmbTypeName_T.DisplayMemberPath = "TypeName";
-                    }
-
-                    if(e.AddedItems.Count == 0) return;
-
-                    if (Trans.Count != 0)
-                    {
-                        ObservableCollection<Trans> mt = new ObservableCollection<Trans>(Trans.Where(t => t.UnomL >= 0.8 * ((Node)e.AddedItems[0]).Unom & t.UnomL <= 1.2 * ((Node)e.AddedItems[0]).Unom).ToList());
-                        cmbTypeName_T.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = mt });
-                        cmbTypeName_T.DisplayMemberPath = "TypeName";
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Селектор узлов средней стороны (тр./АТ)
-        /// </summary>
-        private void TxtEndMidNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TransEndNodeSelector(sender, e);
-        }
-
-        /// <summary>
-        /// Селектор узлов низкой стороны (тр./АТ)
-        /// </summary>
-        private void TxtEndLowNode_T_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            TransEndNodeSelector(sender, e);
-        }
-
-        /// <summary>
-        /// Выбор стартового узла для Выключателя
-        /// </summary>
-        private void TxtStartNode_B_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke((Action)delegate ()
-            {
-                if(txtStartNode_B.SelectedIndex == txtStartNode_B.Items.Count - 1 | txtStartNode_B.SelectedIndex == -1)
-                {
-                    txtEndNode_B.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = track.Nodes });
-                    txtEndNode_B.DisplayMemberPath = "Number";
-                }
-
-                if(e.AddedItems.Count == 0) return;
-
-                try { var t = (Node)e.AddedItems[0]; }
-                catch(Exception) { return; }
-
-                if(txtStartNode_B.SelectedIndex != -1)
-                {
-                    ObservableCollection<Node> l = new ObservableCollection<Node>();
-
-                    foreach(Node i in txtStartNode_B.ItemsSource)
-                    {
-                        if(i.Number != ((Node)e.AddedItems[0]).Number & i.Unom == ((Node)e.AddedItems[0]).Unom)
-                        {
-                            l.Add(i);
-                        }
-                    }
-                    txtEndNode_B.SetBinding(ComboBox.ItemsSourceProperty, new Binding() { Source = l });
-                    txtEndNode_B.DisplayMemberPath = "Number";
-
-                    double unom = track.Nodes.Where(n => n.Number == ((Node)e.AddedItems[0]).Number).Select(n => n.Unom).First();
-                    foreach(ListBoxItem i in cmbUnom_B.Items)
-                    {
-                        if(double.Parse(i.Content.ToString(), CultureInfo.InvariantCulture) == unom)
-                        {
-                            cmbUnom_B.SelectedItem = i;
-                            return;
-                        }
-                    }
-                }
-            });
-        }
-
-        /// <summary>
         /// Отлов горячих клавиш
         /// </summary>
         private void Tab_Elements_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.N)) //Нажатие сочетания Ctrl+N
             {
-                int state = 0;
                 switch(Tab_Elements.SelectedIndex)
                 {
                     case 0: //Узлы
-                        txtType_N.SelectedIndex = 0;
-                        txtName_N.Text = "";
-                        txtPn_N.Text = "";
-                        txtQn_N.Text = "";
-                        txtPg_N.Text = "";
-                        txtQg_N.Text = "";
-                        txtVzd_N.Text = "";
-                        txtQmin_N.Text = "";
-                        txtQmax_N.Text = "";
-                        txtBsh_N.Text = "";
-                        txtRegion_N.Text = "";
-                        txtState_N.Text = "0";
+                        ClearNodes();
                         break;
                     case 1: //Линии
-                        txtEndNode_L.SelectedIndex = -1;
-                        state = cmbUnom_L.SelectedIndex;
-                        cmbUnom_L.SelectedIndex = -1;
-                        cmbUnom_L.SelectedIndex = state;
-                        cmbTypeName_L.SelectedIndex = -1;
-                        txtName_L.Text = "";
-                        txtLength_L.Text = "";
-                        txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
-                        txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
-                        txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
-                        txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
-                        txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
-                        txtState_L.Text = "0";
-                        txtRegion_L.Text = "";
-                        txtN_L.Text = "1";
+                        ClearLines();
                         break;
                     case 2: //Трансформаторы
-                        state = cmbType_T.SelectedIndex;
-                        cmbType_T.SelectedItem = null;
-                        cmbType_T.SelectedIndex = state;
-                        state = cmbUnom_T.SelectedIndex;
-                        cmbUnom_T.SelectedIndex = -1;
-                        cmbUnom_T.SelectedIndex = state;
-                        cmbTypeName_T.SelectedIndex = -1;
-                        txtName_T.Text = "";
-                        txtEndHighNode_T.SelectedIndex = -1; txtEndLowNode_T.SelectedIndex = -1; txtEndMidNode_T.SelectedIndex = -1;
-                        txtUnomHigh_T.DataContext = ""; txtUnomLowDouble_T.DataContext = ""; txtUnomLow_T.DataContext = ""; txtUnomMid_T.DataContext = "";
-                        txtUnomHigh_T.Clear(); txtUnomLowDouble_T.Clear(); txtUnomLow_T.Clear(); txtUnomMid_T.Clear();
-                        txtKHL_T.DataContext = ""; txtKHM_T.DataContext = ""; txtKH_KML_T.DataContext = ""; txtKHL_T.Clear(); txtKHM_T.Clear(); txtKH_KML_T.Clear();
-                        txtRH_T.DataContext = ""; txtRL_T.DataContext = ""; txtRM_T.DataContext = ""; txtRH_T.Clear(); txtRL_T.Clear(); txtRM_T.Clear();
-                        txtXH_T.DataContext = ""; txtXL_T.DataContext = ""; txtXM_T.DataContext = ""; txtXH_T.Clear(); txtXL_T.Clear(); txtXM_T.Clear();
-                        txtBH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.Clear(); txtGH_T.Clear();
-                        txtState_T.Text = "0";
-                        txtRegion_T.Text = "";
-                        txtN_T.Text = "1";
-                        txtIddH_T.DataContext = ""; txtIddM_T.DataContext = ""; txtIddL_T.DataContext = "";
-                        txtIddH_T.Clear(); txtIddM_T.Clear(); txtIddL_T.Clear();
+                        ClearTrans();
                         break;
                     case 3: //Выключатели
-                        state = cmbUnom_B.SelectedIndex;
-                        cmbUnom_B.SelectedIndex = -1;
-                        cmbUnom_B.SelectedIndex = state;
-                        txtEndNode_B.SelectedIndex = -1;
-                        txtName_B.Text = "";
-                        txtState_B.Text = "0";
-                        txtRegion_B.Text = "";
+                        ClearBreakers();
                         break;
                 }
             }
@@ -909,61 +292,10 @@ namespace Power_Equipment_Handbook
             }
         }
 
-
-        /// <summary>
-        /// Смена режима кабель/линия
-        /// </summary>
-        private void Chk_Line_Cable_Checked(object sender, RoutedEventArgs e)
-        {
-            CmbUnom_SelectionChanged(this.cmbUnom_L, null);
-            if (isCable)
-            {
-                chk_Line_Cable.Content = "Кабель";
-                cmbGroundWire_L.Visibility = Visibility.Hidden;
-                lblGroundWireName_L.Visibility = Visibility.Hidden;
-                txtEndNode_L.SelectedIndex = -1;
-                var state = cmbUnom_L.SelectedIndex;
-                cmbUnom_L.SelectedIndex = -1;
-                cmbUnom_L.SelectedIndex = state;
-                cmbTypeName_L.SelectedIndex = -1;
-                txtName_L.Text = "";
-                txtLength_L.Text = "";
-                txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
-                txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
-                txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
-                txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
-                txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
-                txtState_L.Text = "0";
-                txtRegion_L.Text = "";
-                txtN_L.Text = "1";
-            }
-            else
-            {
-                chk_Line_Cable.Content = "Линия";
-                cmbGroundWire_L.Visibility = Visibility.Visible;
-                lblGroundWireName_L.Visibility = Visibility.Visible;
-                cmbGroundWire_L.SelectedIndex = 0;
-                txtEndNode_L.SelectedIndex = -1;
-                var state = cmbUnom_L.SelectedIndex;
-                cmbUnom_L.SelectedIndex = -1;
-                cmbUnom_L.SelectedIndex = state;
-                cmbTypeName_L.SelectedIndex = -1;
-                txtName_L.Text = "";
-                txtLength_L.Text = "";
-                txtr0_L.DataContext = ""; txtR_L.Text = ""; txtR0_L.Text = "";
-                txtx0_L.DataContext = ""; txtX_L.Text = ""; txtX0_L.Text = "";
-                txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
-                txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
-                txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
-                txtState_L.Text = "0";
-                txtRegion_L.Text = "";
-                txtN_L.Text = "1";
-            }
-        }
-
         #endregion Обработчики конкретных событий
 
 
+        #region Работа с дизайном окна
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -984,6 +316,7 @@ namespace Power_Equipment_Handbook
                 this.spliterGridGlobal.Cursor = Cursors.ScrollE;
                 this.gridGlobal.ColumnDefinitions[0].Width = new GridLength(0, GridUnitType.Star);
                 Tab_Side.Visibility = Visibility.Collapsed;
+                this.btnCollapse.Content = ">";
             }
             else
             {
@@ -992,7 +325,18 @@ namespace Power_Equipment_Handbook
                 this.gridGlobal.ColumnDefinitions[0].Width = this.SideWidth;
                 this.spliterGridGlobal.Cursor = Cursors.SizeWE;
                 Tab_Side.Visibility = Visibility.Visible;
+                this.btnCollapse.Content = "<";
             }
         }
+
+        /// <summary>
+        /// Сокрытие/Открытие сайдбара
+        /// </summary>
+        private void btnCollapse_Click(object sender, RoutedEventArgs e)
+        {
+            GridSplitter_MouseDoubleClick(sender: spliterGridGlobal, e:null);
+        }
+
+        #endregion Работа с дизайном окна
     }
 }
