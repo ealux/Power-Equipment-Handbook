@@ -141,6 +141,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="src\res\lock.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="src\res\unlock.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="test.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CustomToolNamespace>Power_Equipment_Handbook</CustomToolNamespace>

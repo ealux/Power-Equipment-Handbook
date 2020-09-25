@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -37,6 +38,7 @@ namespace Power_Equipment_Handbook.src
                     logBox.Foreground = Brushes.Red;
                     System.Media.SystemSounds.Exclamation.Play();
                 }
+                else if (type == LogType.Success) logBox.Foreground = Brushes.Green;
                 else logBox.Foreground = Brushes.Black;
             });
         }
@@ -53,6 +55,7 @@ namespace Power_Equipment_Handbook.src
         {
             Error = 0,
             Information = 1,
+            Success = 2
         }
     }
 }

@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
         mc:Ignorable="d"
-        Title="Бибилиотека оборудования" Height="450" Width="800" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing">
+        Title="Бибилиотека оборудования" Height="450" Width="900" MinWidth="850" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing">
     <Grid>
-        <TabControl Margin="0,10,0,0">
+        <Label Margin="166,3,157,0" BorderBrush="Red" BorderThickness="1" Height="27" VerticalAlignment="Top" Width="469">
+            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="459">
+                <Bold>Внимание!</Bold> Используйте клавишу
+                <Bold>Shift</Bold> для сортировки по <Bold>нескольким</Bold> столбцам
+            </TextBlock>
+        </Label>
+        <TabControl Margin="0,30,0,0">
             <TabItem Header="Линии">
                 <Grid Background="White">
                     <DataGrid x:Name="LinesGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>

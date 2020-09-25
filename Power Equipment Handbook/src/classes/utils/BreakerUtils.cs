@@ -138,6 +138,8 @@ namespace Power_Equipment_Handbook
                 if (BranchChecker(br, txtStartNode_L, txtEndNode_L) == true) track.AddBranch(br);
                 else return;
 
+                Application.Current.Dispatcher?.BeginInvoke((Action)delegate () { Log.Show($"Добавлен выключатель:\t{start} - {end}\t{name}", LogClass.LogType.Success); });
+
                 Tab_Data.SelectedIndex = 1;
 
                 #region Clear controls

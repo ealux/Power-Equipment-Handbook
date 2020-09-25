@@ -343,6 +343,8 @@ namespace Power_Equipment_Handbook
 
                 } while (i < quant);
 
+                Application.Current.Dispatcher?.BeginInvoke((Action)delegate () { Log.Show($"Добавлена линия:\t{start} - {end}\t{name}", LogClass.LogType.Success); });
+
                 Tab_Data.SelectedIndex = 1;
 
                 #region Clear controls

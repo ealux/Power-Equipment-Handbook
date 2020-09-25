@@ -637,6 +637,8 @@ namespace Power_Equipment_Handbook
 
                     } while (i < quant);
 
+                    Application.Current.Dispatcher?.BeginInvoke((Action)delegate () { Log.Show($"Добавлен трансформатор:\t{start} - {end}\tТип: двух.\tНаименование: {name}", LogClass.LogType.Success); });
+
                     Tab_Data.SelectedIndex = 1;
 
                     #region Clear controls
@@ -727,6 +729,8 @@ namespace Power_Equipment_Handbook
                         i++;
 
                     } while (i < quant);
+
+                    Application.Current.Dispatcher?.BeginInvoke((Action)delegate () { Log.Show($"Добавлен трансформатор:\tВН: {start}, СН: {endM}, НН: {endL}\tТип: трёх./АТ\tНаименование: {nameH}", LogClass.LogType.Success); });
 
                     Tab_Data.SelectedIndex = 1;
 

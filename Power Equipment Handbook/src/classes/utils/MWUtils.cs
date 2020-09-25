@@ -278,6 +278,8 @@ namespace Power_Equipment_Handbook
             }
         }
 
+        #endregion Helpers
+
         #region Утилиты
 
         /// <summary>
@@ -300,8 +302,7 @@ namespace Power_Equipment_Handbook
         }
 
         #endregion Утилиты
-
-        #endregion Helpers
+        
 
         #region Power Network Methods
 

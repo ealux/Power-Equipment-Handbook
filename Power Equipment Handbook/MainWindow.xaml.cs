@@ -9,7 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Power_Equipment_Handbook
 {
@@ -204,6 +205,8 @@ namespace Power_Equipment_Handbook
 
                 Tab_Data.SelectedIndex = 0;
 
+                Application.Current.Dispatcher?.BeginInvoke((Action)delegate () { Log.Show($"Добавлен узел:\tНомер: {number}\t Unom: {unom}кВ\tНаименование: {name}", LogClass.LogType.Success); });
+
                 #region Clear controls
 
                 ClearNodes();
@@ -249,12 +252,14 @@ namespace Power_Equipment_Handbook
             });
         }
 
+        #region Отлов горячих клавиш
+
         /// <summary>
-        /// Отлов горячих клавиш
+        /// Отчистка (Ctrl+N) + Ввод данных (Enter)
         /// </summary>
         private void Tab_Elements_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.N)) //Нажатие сочетания Ctrl+N
+            if(e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.N)) //Нажатие сочетания Ctrl+N - отчстка полей ввода
             {
                 switch(Tab_Elements.SelectedIndex)
                 {
@@ -272,7 +277,7 @@ namespace Power_Equipment_Handbook
                         break;
                 }
             }
-            else if(e.Key == Key.Enter) // Нажатие Enter
+            else if(e.Key == Key.Enter) // Нажатие Enter - Ввод
             {
                 switch(Tab_Elements.SelectedIndex)
                 {
@@ -289,18 +294,62 @@ namespace Power_Equipment_Handbook
                         BtnAdd_B_Click(btnAdd_B, new RoutedEventArgs());
                         break;
                 }
+            }            
+        }
+
+        /// <summary>
+        /// Блокировка таблиц данных (Ctrl+B)
+        /// </summary>
+        private void BlockHotKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.B)) //Нажатие сочетания Ctrl+B - Блокировка таблиц данных
+            {
+                LockUnlockDataTable_Click(btnBlockTables, null);
             }
         }
+
+        #endregion Отлов горячих клавиш
 
         #endregion Обработчики конкретных событий
 
 
+
         #region Работа с дизайном окна
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Показать/Скрыть панель ввода данных
+        /// </summary>
+        private void ShowHideInput_Click(object sender, RoutedEventArgs e)
         {
-            if(Tab_Elements.Visibility == Visibility.Collapsed) Tab_Elements.Visibility = Visibility.Visible;
-            else Tab_Elements.Visibility = Visibility.Collapsed;
+            if (Tab_Elements.Visibility == Visibility.Collapsed)
+            { 
+                Tab_Elements.Visibility = Visibility.Visible;
+                btnHideInputs.Content = "^        ^        ^";
+            }
+            else
+            {
+                Tab_Elements.Visibility = Visibility.Collapsed;
+                btnHideInputs.Content = "v        v        v";
+            }
+        }
+
+        /// <summary>
+        /// Блокировка таблиц данных
+        /// </summary>
+        private void LockUnlockDataTable_Click(object sender, RoutedEventArgs e)
+        {
+            if(grdNodes.IsReadOnly == true)
+            {
+                grdNodes.IsReadOnly = false;
+                grdBranches.IsReadOnly = false;
+                imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/unlock.png"));
+            }
+            else
+            {
+                grdNodes.IsReadOnly = true;
+                grdBranches.IsReadOnly = true;
+                imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/lock.png"));
+            }
         }
 
         /// <summary>
