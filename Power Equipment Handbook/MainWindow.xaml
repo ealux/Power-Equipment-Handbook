@@ -91,6 +91,7 @@
             </MenuItem>
             <MenuItem Header="Инструменты" Height="20" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0" >
                 <MenuItem Header="Связность" Click="Connectivity"/>
+                <MenuItem Header="Связный список узлов" Click="Get_LinkedNodes"/>
             </MenuItem>
             <MenuItem Header="Справочник" Click="Get_Library"/>
         </Menu>
@@ -450,7 +451,7 @@
             </TextBlock>
             <TabControl x:Name="Tab_Data" Margin="0,5,0,0" MinWidth="10" MinHeight="420" BorderBrush="#FF9B9797">
                 <TabItem x:Name="Tab_Nodes" Header="Узлы" Background="{x:Null}" Margin="-2,0" BorderBrush="#FF9B9797">
-                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA" Margin="0" Height="Auto">
+                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA" Margin="0" Height="Auto" CanUserReorderColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S " Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
@@ -470,7 +471,7 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem x:Name="Tab_Branches" Header="Ветви" Background="{x:Null}" Margin="0" BorderBrush="#FF9B9797">
-                    <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA">
+                    <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA" CanUserReorderColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="N__Нач" Width="50" Binding="{Binding Start}" ClipboardContentBinding="{x:Null}" />

@@ -278,6 +278,23 @@ namespace Power_Equipment_Handbook
             }
         }
 
+        /// <summary>
+        /// Отображение окна Связного списка узлов
+        /// </summary>
+        private void Get_LinkedNodes(object sender, RoutedEventArgs e)
+        {
+            if (lnodes != null)
+            {
+                if (lnodes.IsVisible) lnodes.Hide();
+                else lnodes.Show();
+            }
+            else if (this.lnodes == null || !this.lnodes.IsVisible)
+            {
+                this.lnodes = new src.windows.LinkedNodes(this.track) { Owner = this };
+                this.lnodes.Show();
+            }
+        }
+
         #endregion Helpers
 
         #region Утилиты
@@ -365,6 +382,12 @@ namespace Power_Equipment_Handbook
                     if(linker.Count != 0) RecurseFinder(new List<int>(linker), ref Exnodes);
                 }
             }
+        }
+
+
+        public void ShowLinkedNodes(object sender, RoutedEventArgs e)
+        {
+
         }
 
         #endregion Power Network Methods

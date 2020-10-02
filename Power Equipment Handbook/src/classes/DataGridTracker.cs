@@ -399,6 +399,18 @@ namespace Power_Equipment_Handbook.src
             Region = region;
         }
 
+        public Node(Node other)
+        {
+            State = other.State;
+            Type = other.Type;
+            Number = other.Number;
+            Unom = other.Unom;
+            Name = other.Name;
+            P_n = other.P_n; Q_n = other.Q_n; P_g = other.P_g; Q_g = other.Q_g;
+            Vzd = other.Vzd; Q_min = other.Q_min; Q_max = other.Q_max; B_sh = other.B_sh;
+            Region = other.Region;
+        }
+
         #region INotifyPropertyChanged interface block
 
         public event PropertyChangedEventHandler PropertyChanged;

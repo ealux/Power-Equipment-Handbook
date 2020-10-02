@@ -21,7 +21,7 @@ namespace Power_Equipment_Handbook
     {
         private readonly string MainTitle = "Power Equipment Handbook";
 
-        private List<DataGridTracker> tracks;
+        private List<DataGridTracker> tracks;   //Список сетей !!!ДОДЕЛАТЬ
         private DataGridTracker track;
         private DBProvider db_prv;
 
@@ -32,6 +32,7 @@ namespace Power_Equipment_Handbook
         public ObservableCollection<MultiTrans> MultiTrans;
 
         public Library lib;
+        public LinkedNodes lnodes;
 
         public bool isCable { get; set; }
         private GridLength SideWidth { get; set; }
@@ -45,7 +46,7 @@ namespace Power_Equipment_Handbook
         {
             InitializeComponent();
             track = new DataGridTracker(grdNodes, grdBranches);
-            tracks = new List<DataGridTracker>();
+            tracks = new List<DataGridTracker>();   //Список сетей !!!ДОДЕЛАТЬ
 
             db_prv = new DBProvider("test.db");                     //Инициализация подключения к встроенной БД оборудования
             Status_Text.Text = "Состояние подключения:   " + db_prv.Status;

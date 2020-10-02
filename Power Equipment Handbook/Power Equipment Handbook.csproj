@@ -102,6 +102,9 @@
     <Compile Include="src\windows\Library.xaml.cs">
       <DependentUpon>Library.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\windows\LinkedNodes.xaml.cs">
+      <DependentUpon>LinkedNodes.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,6 +118,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="src\windows\Library.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="src\windows\LinkedNodes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
