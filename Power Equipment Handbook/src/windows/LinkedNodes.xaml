@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="Список узлов" Height="450" Width="900" MinWidth="850" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing" IsVisibleChanged="Window_IsVisibleChanged">
     <Grid>
+        <Button x:Name="btnUndoFilters" Height="25" Background="White" BorderBrush="{x:Null}" ToolTip="Сбросить сортировку/фильтры" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28" RenderTransformOrigin="0.5,0.5" Click="btnUndoFilters_Click" Margin="5,5,0,0">
+            <Button.Content>
+                <Image x:Name="imgBlock" Source="pack://application:,,,/../src/res/clear-filters.png" />
+            </Button.Content>
+        </Button>
+        <Label Margin="166,3,157,0" BorderBrush="Red" BorderThickness="1" Height="27" VerticalAlignment="Top" Width="469">
+            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="459">
+                <Bold>Внимание!</Bold> Используйте клавишу
+                <Bold>Shift</Bold> для сортировки по <Bold>нескольким</Bold> столбцам
+            </TextBlock>
+        </Label>
         <DataGrid x:Name="LinkedGrid" ItemsSource="{Binding}" CanUserAddRows="False" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch" CanUserSortColumns="True" IsReadOnly="True" Margin="0,35,0,0" Grid.ColumnSpan="2">
             <!--<DataGrid.RowDetailsTemplate >
                 <DataTemplate>

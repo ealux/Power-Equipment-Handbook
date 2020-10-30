@@ -29,7 +29,18 @@ namespace Power_Equipment_Handbook.src.windows
         private int Count { get; set; }
         //ObservableCollection<Branch> localBranches { get; set; }
 
+        //View-элемент для списка узлов
         CollectionViewSource nodesView { get; set; }
+
+        /// <summary>
+        /// Генерация View-элемента для отображения в datagrid
+        /// </summary>
+        internal void GenerateView()
+        {
+            this.nodesView = new CollectionViewSource();
+            this.nodesView.Source = this.localNodes.OrderBy(n => n.Unom).ThenBy(n => n.Number);
+            this.nodesView.GroupDescriptions.Add(new PropertyGroupDescription("Unom"));
+        }
 
 
         public LinkedNodes(DataGridTracker dgt)
@@ -43,9 +54,7 @@ namespace Power_Equipment_Handbook.src.windows
 
             //Группировка по Unom
             Count = localNodes.Count;
-            nodesView = new CollectionViewSource();
-            nodesView.Source = this.localNodes.OrderBy(n => n.Unom).ThenBy(n => n.Number);
-            nodesView.GroupDescriptions.Add(new PropertyGroupDescription("Unom"));
+            GenerateView();
             this.LinkedGrid.ItemsSource = nodesView.View;
             localNodes.CollectionChanged += LocalNodes_CollectionChanged;
 
@@ -71,7 +80,7 @@ namespace Power_Equipment_Handbook.src.windows
         }
 
         /// <summary>
-        /// 
+        /// Открытие/закрытие окна списка узлов
         /// </summary>
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -93,5 +102,17 @@ namespace Power_Equipment_Handbook.src.windows
         {
             this.Count = localNodes.Count;
         }
+
+        /// <summary>
+        /// Нажатие клавиши сброса сортировки/фильтрации
+        /// </summary>
+        private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
+        {
+            GenerateView();
+            this.LinkedGrid.ItemsSource = nodesView.View;
+        }
+
+
+        
     }
 }

@@ -28,6 +28,10 @@ namespace Power_Equipment_Handbook.src.windows
             TransGrid.ItemsSource = db.Command_Query("Select * from [Trans]", db.Connection);
             MTransGrid.ItemsSource = db.Command_Query("Select * from [Multitrans]", db.Connection);
             CablesGrid.ItemsSource = db.Command_Query("Select * from [Cables]", db.Connection);
+            BreakersGrid.ItemsSource = db.Command_Query("Select * from [Breakers]", db.Connection);
+            DisconnectorsGrid.ItemsSource = db.Command_Query("Select * from [Disconnector]", db.Connection);
+            SCGrid.ItemsSource = db.Command_Query("Select * from [Short-circuiter]", db.Connection);
+            TTGrid.ItemsSource = db.Command_Query("Select * from [TT]", db.Connection);
         }
 
         /// <summary>
@@ -37,6 +41,41 @@ namespace Power_Equipment_Handbook.src.windows
         {
             this.Hide();
             e.Cancel = true;
+        }
+
+        /// <summary>
+        /// Нажатие клавиши сброса сортировки/фильтрации
+        /// </summary>
+        private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
+        {
+            switch (this.tabLib.SelectedIndex)
+            {
+                case 0:
+                    LinesGrid.ItemsSource = db.Command_Query("Select * from [Lines]", db.Connection);
+                    break;
+                case 1:
+                    CablesGrid.ItemsSource = db.Command_Query("Select * from [Cables]", db.Connection);
+                    break;
+                case 2:
+                    TransGrid.ItemsSource = db.Command_Query("Select * from [Trans]", db.Connection);
+                    break;
+                case 3:
+                    MTransGrid.ItemsSource = db.Command_Query("Select * from [Multitrans]", db.Connection);
+                    break;
+                case 4:
+                    BreakersGrid.ItemsSource = db.Command_Query("Select * from [Breakers]", db.Connection);
+                    break;
+                case 5:
+                    DisconnectorsGrid.ItemsSource = db.Command_Query("Select * from [Disconnector]", db.Connection);
+                    break;
+                case 6:
+                    SCGrid.ItemsSource = db.Command_Query("Select * from [Short-circuiter]", db.Connection);
+                    break;
+                case 7:
+                    TTGrid.ItemsSource = db.Command_Query("Select * from [TT]", db.Connection);
+                    break;
+
+            }        
         }
     }
 }

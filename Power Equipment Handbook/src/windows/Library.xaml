@@ -5,15 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
         mc:Ignorable="d"
-        Title="Бибилиотека оборудования" Height="450" Width="900" MinWidth="850" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing">
+        Title="Бибилиотека оборудования" Height="450" Width="974" MinWidth="850" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing">
     <Grid>
+        <Button x:Name="btnUndoFilters" Height="25" Background="White" BorderBrush="{x:Null}" ToolTip="Сбросить сортировку/фильтры" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28" RenderTransformOrigin="0.5,0.5" Click="btnUndoFilters_Click" Margin="5,2,0,0">
+            <Button.Content>
+                <Image x:Name="imgBlock" Source="pack://application:,,,/../src/res/clear-filters.png" />
+            </Button.Content>
+        </Button>
         <Label Margin="166,3,157,0" BorderBrush="Red" BorderThickness="1" Height="27" VerticalAlignment="Top" Width="469">
             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="459">
                 <Bold>Внимание!</Bold> Используйте клавишу
                 <Bold>Shift</Bold> для сортировки по <Bold>нескольким</Bold> столбцам
             </TextBlock>
         </Label>
-        <TabControl Margin="0,30,0,0">
+        <TabControl x:Name="tabLib" Margin="0,30,0,0">
             <TabItem Header="Линии">
                 <Grid Background="White">
                     <DataGrid x:Name="LinesGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
@@ -32,6 +37,26 @@
             <TabItem Header="Трансформаторы (трёх. и АТ)">
                 <Grid Background="White">
                     <DataGrid x:Name="MTransGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Выключатели">
+                <Grid Background="White">
+                    <DataGrid x:Name="BreakersGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Разъединители">
+                <Grid Background="White">
+                    <DataGrid x:Name="DisconnectorsGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Отделители/Короткозамыкатели">
+                <Grid Background="White">
+                    <DataGrid x:Name="SCGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="ТТ">
+                <Grid Background="White">
+                    <DataGrid x:Name="TTGrid" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch"/>
                 </Grid>
             </TabItem>
         </TabControl>

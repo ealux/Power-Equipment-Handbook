@@ -388,5 +388,20 @@ namespace Power_Equipment_Handbook
         }
 
         #endregion Работа с дизайном окна
+
+        private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
+        {
+            switch (this.Tab_Data.SelectedIndex)
+            {
+                case 0:
+                    this.track.grdNodes.ItemsSource = null;
+                    this.track.grdNodes.ItemsSource = this.track.Nodes;
+                    break;
+                case 1:
+                    this.track.grdBranches.ItemsSource = null;
+                    this.track.grdBranches.ItemsSource = this.track.Branches;
+                    break;
+            }
+        }
     }
 }

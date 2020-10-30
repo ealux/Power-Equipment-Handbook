@@ -154,6 +154,7 @@
     <Resource Include="src\res\unlock.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="src\res\clear-filters.png" />
     <Content Include="test.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CustomToolNamespace>Power_Equipment_Handbook</CustomToolNamespace>
