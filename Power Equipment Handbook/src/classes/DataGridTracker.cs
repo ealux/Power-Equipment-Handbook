@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Xml.Serialization;
 
 namespace Power_Equipment_Handbook.src
@@ -18,6 +20,8 @@ namespace Power_Equipment_Handbook.src
         [XmlIgnore] public DataGrid grdBranches { get; set; }   //Таблица(UI) ветвей
         [XmlIgnore] public DataGrid grdCells { get; set; }      //Таблица(UI) ячеек
 
+        private CollectionViewSource CellsView { get; set; }
+
 
         [XmlArrayItem("Node",   Type =typeof(Node))]    public ObservableCollection<Node>   Nodes = new ObservableCollection<Node>();       //Узлы
         [XmlArrayItem("Branch", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();  //Ветви
@@ -30,7 +34,9 @@ namespace Power_Equipment_Handbook.src
         {
             this.grdNodes = grdNodes;           this.grdNodes.ItemsSource = Nodes;
             this.grdBranches = grdBranches;     this.grdBranches.ItemsSource = Branches;
-            this.grdCells = grdCells;           this.grdCells.ItemsSource = Cells;
+            this.grdCells = grdCells;           GenerateViewForCells(); //MainWindow.GenerateViewForCells();
+
+            Cells.CollectionChanged += CellsCollectionChanged;
         }
 
         /// <summary>
@@ -44,6 +50,25 @@ namespace Power_Equipment_Handbook.src
         /// </summary>
         /// <param name="branch">Добавляемая ветвь</param>
         public void AddBranch(Branch branch) => Application.Current.Dispatcher?.BeginInvoke((Action)delegate{ Branches.Add(branch); grdBranches.UpdateLayout(); });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal void GenerateViewForCells()
+        {
+            this.CellsView = new CollectionViewSource();
+            this.CellsView.Source = this.Cells.OrderBy(n => n.NodeNumber);
+            this.CellsView.GroupDescriptions.Add(new PropertyGroupDescription("NodeNumber"));
+            this.grdCells.ItemsSource = CellsView.View;
+        }
+
+        private void CellsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher?.Invoke(() =>
+            {
+                GenerateViewForCells();
+            });
+        }
     }
 
 

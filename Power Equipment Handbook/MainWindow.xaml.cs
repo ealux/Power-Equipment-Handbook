@@ -314,7 +314,6 @@ namespace Power_Equipment_Handbook
         #endregion Обработчики конкретных событий
 
 
-
         #region Работа с дизайном окна
 
         /// <summary>
@@ -404,11 +403,10 @@ namespace Power_Equipment_Handbook
                     this.track.grdBranches.ItemsSource = null;
                     this.track.grdBranches.ItemsSource = this.track.Branches;
                     break;
-                //case 2:
-                //    this.ta
+                case 2:
+                    this.track.GenerateViewForCells();
+                    break;
             }
-        }
-
-        
+        }        
     }
 }

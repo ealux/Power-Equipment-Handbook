@@ -461,21 +461,24 @@ namespace Power_Equipment_Handbook
             switch(extension.ToLower())
             {
                 case ".peh":
-                    //try
-                    //{
+                    try
+                    {
                         localTracker = serializator.fromXML();
 
-                        track.Nodes.Clear(); track.Branches.Clear();                    //Очистка старых значений в колекциях Узлов и Ветвей
+                        track.Nodes.Clear(); track.Branches.Clear(); track.Cells.Clear();                     //Очистка старых значений в колекциях Узлов, Ветвей, Ячеек
+                        this.grdCommutation.ItemsSource = null; this.grdElements.ItemsSource = null;
+
                         Log.Show($"Извлечение данных из файла: {filename}. Процесс...", LogClass.LogType.Information);
 
                         foreach(var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
                         foreach(var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
-                    //}
-                    //catch(Exception)
-                    //{
-                    //    Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
-                    //    return;
-                    //}
+                        foreach (var i in localTracker.Cells) track.Cells.Add(i);  //Добавление Ветвей
+                    }
+                                    catch (Exception)
+                    {
+                        Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
+                        return;
+                    }
                     break;
 
                     //case ".rg2":

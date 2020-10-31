@@ -20,6 +20,7 @@ namespace Power_Equipment_Handbook
     /// Класс ячейки, присоединяемой к узлу
     /// </summary>
     /// <typeparam name="T">Тип элемента ячейки</typeparam>
+    [Serializable]
     public class Cell : INotifyPropertyChanged
     {
         int nodenumber;
@@ -70,20 +71,27 @@ namespace Power_Equipment_Handbook
     public class BreakerCell: Element
     {
         double? tvkl, totkl;
-        string type;        
 
-        [XmlAttribute] public string Type { get => type; set => SetProperty(ref type, value); }
-        [XmlAttribute] public double? Tvkl { get => tvkl; set => SetProperty(ref tvkl, value); }
-        [XmlAttribute] public double? Totkl { get => totkl; set => SetProperty(ref totkl, value); }
+        [XmlAttribute] public string Type { get; } = "Выкл.";
 
-        public BreakerCell(double? tvkl, double? totkl, string type,
+        [XmlIgnore] public double? Tvkl { get => tvkl; set => SetProperty(ref tvkl, value); }
+        [XmlIgnore] public double? Totkl { get => totkl; set => SetProperty(ref totkl, value); }
+
+        #region Properties to Text (serialize)
+
+        [XmlElement("Tvkl")] public string TvklAsText { get => (Tvkl.HasValue) ? Inom.ToString() : null; set => Tvkl = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
+        [XmlElement("Totkl")] public string TotklAsText { get => (Totkl.HasValue) ? Inom.ToString() : null; set => Totkl = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
+
+        #endregion Properties to Text (serialize)
+
+        public BreakerCell() { }
+        public BreakerCell(double? tvkl, double? totkl,
                            string name, double? inom, double unom,
                            double? iotkl, double? iterm, double? iudar,
                            double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm)
         {
             this.tvkl = tvkl;
             this.totkl = totkl;
-            this.type = type;
         }
     }
 
@@ -92,11 +100,12 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public class DisconnectorCell : Element
     {
+        [XmlAttribute] public string Type { get; } = "Разъед.";
+
+        public DisconnectorCell() { }
         public DisconnectorCell(string name, double? inom, double unom,
                                 double? iotkl, double? iterm, double? iudar,
-                                double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm)
-        {
-        }
+                                double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm) { }
     }
 
     /// <summary>
@@ -105,19 +114,21 @@ namespace Power_Equipment_Handbook
     public class ShortCircuiterCell : Element
     {
         double? totkl;
-        string type;
 
-        [XmlAttribute] public string Type { get => type; set => SetProperty(ref type, value); }
-        [XmlAttribute] public double? Totkl { get => totkl; set => SetProperty(ref totkl, value); }
+        [XmlAttribute] public string Type { get; } = "От./КЗ";
+        [XmlIgnore] public double? Totkl { get => totkl; set => SetProperty(ref totkl, value); }
 
-        public ShortCircuiterCell(double? totkl, string type, //special
+        #region Properties to Text (serialize)
+
+        [XmlElement("Totkl")] public string TotklAsText { get => (Totkl.HasValue) ? Inom.ToString() : null; set => Totkl = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
+
+        #endregion Properties to Text (serialize)
+
+        public ShortCircuiterCell() { }
+        public ShortCircuiterCell(double? totkl, //special
                                   string name, double? inom, double unom,
                                   double? iotkl, double? iterm, double? iudar,
-                                  double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm)
-        {
-            this.totkl = totkl;
-            this.type = type;
-        }
+                                  double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm) => this.totkl = totkl;
     }
 
     /// <summary>
@@ -125,11 +136,13 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public class TTCell : Element
     {
-        int iperv, ivtor;        
+        int iperv, ivtor;
 
+        [XmlAttribute] public string Type { get; } = "ТТ";
         [XmlAttribute] public int Iperv { get => iperv; set => SetProperty(ref iperv, value); }
         [XmlAttribute] public int Ivtor { get => ivtor; set => SetProperty(ref ivtor, value); }
 
+        public TTCell() { }
         public TTCell(int iperv, int ivtor, //special
                       string name, double? inom, double unom,
                                   double? iotkl, double? iterm, double? iudar,
@@ -146,13 +159,14 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public class BusbarCell : Element  //Допилить (ошиновка)
     {
+        [XmlAttribute] public string Type { get; } = "Ошин.";
+        public BusbarCell() { }
         public BusbarCell(string name, double? inom, double unom,
                                   double? iotkl, double? iterm, double? iudar,
-                                  double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm)
-        {
-
-        }
+                                  double? tterm, double? bterm) : base(name, inom, unom, iotkl, iterm, iudar, tterm, bterm) { }
     }
+
+
 
 
     /// <summary>
@@ -168,7 +182,9 @@ namespace Power_Equipment_Handbook
             this.track.Cells.Add(new Cell(1, "ф.23", 6.3));
             this.track.Cells.Add(new Cell(2, "ф.24", 6.3));
 
-            this.track.Cells[0].CellElements.Add(new BreakerCell(0.1, 0.1, "Элегаз", "VD4-12", null, 0.1, null, null, null, null, null));
+            this.track.Cells[0].CellElements.Add(new BreakerCell(0.1, 0.1, "VD4-12", null, 0.1, null, null, null, null, null));
+            this.track.Cells[0].CellElements.Add(new DisconnectorCell("РВЗ-14-47-89 1а УХЛЗ2", null, 0.1, null, null, null, null, null));
+            this.track.Cells[0].CellElements.Add(new ShortCircuiterCell(0.1, "РВЗ-14-47-89 1а УХЛЗ2 РВЗ-14-47-89 1а УХЛЗ2", null, 0.1, null, null, null, null, null));
 
             Application.Current.Dispatcher.Invoke((Action)delegate ()
             {                
@@ -214,5 +230,14 @@ namespace Power_Equipment_Handbook
                 if (c != null) this.grdCommutation.ItemsSource = new ObservableCollection<Cell>(this.track.Cells.Where(x => c.NodeNumber == x.NodeNumber));
             }
         }
+
+        /// <summary>
+        /// Потеря фокуса и сокрытие деталей общей таблицы ячеек
+        /// </summary>
+        private void grdCells_LostFocus(object sender, RoutedEventArgs e)
+        {
+            this.track.grdCells.SelectedIndex = -1;
+        }
+
     }
 }

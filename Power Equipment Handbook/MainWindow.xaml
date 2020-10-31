@@ -458,15 +458,16 @@
                 </TabItem>
                 <TabItem x:Name="Tab_Commutation" Header="Коммутация" Margin="0,-2,-130,0" HorizontalAlignment="Right" Width="130," Cursor="Hand" BorderBrush="#FF9B9797">
                     <Grid>
-                        <ComboBox x:Name="txtStartNode_C" HorizontalAlignment="Left" Height="22" Margin="5,100,0,0" VerticalAlignment="Top" Width="90" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_C_SelectionChanged" DropDownOpened="DropDownNodeReflector" DisplayMemberPath="Number">
+                        <Button Margin="14,200,0,0" Content="Показать узлы" BorderBrush="#FFACACAC" Background="#FFEDEDED" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" Width="89" Height="16" VerticalAlignment="Top" Click="Get_LinkedNodes" Padding="1,0" />
+                        <ComboBox x:Name="txtStartNode_C" HorizontalAlignment="Left" Height="22" Margin="14,58,0,0" VerticalAlignment="Top" Width="90" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_C_SelectionChanged" DropDownOpened="DropDownNodeReflector" DisplayMemberPath="Number">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
                                     <Setter Property="ToolTip" Value="{Binding Name}" />
                                 </Style>
                             </ComboBox.ItemContainerStyle>
                         </ComboBox>
-                        <Label x:Name="lblStartNode_C" Content="Узел" HorizontalAlignment="Left" Margin="30,75,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
-                        <ComboBox x:Name="cmbUnom_C" HorizontalAlignment="Left" Margin="113,100,0,0" VerticalAlignment="Top" Width="65" Height="22" IsTabStop="False" SelectionChanged="CmbUnom_SelectionChanged" HorizontalContentAlignment="Center">
+                        <Label x:Name="lblStartNode_C" Content="Узел" HorizontalAlignment="Left" Margin="39,33,0,0" VerticalAlignment="Top" Height="24" FontWeight="Bold" />
+                        <ComboBox x:Name="cmbUnom_C" HorizontalAlignment="Left" Margin="24,109,0,0" VerticalAlignment="Top" Width="65" Height="22" IsTabStop="False" SelectionChanged="CmbUnom_SelectionChanged" HorizontalContentAlignment="Center">
                             <ListBoxItem Content="0.4"/>
                             <ListBoxItem Content="0.66"/>
                             <ListBoxItem Content="3"/>
@@ -488,23 +489,36 @@
                             <ListBoxItem Content="750"/>
                             <ListBoxItem Content="1150"/>
                         </ComboBox>
-                        <Label x:Name="lblUnom_C" Content="Uном" HorizontalAlignment="Left" Margin="126,75,0,0" VerticalAlignment="Top" Height="24" />
-                        <DataGrid x:Name="grdCommutation" BorderThickness="1" BorderBrush="LightGray" Margin="224,40,0,0" AutoGenerateColumns="False" HorizontalAlignment="Left" Width="450" Height="142" VerticalAlignment="Top" CanUserReorderColumns="True" ItemsSource="{Binding}"
+                        <Label x:Name="lblUnom_C" Content="Uном" HorizontalAlignment="Left" Margin="37,84,0,0" VerticalAlignment="Top" Height="24" />
+                        <GroupBox Header="Ячейки" BorderThickness="1" BorderBrush="#FFB5BBBF" Margin="119,0,0,0" Height="222" VerticalAlignment="Top" HorizontalAlignment="Left" Width="515" >
+                            <DataGrid x:Name="grdCommutation" BorderThickness="1" BorderBrush="LightGray" Margin="0,40,0,0" AutoGenerateColumns="False" CanUserReorderColumns="True" ItemsSource="{Binding}"
                                   CanUserAddRows="false" CanUserDeleteRows="False"
                                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                  AlternationCount="2" AlternatingRowBackground="#FFF0F0F0" IsManipulationEnabled="True" SelectedCellsChanged="grdCommutation_SelectedCellsChanged" EnableRowVirtualization="False">
-                            <DataGrid.Columns>                              
-                                <DataGridTextColumn Header="Номер узла" Width="85" Binding="{Binding NodeNumber}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
-                                <DataGridTextColumn Header="Наименование" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
-                                <DataGridTextColumn Header="Unom" Width="*" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
-                                <DataGridTextColumn Header="Элементы" Width="*" Binding="{Binding ElemsCount}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                  AlternationCount="2" AlternatingRowBackground="#FFF0F0F0" IsManipulationEnabled="True" SelectedCellsChanged="grdCommutation_SelectedCellsChanged" EnableRowVirtualization="False" Width="500" MinWidth="500">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Номер узла" Width="75" Binding="{Binding NodeNumber}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Наименование" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Unom" Width="80" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Элементы" Width="65" Binding="{Binding ElemsCount}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
 
-                        <DataGrid x:Name="grdElements" BorderThickness="1" BorderBrush="LightGray" Margin="679,40,0,0" HorizontalAlignment="Left" Width="495" Height="142" VerticalAlignment="Top" >
-
-                        </DataGrid>
-
+                        <GroupBox Header="Элементы ячейки (оборудование)" BorderThickness="1" BorderBrush="#FFB5BBBF" Margin="634,0,10,0" Height="222" VerticalAlignment="Top">
+                            <DataGrid x:Name="grdElements" ItemsSource="{Binding}" BorderThickness="1" BorderBrush="LightGray" Margin="0,40,0,0" AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Тип" Width="50" MaxWidth="100" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Наименование" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Unom" Width="80" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Inom" Width="80" Binding="{Binding Inom}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Iоткл" Width="80" Binding="{Binding Iotkl}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Iтерм" Width="80" Binding="{Binding Iterm}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="tтерм" Width="80" Binding="{Binding Tterm}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="Bтерм" Width="80" Binding="{Binding Bterm}" ClipboardContentBinding="{x:Null}" />
+                                    <DataGridTextColumn Header="iуд" Width="80" Binding="{Binding Iudar}" ClipboardContentBinding="{x:Null}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
             </TabControl>
@@ -575,10 +589,74 @@
                 </TabItem>
                 <TabItem x:Name="Tab_Cells" Header="Ячейки" Background="{x:Null}" Margin="0" BorderBrush="#FF9B9797">
                     <DataGrid x:Name="grdCells" ItemsSource="{Binding}" MinRowHeight="10" 
-                              HeadersVisibility="All" Margin="0" AutoGenerateColumns="True" 
+                              HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" 
                               HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" 
-                              IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA" CanUserReorderColumns="True"
-                              SelectedCellsChanged="grdCommutation_SelectedCellsChanged"/>
+                              IsSynchronizedWithCurrentItem="True" CanUserReorderColumns="True"
+                              SelectedCellsChanged="grdCommutation_SelectedCellsChanged"
+                              IsReadOnly="True" SelectionMode="Single" LostFocus="grdCells_LostFocus"
+                              CanUserResizeRows="False" MinColumnWidth="50">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер узла" Width="120" MaxWidth="120" Binding="{Binding NodeNumber}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Наименование" Width="500" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Unom" Width="*" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Количество элементов" Width="*" Binding="{Binding ElemsCount}" ClipboardContentBinding="{x:Null}" IsReadOnly="True" />
+                        </DataGrid.Columns>
+                        <DataGrid.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=NodeNumber}" FontWeight="Bold" Padding="3" Background="Gray"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                                <GroupStyle.ContainerStyle>
+                                    <Style TargetType="{x:Type GroupItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                    <Expander IsExpanded="True">
+                                                        <Expander.Header>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Номер узла: " />
+                                                                <TextBlock Text="{Binding Path=Name}" Margin="8,0,4,0"/>
+                                                                <TextBlock Text=" "/>
+                                                                <TextBlock Text=" ( "/>
+                                                                <TextBlock Text="{Binding Path=ItemCount}"/>
+                                                                <TextBlock Text=" шт. )"/>
+                                                            </StackPanel>
+                                                        </Expander.Header>
+                                                        <ItemsPresenter />
+                                                    </Expander>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.ContainerStyle>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <DataGrid ItemsSource="{Binding CellElements}" IsReadOnly="True" 
+                                          AutoGenerateColumns="False" CanUserResizeColumns="True" CanUserSortColumns="True"
+                                          HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="5,5,5,5"  
+                                          MinWidth="500" Width="1145" VerticalAlignment="Center"
+                                          BorderThickness="1" BorderBrush="Black" CanUserResizeRows="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Тип" Width="50" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Наименование" Width="*" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Unom" Width="80" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Inom" Width="100" Binding="{Binding Inom}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Iоткл" Width="100" Binding="{Binding Iotkl}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Iтерм" Width="100" Binding="{Binding Iterm}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="tтерм" Width="100" Binding="{Binding Tterm}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="Bтерм" Width="100" Binding="{Binding Bterm}" ClipboardContentBinding="{x:Null}" />
+                                        <DataGridTextColumn Header="iуд" Width="100" Binding="{Binding Iudar}" ClipboardContentBinding="{x:Null}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
                 </TabItem>
             </TabControl>
         </DockPanel>

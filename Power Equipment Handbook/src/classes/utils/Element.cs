@@ -10,23 +10,11 @@ using System.Xml.Serialization;
 namespace Power_Equipment_Handbook.src
 {
     /// <summary>
-    /// Интерфейс элемента Ячейки узла
-    /// </summary>
-    interface IElement : INotifyPropertyChanged
-    {      
-        double? Inom { get; set; }
-        double? Iotkl { get; set; }
-        double? Iterm { get; set; }
-        double? Tterm { get; set; }
-        double? Bterm { get; set; }
-        double? Iudar { get; set; }
-        double Unom { get; set; }
-    }
-
-    /// <summary>
     /// Абстрактный класс элемента Ячейки узла
     /// </summary>
-    public abstract class Element : IElement
+    [XmlInclude(type:typeof(BreakerCell)), XmlInclude(type: typeof(DisconnectorCell)),
+     XmlInclude(type: typeof(ShortCircuiterCell)), XmlInclude(type: typeof(TTCell)), XmlInclude(type: typeof(BusbarCell))]
+    public abstract class Element : INotifyPropertyChanged
     {
         string name;
         double? inom, iotkl, iterm, tterm, bterm, iudar;
@@ -50,10 +38,15 @@ namespace Power_Equipment_Handbook.src
         [XmlElement("Tterm")] public string TtermAsText { get => (Tterm.HasValue) ? Tterm.ToString() : null; set => Tterm = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
         [XmlElement("Bterm")] public string BtermAsText { get => (Bterm.HasValue) ? Bterm.ToString() : null; set => Bterm = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
         [XmlElement("Iudar")] public string IudarAsText { get => (Iudar.HasValue) ? Iudar.ToString() : null; set => Iudar = !string.IsNullOrEmpty(value) ? double.Parse(value) : default(double?); }
-        #endregion Inom property to Text
+        #endregion Properties to Text (serialize)
 
         #endregion Properties
 
+
+        /// <summary>
+        /// Конструктор пустой (для сериализации)
+        /// </summary>
+        public Element() { }
 
         /// <summary>
         /// Конструктор элемента ячейки
@@ -72,6 +65,7 @@ namespace Power_Equipment_Handbook.src
             this.unom = unom;
         }
 
+        
 
         #region INotifyPropertyChanged interface block
 

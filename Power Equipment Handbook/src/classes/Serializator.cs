@@ -19,7 +19,7 @@ namespace Power_Equipment_Handbook.src
         /// Инициализация обобщенного Сериализатора
         /// </summary>
         /// <param name="file">Абсолютный путь к файлу записи</param>
-        /// <param name="tracker">Объект с наборо данных (Узлы и Ветви) типа DataGridTracker</param>
+        /// <param name="tracker">Объект с набором данных (Узлы, Ветви, Ячейки) типа DataGridTracker</param>
         public UniverseSerializator(string file, DataGridTracker tracker)
         {
             this.filename = file;
