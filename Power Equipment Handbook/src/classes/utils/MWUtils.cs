@@ -156,13 +156,13 @@ namespace Power_Equipment_Handbook
                         Lines.Add(new Line()
                         {
                             Unom = sqldata["Unom"] as double?,
-                            TypeName = sqldata["TypeName"] as string,
+                            TypeName = sqldata["Марка"] as string,
                             R0 = sqldata["R0"] as double?,
                             X0 = sqldata["X0"] as double?,
                             B0 = sqldata["B0"] as double?,
                             G0 = sqldata["G0"] as double?,
-                            Idd = sqldata["Idd"] as double?,
-                            Source = sqldata["Source"] as string
+                            Idd = sqldata["Iдд"] as double?,
+                            Source = sqldata["Источник"] as string
                         });
                     }
                 }
@@ -190,14 +190,14 @@ namespace Power_Equipment_Handbook
                             Trans.Add(new Trans()
                             {
                                 Unom = sqldata["Unom"] as double?,
-                                TypeName = sqldata["TypeName"] as string,
+                                TypeName = sqldata["Марка"] as string,
                                 UnomH = sqldata["UnomH"] as double?,
                                 UnomL = sqldata["UnomL"] as double?,
                                 R = sqldata["R"] as double?,
                                 X = sqldata["X"] as double?,
                                 B = sqldata["B"] as double?,
                                 G = sqldata["G"] as double?,
-                                Source = sqldata["Source"] as string,
+                                Source = sqldata["Источник"] as string,
                                 Inom = (snom_loc / unom_loc / Math.Sqrt(3)).HasValue ? (double?)Math.Round((double)(snom_loc / unom_loc / Math.Sqrt(3)), 2) : null
                             });
                         }
@@ -226,7 +226,7 @@ namespace Power_Equipment_Handbook
                             MultiTrans.Add(new MultiTrans()
                             {
                                 Unom = sqldata["Unom"] as double?,
-                                TypeName = sqldata["TypeName"] as string,
+                                TypeName = sqldata["Марка"] as string,
                                 UnomH = sqldata["UnomH"] as double?,
                                 UnomM = sqldata["UnomM"] as double?,
                                 UnomL = sqldata["UnomL"] as double?,
@@ -461,8 +461,8 @@ namespace Power_Equipment_Handbook
             switch(extension.ToLower())
             {
                 case ".peh":
-                    try
-                    {
+                    //try
+                    //{
                         localTracker = serializator.fromXML();
 
                         track.Nodes.Clear(); track.Branches.Clear();                    //Очистка старых значений в колекциях Узлов и Ветвей
@@ -470,17 +470,17 @@ namespace Power_Equipment_Handbook
 
                         foreach(var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
                         foreach(var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
-                    }
-                    catch(Exception)
-                    {
-                        Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
-                        return;
-                    }
+                    //}
+                    //catch(Exception)
+                    //{
+                    //    Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
+                    //    return;
+                    //}
                     break;
 
-                //case ".rg2":
-                //    serializator.toRG2();
-                //    break;
+                    //case ".rg2":
+                    //    serializator.toRG2();
+                    //    break;
             }
 
             Log.Show($"Успешно прочитан файл {filename}", LogClass.LogType.Information); //Информирует об успешном чтении файла

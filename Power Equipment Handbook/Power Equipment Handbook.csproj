@@ -93,6 +93,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="src\classes\DataGridTracker.cs" />
     <Compile Include="src\classes\DBProvider.cs" />
+    <Compile Include="src\classes\utils\CellsUtils.cs" />
+    <Compile Include="src\classes\utils\IElement.cs" />
     <Compile Include="src\classes\utils\MWUtils.cs" />
     <Compile Include="src\classes\Log.cs" />
     <Compile Include="src\classes\Serializator.cs" />

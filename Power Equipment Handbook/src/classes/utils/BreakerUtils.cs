@@ -49,7 +49,7 @@ namespace Power_Equipment_Handbook
 
 
     /// <summary>
-    /// Вспомогательные методы MainWindow для Трансформаторов
+    /// Вспомогательные методы MainWindow для Выключателей
     /// </summary>
     public partial class MainWindow
     {

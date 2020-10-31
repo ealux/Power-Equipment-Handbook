@@ -41,7 +41,7 @@
                     <GroupStyle.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding Path=Unom}" FontWeight="Bold" Padding="3"/>
+                                <TextBlock Text="{Binding Path=Unom}" FontWeight="Bold" Padding="3" Background="Gray"/>
                             </StackPanel>
                         </DataTemplate>
                     </GroupStyle.HeaderTemplate>
@@ -56,9 +56,9 @@
                                                     <TextBlock Text="Unom: " />
                                                     <TextBlock Text="{Binding Path=Name}" Margin="8,0,4,0"/>
                                                     <TextBlock Text=" кВ "/>
-                                                    <TextBlock Text="("/>
+                                                    <TextBlock Text=" ( "/>
                                                     <TextBlock Text="{Binding Path=ItemCount}"/>
-                                                    <TextBlock Text=")"/>
+                                                    <TextBlock Text=" шт. )"/>
                                                 </StackPanel>
                                             </Expander.Header>
                                             <ItemsPresenter />

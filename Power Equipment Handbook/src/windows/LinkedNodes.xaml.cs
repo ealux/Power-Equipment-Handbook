@@ -94,8 +94,7 @@ namespace Power_Equipment_Handbook.src.windows
             else
             {
                 nodesView = null;
-            }
-            
+            }            
         }
 
         private void TextBlock_SourceUpdated(object sender, DataTransferEventArgs e)
@@ -110,9 +109,6 @@ namespace Power_Equipment_Handbook.src.windows
         {
             GenerateView();
             this.LinkedGrid.ItemsSource = nodesView.View;
-        }
-
-
-        
+        }                
     }
 }

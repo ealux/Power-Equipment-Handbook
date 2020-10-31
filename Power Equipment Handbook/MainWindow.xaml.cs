@@ -19,7 +19,7 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public partial class MainWindow
     {
-        private readonly string MainTitle = "Power Equipment Handbook";
+        //private readonly string MainTitle = "Power Equipment Handbook";
 
         private List<DataGridTracker> tracks;   //Список сетей !!!ДОДЕЛАТЬ
         private DataGridTracker track;
@@ -38,14 +38,13 @@ namespace Power_Equipment_Handbook
         private GridLength SideWidth { get; set; }
 
 
-
         /// <summary>
         /// Конструктор главного окна 
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            track = new DataGridTracker(grdNodes, grdBranches);
+            track = new DataGridTracker(grdNodes, grdBranches, grdCells);
             tracks = new List<DataGridTracker>();   //Список сетей !!!ДОДЕЛАТЬ
 
             db_prv = new DBProvider("test.db");                     //Инициализация подключения к встроенной БД оборудования
@@ -61,6 +60,7 @@ namespace Power_Equipment_Handbook
             txtEndLowNode_T.ItemsSource = track.Nodes;
             txtStartNode_B.ItemsSource = track.Nodes;
             txtEndNode_B.ItemsSource = track.Nodes;
+            txtStartNode_C.ItemsSource = track.Nodes;
 
             chk_Line_Cable.DataContext = this;
 
@@ -343,12 +343,14 @@ namespace Power_Equipment_Handbook
             {
                 grdNodes.IsReadOnly = false;
                 grdBranches.IsReadOnly = false;
+                grdCells.IsReadOnly = false;
                 imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/unlock.png"));
             }
             else
             {
                 grdNodes.IsReadOnly = true;
                 grdBranches.IsReadOnly = true;
+                grdCells.IsReadOnly = true;
                 imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/lock.png"));
             }
         }
@@ -389,6 +391,7 @@ namespace Power_Equipment_Handbook
 
         #endregion Работа с дизайном окна
 
+
         private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
         {
             switch (this.Tab_Data.SelectedIndex)
@@ -401,7 +404,11 @@ namespace Power_Equipment_Handbook
                     this.track.grdBranches.ItemsSource = null;
                     this.track.grdBranches.ItemsSource = this.track.Branches;
                     break;
+                //case 2:
+                //    this.ta
             }
         }
+
+        
     }
 }
