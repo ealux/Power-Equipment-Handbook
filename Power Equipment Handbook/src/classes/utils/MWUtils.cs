@@ -142,7 +142,7 @@ namespace Power_Equipment_Handbook
             if(type == "Line")
             {
                 Lines.Clear();
-                string comm = "";
+                string comm;
 
                 if (isCable == true) comm = $"SELECT * FROM [Cables] WHERE [Unom] = {unom}".Replace(',','.');
                 else comm = $"SELECT * FROM [Lines] WHERE [Unom] = {unom}".Replace(',', '.');
@@ -472,9 +472,11 @@ namespace Power_Equipment_Handbook
 
                         foreach(var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
                         foreach(var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
-                        foreach (var i in localTracker.Cells) track.Cells.Add(i);  //Добавление Ветвей
+                        foreach (var i in localTracker.Cells) track.Cells.Add(i);       //Добавление Ячеек
+
+                        FullUpdate();
                     }
-                                    catch (Exception)
+                    catch (Exception)
                     {
                         Log.Show($"Ошибка чтения файла: {filename}"); //Информирует об ошибке импорта
                         return;
@@ -487,6 +489,43 @@ namespace Power_Equipment_Handbook
             }
 
             Log.Show($"Успешно прочитан файл {filename}", LogClass.LogType.Information); //Информирует об успешном чтении файла
+        }
+
+
+        /// <summary>
+        /// Выгрузка и структурирование данных по Оборудованию и Ячейкам в xlsx документ
+        /// </summary>
+        private void EquipmentSerialize_Click(object sender, RoutedEventArgs e)
+        {
+            if (track.Nodes.Count == 0) //Условие наличия узлов
+            {
+                Log.Show("Отсутствуют узлы!");
+                return;
+            }
+            if (track.Cells.Count == 0) //Условие наличия узлов ячеек
+            {
+                Log.Show("Отсутствуют ячейки оборудования!");
+                return;
+            }
+
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "Excel (*.xlsx)|*.xlsx",       // | Rastr_rgm (*.rg2)|*.rg2",
+                OverwritePrompt = true,
+                AddExtension = true
+                //InitialDirectory = "./Save/", 
+            };
+
+            if (sfd.ShowDialog() == false) return;
+
+            string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
+
+            UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
+
+            Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
+            serializator.EquipmentToXLSX();
+
+            Log.Show($"Успешно записано в файл: {filename}", LogClass.LogType.Information); //Информирует об записи в файл
         }
 
         #endregion Save/Open (Serialize/Deserialize) Methods

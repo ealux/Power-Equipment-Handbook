@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Threading.Tasks;
+using System.CodeDom;
+using System.Windows.Media;
+using System.Linq;
 
 namespace Power_Equipment_Handbook.src
 {
@@ -12,8 +15,8 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class UniverseSerializator
     {
-        private string filename;        //Абсолютный путь к файлу
-        DataGridTracker track;  //Класс, содержащий данные с текущим состоянием таблиц Ветвей и Узлов
+        private readonly string filename;        //Абсолютный путь к файлу
+        private DataGridTracker track;          //Класс, содержащий данные с текущим состоянием таблиц Ветвей и Узлов
 
         /// <summary>
         /// Инициализация обобщенного Сериализатора
@@ -57,7 +60,7 @@ namespace Power_Equipment_Handbook.src
             using(StreamReader fs = new StreamReader(filename))
             {
                 track = (DataGridTracker)serializer.Deserialize(fs);
-                fs.Close();
+                //fs.Close();
             }
             return track;
         }
@@ -185,6 +188,130 @@ namespace Power_Equipment_Handbook.src
 
                     p.Save(); //Сохранение выходного документа
                 }
+            });
+        }
+
+        /// <summary>
+        /// Сериализация в Excel файл с расширением OpenXML *.xlsx Таблица оборудования
+        /// </summary>
+        public void EquipmentToXLSX()
+        {
+            Task.Run(() =>
+            {
+                FileInfo fileInfo = new FileInfo(filename);
+
+                if (fileInfo.Exists) fileInfo.Delete();
+
+                using (ExcelPackage p = new ExcelPackage(fileInfo))
+                {
+                    var wb = p.Workbook;
+
+                    var sheetEquipment = wb.Worksheets.Add("Основное оборудование");    //Страница оборудования
+
+                    int row = 3; //Стартовая позиция строки
+                    int col = 1; //Стартовая позиция столбца
+
+                    #region Excel PreDesign
+
+                    string[] lbl = new string[] { "Наименование ПС", "№ ячейки", "Uном, кВ", "Оборудование", "Марка", 
+                                                  "I ном, А", "I откл.ном, кА", "I тер.ном, кА", "t тер.ном, с", "B к.норм, кА2с", "i пр.скв, кА",
+                                                  "I п0, А", "t сумм, с", "B к.норм, кА2с", "i уд, кА" , "ta, с", "t осн.защ, с", "b расч, %"};
+
+                    sheetEquipment.Cells[row, col].Value = "Оборудование";              sheetEquipment.Cells[row, col, row, col + 4].Merge = true;
+                    sheetEquipment.Cells[row, col + 5].Value = "Нормируемые параметры"; sheetEquipment.Cells[row, col + 5, row, col + 10].Merge = true;
+                    sheetEquipment.Cells[row, col + 11].Value = "Расчётные параметры";  sheetEquipment.Cells[row, col + 11, row, col + 17].Merge = true;
+                    sheetEquipment.Cells[row+1, col + 11].Value = "_Режим_1_";          sheetEquipment.Cells[row+1, col + 11, row+1, col + 17].Merge = true;
+
+                    for (int i = 0; i < lbl.Length; i++)
+                    {
+                        if (i <= 10)
+                        {
+                            sheetEquipment.Cells[4, i + 1, 5, i + 1].Merge = true;
+                            sheetEquipment.Cells[4, i + 1].Value = lbl[i];
+                        }
+                        else
+                        {
+                            sheetEquipment.Cells[5, i + 1].Value = lbl[i];
+                        }
+                    }
+
+                    #endregion Excel PreDesign
+
+                    row = row + 3;                                                  //Установка стартовой похиции строки для вывода ячеек 
+                    var nodes = track.Cells.Select(n => n.NodeNumber).Distinct();   //Список уникальных узлов где есть ячейки
+
+                    foreach (var node in nodes) //Цикл по узлам
+                    {
+                        sheetEquipment.Cells[row, 1].Value = track.Nodes.Where(n => n.Number == node).First().Name;//Вывод имени узла
+                        sheetEquipment.Cells[row, 3].Value = track.Nodes.Where(n => n.Number == node).First().Unom;//Вывод Unom узла
+
+                        var cells = track.Cells.Where(n => n.NodeNumber == node);
+
+                        int node_bias = -1;
+                        foreach (var cell in cells)
+                        {
+                            if (cell.ElemsCount == 0) node_bias += 1;
+                            else node_bias += cell.ElemsCount;
+                        }
+
+                        sheetEquipment.Cells[row, 1, row + node_bias, 1].Merge = true; //Объединение полей (наименование узла)
+                        sheetEquipment.Cells[row, 3, row + node_bias, 3].Merge = true; //Объединение полей (Unom узла)
+
+                        foreach (var cell in cells) //Цикл по ячейкам
+                        {
+                            sheetEquipment.Cells[row, 2].Value = cell.Name;         //Вывод имени ячейки                            
+
+                            if (cell.CellElements.Count != 0)                       //Условие наличия элементов ячейки
+                            {
+                                var elemsCount = cell.CellElements.Count - 1;
+                                sheetEquipment.Cells[row, 2, row + elemsCount, 2].Merge = true; //Объединение полей (наименование ячейки)
+
+                                foreach (var elem in cell.CellElements) //Цикл по элементам ячейки
+                                {
+                                    sheetEquipment.Cells[row, 4].Value = elem.SerializeType();  //Вывод Типа оборудования
+                                    sheetEquipment.Cells[row, 5].Value = elem.Name;             //Вывод Марки оборудования
+                                    sheetEquipment.Cells[row, 6].Value = elem.Inom;             //Вывод Inom оборудования
+                                    sheetEquipment.Cells[row, 7].Value = elem.Iotkl;            //Вывод Iоткл оборудования
+                                    sheetEquipment.Cells[row, 8].Value = elem.Iterm;            //Вывод Iтерм оборудования
+                                    sheetEquipment.Cells[row, 9].Value = elem.Tterm;            //Вывод tтерм оборудования
+                                    sheetEquipment.Cells[row, 10].Value = elem.Bterm;           //Вывод Bтерм оборудования
+                                    sheetEquipment.Cells[row, 11].Value = elem.Iudar;           //Вывод iуд оборудования
+
+                                    row += 1;
+                                }
+                            }
+                            else row += 1;
+                        }
+                    }
+
+
+                    #region PostDesign
+
+                    for (int i = 1; i < 19; i++)
+                    {
+                        for (int j = 3; j <= row - 1; j++)
+                        {
+                            if (sheetEquipment.Cells[j, i].Value == null) sheetEquipment.Cells[j, i].Value = "";
+                            sheetEquipment.Cells[j, i].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        }
+                    }
+                    foreach (var item in sheetEquipment.MergedCells) sheetEquipment.Cells[item].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                    sheetEquipment.Cells[3, 1, row - 1, 5].Style.Border.BorderAround(ExcelBorderStyle.Thick);
+                    sheetEquipment.Cells[3, 6, row - 1, 11].Style.Border.BorderAround(ExcelBorderStyle.Thick);
+                    sheetEquipment.Cells[3, 12, row - 1, 18].Style.Border.BorderAround(ExcelBorderStyle.Thick);
+
+                    sheetEquipment.Cells.AutoFitColumns();
+                    sheetEquipment.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    sheetEquipment.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                    sheetEquipment.Column(1).Style.WrapText = true;
+                    sheetEquipment.Column(2).Style.WrapText = true;
+
+                    #endregion PostDesign
+
+                    p.Save(); //Сохранение выходного документа
+                }                
             });
         }
 

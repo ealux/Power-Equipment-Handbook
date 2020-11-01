@@ -25,7 +25,7 @@ namespace Power_Equipment_Handbook
         private DataGridTracker track;
         private DBProvider db_prv;
 
-        private LogClass Log;
+        private readonly LogClass Log;
 
         public ObservableCollection<Line> Lines;
         public ObservableCollection<Trans> Trans;
@@ -391,6 +391,9 @@ namespace Power_Equipment_Handbook
         #endregion Работа с дизайном окна
 
 
+        /// <summary>
+        /// Сброс сортировки
+        /// </summary>
         private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
         {
             switch (this.Tab_Data.SelectedIndex)
@@ -407,6 +410,7 @@ namespace Power_Equipment_Handbook
                     this.track.GenerateViewForCells();
                     break;
             }
-        }        
+        }
+                
     }
 }

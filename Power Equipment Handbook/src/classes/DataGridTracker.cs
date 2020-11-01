@@ -39,6 +39,7 @@ namespace Power_Equipment_Handbook.src
             Cells.CollectionChanged += CellsCollectionChanged;
         }
 
+
         /// <summary>
         /// Добавить узел в список узлов
         /// </summary>
@@ -52,23 +53,19 @@ namespace Power_Equipment_Handbook.src
         public void AddBranch(Branch branch) => Application.Current.Dispatcher?.BeginInvoke((Action)delegate{ Branches.Add(branch); grdBranches.UpdateLayout(); });
 
         /// <summary>
-        /// 
+        /// Обновить источник данных для общей таблицы ячеек
         /// </summary>
         internal void GenerateViewForCells()
         {
-            this.CellsView = new CollectionViewSource();
-            this.CellsView.Source = this.Cells.OrderBy(n => n.NodeNumber);
+            this.CellsView = new CollectionViewSource() { Source = this.Cells.OrderBy(n => n.NodeNumber) };
             this.CellsView.GroupDescriptions.Add(new PropertyGroupDescription("NodeNumber"));
             this.grdCells.ItemsSource = CellsView.View;
         }
 
-        private void CellsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Application.Current.Dispatcher?.Invoke(() =>
-            {
-                GenerateViewForCells();
-            });
-        }
+        /// <summary>
+        /// Реакция на события изменения исходной коллекции для таблицы ячеек
+        /// </summary>
+        private void CellsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => Application.Current.Dispatcher?.Invoke(() => { GenerateViewForCells(); });
     }
 
 

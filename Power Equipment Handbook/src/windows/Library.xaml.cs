@@ -17,7 +17,7 @@ namespace Power_Equipment_Handbook.src.windows
 {
     public partial class Library : Window
     {
-        DBProvider db;
+        readonly DBProvider db;
 
         public Library(DBProvider dbProvider)
         {

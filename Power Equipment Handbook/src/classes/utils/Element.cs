@@ -23,6 +23,7 @@ namespace Power_Equipment_Handbook.src
         #region Properties
 
         [XmlAttribute] public string Name { get => name; set => SetProperty(ref name, value); }
+        [XmlAttribute] public virtual string Type { get => name; }
         [XmlIgnore] public double? Inom { get => inom; set => SetProperty(ref inom, value); }   
         [XmlIgnore] public double? Iotkl { get => iotkl; set => SetProperty(ref iotkl, value); }
         [XmlIgnore] public double? Iterm { get => iterm; set => SetProperty(ref iterm, value); }
@@ -65,6 +66,11 @@ namespace Power_Equipment_Handbook.src
             this.unom = unom;
         }
 
+
+        /// <summary>
+        /// Абстрактный метод вывода полного наименования типа при выгрузке оборудования
+        /// </summary>
+        public abstract string SerializeType();
         
 
         #region INotifyPropertyChanged interface block
