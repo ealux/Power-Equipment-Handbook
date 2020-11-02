@@ -193,6 +193,43 @@ namespace Power_Equipment_Handbook
         public override string SerializeType() => "Ошиновка";
     }
 
+    /// <summary>
+    /// Класс для настройки опций добавления комплекта оборудования
+    /// </summary>
+    public class CellElementsOptions : INotifyPropertyChanged
+    {
+        bool breaker = true;
+        bool discon = true;
+        bool sc = false;
+        bool tt = true;
+        bool bbur = true;
+
+        public bool isBreaker { get => breaker; set => SetProperty(ref breaker, value); }       //Добавление Выключателя
+        public bool isDisconnector { get => discon; set => SetProperty(ref discon, value); }    //Добавление Разъединителя
+        public bool isSC { get => sc; set => SetProperty(ref sc, value); }                      //Добавление Отделителя/Короткозамыкателя
+        public bool isTT { get => tt; set => SetProperty(ref tt, value); }                      //Добавление Трансформатора тока
+        public bool isBusbar { get => bbur; set => SetProperty(ref bbur, value); }              //Добавление Ошиновки
+
+        public CellElementsOptions() { }
+
+        #region INotifyPropertyChanged interface block
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(storage, value)) return false;
+            storage = value; OnPropertyChanged(propertyName); return true;
+        }
+
+        #endregion INotifyPropertyChanged interface block
+    }
+
 
 
     /// <summary>
@@ -337,11 +374,13 @@ namespace Power_Equipment_Handbook
 
                 txtStartNode_C.SelectedIndex = -1;
                 txtStartNode_C.SelectedIndex = index;
+
+                grdElements.ItemsSource = null;
+                grdElements.Items.Clear();
             });
         }
 
         #endregion Ячейки
-
 
 
         #region Элементы
@@ -385,37 +424,49 @@ namespace Power_Equipment_Handbook
                     int index_txt = txtStartNode_C.SelectedIndex;
                     var tmp_cell = (Cell)grdCommutation.SelectedItem;
 
-
-                    var added_br = new BreakerCell(tvkl: null, totkl: null,
+                    if (this.ComplectOptions.isBreaker) //Выключатель
+                    {
+                        var added_br = new BreakerCell(tvkl: null, totkl: null,
                                                 name: "_Выключатель_ячейки_", inom: null, unom: tmp_cell.Unom,
                                                 iotkl: null, iterm: null, iudar: null,
                                                 tterm: null, bterm: null);
+                        tmp_cell.CellElements.Add(added_br);
+                    }
 
-                    var added_discon = new DisconnectorCell(name: "_Разъединитель_ячейки_", inom: null, unom: tmp_cell.Unom,
+                    if (this.ComplectOptions.isDisconnector) //Разъединитель
+                    {
+                        var added_discon = new DisconnectorCell(name: "_Разъединитель_ячейки_", inom: null, unom: tmp_cell.Unom,
                                                     iotkl: null, iterm: null, iudar: null,
                                                     tterm: null, bterm: null);
+                        tmp_cell.CellElements.Add(added_discon);
+                    }
 
-                    var added_SC = new ShortCircuiterCell(totkl: null,
+                    if (this.ComplectOptions.isSC)
+                    {
+                        var added_SC = new ShortCircuiterCell(totkl: null,
                                                        name: "_Отдел./Короткозамык._ячейки_", inom: null, unom: tmp_cell.Unom,
                                                        iotkl: null, iterm: null, iudar: null,
                                                        tterm: null, bterm: null);
+                        tmp_cell.CellElements.Add(added_SC);
+                    }
 
-                    var added_TT = new TTCell(iperv: 0, ivtor: 0,
+                    if (this.ComplectOptions.isTT)
+                    {
+                        var added_TT = new TTCell(iperv: 0, ivtor: 0,
                                            name: "_Трансформатор_тока_ячейки_", inom: null, unom: tmp_cell.Unom,
                                            iotkl: null, iterm: null, iudar: null,
                                            tterm: null, bterm: null);
+                        tmp_cell.CellElements.Add(added_TT);
+                    }
 
-                    var added_bus = new BusbarCell(name: "_Ошиновка_ячейки_", inom: null, unom: tmp_cell.Unom,
+                    if (this.ComplectOptions.isBusbar)
+                    {
+                        var added_bus = new BusbarCell(name: "_Ошиновка_ячейки_", inom: null, unom: tmp_cell.Unom,
                                                iotkl: null, iterm: null, iudar: null,
                                                tterm: null, bterm: null);
-
-                    tmp_cell.CellElements.Add(added_br);
-                    tmp_cell.CellElements.Add(added_discon);
-                    tmp_cell.CellElements.Add(added_SC);
-                    tmp_cell.CellElements.Add(added_TT);
-                    tmp_cell.CellElements.Add(added_bus);
-
-
+                        tmp_cell.CellElements.Add(added_bus);
+                    }
+                    
                     FullUpdate();
 
                     grdCommutation.SelectedIndex = -1;
@@ -426,6 +477,18 @@ namespace Power_Equipment_Handbook
             });
         }
 
+        /// <summary>
+        /// Настройка элементов для компектного добавления оборудования
+        /// </summary>
+        private void btnAddElemComplexOptions_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            {
+                CellElementComplexOptions cr = new CellElementComplexOptions(ref this.ComplectOptions);
+                cr.ShowDialog();
+            }); 
+        }
+                
         /// <summary>
         /// Удаление оборудования 
         /// </summary>
@@ -438,7 +501,8 @@ namespace Power_Equipment_Handbook
                 var tmp_cell = (Cell)grdCommutation.SelectedItem;
 
                 Element row = (Element)grdElements.SelectedItem;
-                tmp_cell.CellElements.Remove(row);
+                try { tmp_cell.CellElements.Remove(row); }
+                catch (Exception) { return; }                
 
                 grdCommutation.UpdateLayout();
 
@@ -447,9 +511,49 @@ namespace Power_Equipment_Handbook
                 grdCommutation.SelectedIndex = -1;
                 txtStartNode_C.SelectedIndex = -1;
                 txtStartNode_C.SelectedIndex = index_txt;
-                grdCommutation.SelectedIndex = index_comm;
+                grdCommutation.SelectedIndex = index_comm;                
             });
         }
+
+
+        #region Справочные элементы
+
+        /// <summary>
+        /// Добавление оборудования. Данные из справочника 
+        /// </summary>
+        private void btnAddElemDict_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke((Action)delegate ()
+            {
+                if ((Cell)grdCommutation.SelectedItem != null & grdCommutation.SelectedIndex != -1)
+                {
+                    int index_comm = grdCommutation.SelectedIndex;
+                    int index_txt = txtStartNode_C.SelectedIndex;
+                    var tmp_cell = (Cell)grdCommutation.SelectedItem;
+
+                    CellElementHandbook ceh = new CellElementHandbook(ref tmp_cell, db_prv);
+                    ceh.ShowDialog();
+
+                    FullUpdate();
+
+                    grdCommutation.SelectedIndex = -1;
+                    txtStartNode_C.SelectedIndex = -1;
+                    txtStartNode_C.SelectedIndex = index_txt;
+                    grdCommutation.SelectedIndex = index_comm;
+                }
+            });
+
+            //test
+            //var c = new Cell();
+
+            //CellElementHandbook ceh = new CellElementHandbook(ref c);
+            //ceh.ShowDialog();
+
+        }
+
+        #endregion Справочные элементы
+
         #endregion Элементы
+
     }
 }

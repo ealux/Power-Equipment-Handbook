@@ -37,6 +37,8 @@ namespace Power_Equipment_Handbook
         public bool isCable { get; set; }
         private GridLength SideWidth { get; set; }
 
+        public CellElementsOptions ComplectOptions; //Настройки комплекта при добавлении оборудования
+
 
         /// <summary>
         /// Конструктор главного окна 
@@ -71,6 +73,8 @@ namespace Power_Equipment_Handbook
             Log = new LogClass(txtLog);                             //Инициализация Лога приложения
 
             isCable = false;
+
+            ComplectOptions = new CellElementsOptions();            //Инициализация опций комплекта при добавлении оборудования
         }
 
         
@@ -390,27 +394,5 @@ namespace Power_Equipment_Handbook
 
         #endregion Работа с дизайном окна
 
-
-        /// <summary>
-        /// Сброс сортировки
-        /// </summary>
-        private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
-        {
-            switch (this.Tab_Data.SelectedIndex)
-            {
-                case 0:
-                    this.track.grdNodes.ItemsSource = null;
-                    this.track.grdNodes.ItemsSource = this.track.Nodes;
-                    break;
-                case 1:
-                    this.track.grdBranches.ItemsSource = null;
-                    this.track.grdBranches.ItemsSource = this.track.Branches;
-                    break;
-                case 2:
-                    this.track.GenerateViewForCells();
-                    break;
-            }
-        }
-                
     }
 }

@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Power_Equipment_Handbook.src
-{
+{   
     /// <summary>
     /// Абстрактный класс элемента Ячейки узла
     /// </summary>
-    [XmlInclude(type:typeof(BreakerCell)), XmlInclude(type: typeof(DisconnectorCell)),
+    [XmlInclude(type: typeof(BreakerCell)), XmlInclude(type: typeof(DisconnectorCell)),
      XmlInclude(type: typeof(ShortCircuiterCell)), XmlInclude(type: typeof(TTCell)), XmlInclude(type: typeof(BusbarCell))]
     public abstract class Element : INotifyPropertyChanged
     {
         string name;
         double? inom, iotkl, iterm, tterm, bterm, iudar;
-        double unom;        
+        double unom;
 
         #region Properties
 
         [XmlAttribute] public string Name { get => name; set => SetProperty(ref name, value); }
         [XmlAttribute] public virtual string Type { get => name; }
-        [XmlIgnore] public double? Inom { get => inom; set => SetProperty(ref inom, value); }   
+        [XmlIgnore] public double? Inom { get => inom; set => SetProperty(ref inom, value); }
         [XmlIgnore] public double? Iotkl { get => iotkl; set => SetProperty(ref iotkl, value); }
         [XmlIgnore] public double? Iterm { get => iterm; set => SetProperty(ref iterm, value); }
         [XmlIgnore] public double? Tterm { get => tterm; set => SetProperty(ref tterm, value); }
@@ -71,7 +71,7 @@ namespace Power_Equipment_Handbook.src
         /// Абстрактный метод вывода полного наименования типа при выгрузке оборудования
         /// </summary>
         public abstract string SerializeType();
-        
+
 
         #region INotifyPropertyChanged interface block
 

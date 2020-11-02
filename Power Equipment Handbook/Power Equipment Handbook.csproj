@@ -101,8 +101,14 @@
     <Compile Include="src\classes\utils\BreakerUtils.cs" />
     <Compile Include="src\classes\utils\LinesUtils.cs" />
     <Compile Include="src\classes\utils\TransUtils.cs" />
-    <Compile Include="src\windows\CellElementAddSimple.xaml.cs">
+    <Compile Include="src\windows\elements\CellElementAddSimple.xaml.cs">
       <DependentUpon>CellElementAddSimple.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\windows\elements\CellElementComplexOptions.xaml.cs">
+      <DependentUpon>CellElementComplexOptions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\windows\elements\CellElementHandbook.xaml.cs">
+      <DependentUpon>CellElementHandbook.xaml</DependentUpon>
     </Compile>
     <Compile Include="src\windows\Library.xaml.cs">
       <DependentUpon>Library.xaml</DependentUpon>
@@ -122,7 +128,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="src\windows\CellElementAddSimple.xaml">
+    <Page Include="src\windows\elements\CellElementAddSimple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="src\windows\elements\CellElementComplexOptions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="src\windows\elements\CellElementHandbook.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -164,6 +178,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="src\res\clear-filters.png" />
+    <Resource Include="src\res\gear.png" />
     <Content Include="test.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CustomToolNamespace>Power_Equipment_Handbook</CustomToolNamespace>

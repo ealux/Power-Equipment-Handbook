@@ -16,6 +16,7 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public partial class MainWindow
     {
+
         #region Helpers
 
         /// <summary>
@@ -318,8 +319,28 @@ namespace Power_Equipment_Handbook
             txtState_N.Text = "0";
         }
 
-        #endregion Утилиты
-        
+        /// <summary>
+        /// Сброс сортировки
+        /// </summary>
+        private void btnUndoFilters_Click(object sender, RoutedEventArgs e)
+        {
+            switch (this.Tab_Data.SelectedIndex)
+            {
+                case 0:
+                    this.track.grdNodes.ItemsSource = null;
+                    this.track.grdNodes.ItemsSource = this.track.Nodes;
+                    break;
+                case 1:
+                    this.track.grdBranches.ItemsSource = null;
+                    this.track.grdBranches.ItemsSource = this.track.Branches;
+                    break;
+                case 2:
+                    this.track.GenerateViewForCells();
+                    break;
+            }
+        }
+
+        #endregion Утилиты        
 
         #region Power Network Methods
 

@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
         mc:Ignorable="d" 
-        Height="250" Width="238" Background="White" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Добавить оборудование" Height="250" Width="238" Background="White" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="0,0,0,0">
         
         <StackPanel Margin="28,20,22,21">

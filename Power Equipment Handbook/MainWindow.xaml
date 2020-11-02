@@ -92,6 +92,7 @@
             <MenuItem Header="Инструменты" Height="20" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0" >
                 <MenuItem Header="Связность" Click="Connectivity"/>
                 <MenuItem Header="Cписок узлов" Click="Get_LinkedNodes"/>
+                <MenuItem Header="Выгрузить список оборудования" Click="EquipmentSerialize_Click"/>
             </MenuItem>
             <MenuItem Header="Справочник" Click="Get_Library"/>
         </Menu>
@@ -458,8 +459,12 @@
                 </TabItem>
                 <TabItem x:Name="Tab_Commutation" Header="Коммутация" Margin="0,-2,-130,0" HorizontalAlignment="Right" Width="130," Cursor="Hand" BorderBrush="#FF9B9797">
                     <Grid>
-                        <Button Margin="14,175,0,0" Content="Выгрузка" BorderBrush="#FFACACAC" Background="#FFEDEDED" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" Width="89" Height="16" VerticalAlignment="Top" Click="EquipmentSerialize_Click" Padding="1,0" />
-                        <Button Margin="14,200,0,0" Content="Показать узлы" BorderBrush="#FFACACAC" Background="#FFEDEDED" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" Width="89" Height="16" VerticalAlignment="Top" Click="Get_LinkedNodes" Padding="1,0" />
+                        <Menu Margin="18,141,0,0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Width="80" Height="22" VerticalAlignment="Top">
+                            <MenuItem Header="Действия | v" Height="20" Width="80" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <MenuItem Header="Сформировать таблицу оборудования" Click="EquipmentSerialize_Click" />
+                            </MenuItem>
+                        </Menu>
+                        <Button Margin="14,200,0,0" Content="Показать узлы" BorderBrush="#FFACACAC" Background="#FFEDEDED" FontSize="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" HorizontalAlignment="Left" Width="89" Height="16" VerticalAlignment="Top" Click="Get_LinkedNodes" Padding="0"  ToolTip="Открыть вспомогательную таблицу узлов" ToolTipService.InitialShowDelay="150"/>
                         <ComboBox x:Name="txtStartNode_C" HorizontalAlignment="Left" Height="22" Margin="14,27,0,0" VerticalAlignment="Top" Width="90" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_C_SelectionChanged" DropDownOpened="DropDownNodeReflector" DisplayMemberPath="Number" IsReadOnly="True">
                             <ComboBox.ItemContainerStyle>
                                 <Style TargetType="ComboBoxItem">
@@ -493,7 +498,7 @@
                         <Label x:Name="lblUnom_C" Content="Uном" HorizontalAlignment="Left" Margin="37,53,0,0" VerticalAlignment="Top" Height="24" />
                         <GroupBox Header="Ячейки" BorderThickness="1" BorderBrush="#FFACACAC" Margin="119,0,0,0" Height="222" VerticalAlignment="Top" HorizontalAlignment="Left" Width="515" >
                             <Grid>
-                                <Button x:Name="btnAddCell" Content="+" Margin="-1,11,477,168" Background="#FFEAEAEA" BorderBrush="#FFACACAC" Click="btnAddCell_Click" VerticalContentAlignment="Center" Padding="1,0"/>
+                                <Button x:Name="btnAddCell" Content="+" Margin="-1,11,477,168" Background="#FFEAEAEA" BorderBrush="#FFACACAC" Click="btnAddCell_Click" VerticalContentAlignment="Stretch" Padding="0" Width="25" ToolTip="Добавить ячейку оборудования" ToolTipService.InitialShowDelay="150"/>
                                 <DataGrid x:Name="grdCommutation" BorderThickness="1" BorderBrush="#FFACACAC" Margin="-1,40,0,0" AutoGenerateColumns="False" CanUserReorderColumns="True" ItemsSource="{Binding}"
                                   CanUserAddRows="false" CanUserDeleteRows="False"
                                   HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
@@ -520,9 +525,14 @@
                         <GroupBox Header="Элементы ячейки (оборудование)" BorderThickness="1" BorderBrush="#FFACACAC" Margin="634,0,10,0" Height="222" VerticalAlignment="Top">
                             <Grid>
                                 <Label x:Name="lblElementCell" Margin="400,0,0,159" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
-                                <Button x:Name="btnAddElemString" Margin="0,10,0,169" Content="+  Строка" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="62" Click="btnAddElemString_Click" />
-                                <Button x:Name="btnAddElemComplex" Margin="69,10,0,169" Content="+  Комплект" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="76" Click="btnAddElemComplex_Click" />
-                                <Button x:Name="btnAddElemDict" Margin="154,10,0,169" Content="+ из справочника" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="105" IsEnabled="False" />
+                                <Button x:Name="btnAddElemString" Margin="0,10,0,169" Content="+  Строка" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="64" Click="btnAddElemString_Click" VerticalContentAlignment="Stretch" Padding="1,0" ToolTip="Добавить пустую строку оборудования" ToolTipService.InitialShowDelay="150"/>
+                                <Button x:Name="btnAddElemComplex" Margin="71,10,0,169" Content="+  Комплект" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="78" Click="btnAddElemComplex_Click" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Padding="1,0" ToolTip="Добавить комплект оборудования (несколько типов)" ToolTipService.InitialShowDelay="150"/>
+                                <Button x:Name="btnAddElemComplexOptions" Margin="148,10,0,169" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="25" Click="btnAddElemComplexOptions_Click" VerticalContentAlignment="Center" Padding="1,0" ToolTip="Настройка комплекта добавляемого оборудования" ToolTipService.InitialShowDelay="150" >
+                                    <Button.Content>
+                                        <Image x:Name="imgOptions" Source="pack://application:,,,/../src/res/gear.png" Height="15" Width="15" />
+                                    </Button.Content>
+                                </Button>
+                                <Button x:Name="btnAddElemDict" Margin="181,10,0,169" Content="+ из справочника" Background="#FFEAEAEA" BorderBrush="#FFACACAC" HorizontalAlignment="Left" Width="108" VerticalContentAlignment="Stretch" Padding="1,0" Click="btnAddElemDict_Click" />
                                 <DataGrid x:Name="grdElements" ItemsSource="{Binding}" BorderThickness="1" BorderBrush="#FFACACAC" Margin="0,40,0,0" AutoGenerateColumns="False"
                                       CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single">
                                     <DataGrid.Columns>

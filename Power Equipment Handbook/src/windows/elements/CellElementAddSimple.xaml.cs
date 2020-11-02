@@ -32,7 +32,7 @@ namespace Power_Equipment_Handbook.src.windows
         }
 
         /// <summary>
-        /// 
+        /// Выбор типа оборудования для добавления
         /// </summary>
         private void btnAddElemSimple_Click(object sender, RoutedEventArgs e)
         {
