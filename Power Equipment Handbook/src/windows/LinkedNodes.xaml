@@ -6,6 +6,11 @@
         xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
         mc:Ignorable="d"
         Title="Список узлов" Height="450" Width="900" MinWidth="850" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing" IsVisibleChanged="Window_IsVisibleChanged">
+    <Window.Resources>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <Button x:Name="btnUndoFilters" Height="25" Background="White" BorderBrush="{x:Null}" ToolTip="Сбросить сортировку/фильтры" Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28" RenderTransformOrigin="0.5,0.5" Click="btnUndoFilters_Click" Margin="5,5,0,0">
             <Button.Content>
@@ -18,24 +23,8 @@
                 <Bold>Shift</Bold> для сортировки по <Bold>нескольким</Bold> столбцам
             </TextBlock>
         </Label>
-        <DataGrid x:Name="LinkedGrid" ItemsSource="{Binding}" CanUserAddRows="False" AutoGenerateColumns="True" ColumnWidth="Auto" HorizontalContentAlignment="Stretch" CanUserSortColumns="True" IsReadOnly="True" Margin="0,35,0,0" Grid.ColumnSpan="2">
-            <!--<DataGrid.RowDetailsTemplate >
-                <DataTemplate>
-                    <Border BorderThickness="0" Padding="10">
-                        <DataGrid x:Name="ndBranches" ItemsSource="{Binding Path=localBranches}">
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontSize="12" Text="Sales Person: " VerticalAlignment="Center" />
-                                        <TextBlock FontSize="16" Foreground="MidnightBlue" Text="{Binding Path=Branches.Start}" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </DataTemplate>                                
-                            </DataGrid.RowDetailsTemplate>                            
-                        </DataGrid>
-                    </Border>
-                </DataTemplate>
-            </DataGrid.RowDetailsTemplate>-->
-
+        <DataGrid x:Name="LinkedGrid" ItemsSource="{Binding}" CanUserAddRows="False" AutoGenerateColumns="False" 
+                   CanUserSortColumns="True" IsReadOnly="True" Margin="0,35,0,0" Grid.ColumnSpan="2">
             <DataGrid.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -70,6 +59,23 @@
                     </GroupStyle.ContainerStyle>
                 </GroupStyle>
             </DataGrid.GroupStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="S " Width="25" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Номер" Width="55" Binding="{Binding Number, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Дисп. Наименование" Width="300" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Uном" Width="55" Binding="{Binding Unom, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Pнагр" Width="*" Binding="{Binding P_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Qнагр" Width="*" Binding="{Binding Q_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Pген" Width="*" Binding="{Binding P_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Qген" Width="*" Binding="{Binding Q_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Vзд" Width="*" Binding="{Binding Vzd, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Qmin" Width="*" Binding="{Binding Q_min, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Qmax" Width="*" Binding="{Binding Q_max, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Gшунт" Width="*" Binding="{Binding G_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Bшунт" Width="*" Binding="{Binding B_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Район" Width="35" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </Window>

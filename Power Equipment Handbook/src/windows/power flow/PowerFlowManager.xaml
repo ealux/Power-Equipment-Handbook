@@ -1,0 +1,110 @@
+﻿<Window x:Class="Power_Equipment_Handbook.src.windows.PowerFlowManager"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
+      mc:Ignorable="d" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing"
+      Title="PowerFlowManager" Height="768" Width="1269">
+
+    <Grid Width="Auto">
+
+        <Border MinWidth="75" MaxWidth="75" Margin="340,10,0,0" BorderBrush="#FF9B9797" 
+                CornerRadius="4" BorderThickness="1" Background="#FFF0F0F0" HorizontalAlignment="Left" Width="75" Height="19" VerticalAlignment="Top">
+            <Button Content="Расчёт" Background="Transparent" 
+                    BorderThickness="0" Click="Button_Click" 
+                    Padding="0" HorizontalContentAlignment="Center"/>
+        </Border>
+
+        <TabControl x:Name="Tab_Data" Margin="0,40,0,0" MinWidth="10" MinHeight="420" BorderBrush="#FF9B9797" Width="Auto" Height="447" VerticalAlignment="Top">
+            <TabItem x:Name="Tab_Nodes" Header="Узлы" Background="{x:Null}" Margin="-2,0,-53,0" BorderBrush="#FF9B9797" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <TabItem.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                </TabItem.Resources>
+                <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFE6E2E2" Margin="0" Height="Auto" 
+                              CanUserReorderColumns="True" Width="Auto">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="S " Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox SelectedValuePath="Content" SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" IsEditable="True" IsReadOnly="True">
+                                        <ComboBoxItem Content="Нагр"/>
+                                        <ComboBoxItem Content="База" />
+                                        <ComboBoxItem Content="Ген" />
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Номер" Width="50" Binding="{Binding Number, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Uном" Width="*" Binding="{Binding Unom, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Pнагр" Width="*" Binding="{Binding P_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qнагр" Width="*" Binding="{Binding Q_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Pген" Width="*" Binding="{Binding P_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qген" Width="*" Binding="{Binding Q_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Vзд" Width="*" Binding="{Binding Vzd, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qmin" Width="*" Binding="{Binding Q_min, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qmax" Width="*" Binding="{Binding Q_max, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Gшунт" Width="*" Binding="{Binding G_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Bшунт" Width="*" Binding="{Binding B_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Uрасч" Width="*" Binding="{Binding Path=U.Magnitude, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Угол" Width="*" Binding="{Binding Delta, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem x:Name="Tab_Branches" Header="Ветви" Background="{x:Null}" Margin="52,0,-110,0" BorderBrush="#FF9B9797" Width="Auto">
+                <TabItem.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    </Style>
+                </TabItem.Resources>
+                <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" 
+                          HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" 
+                          AlternatingRowBackground="#FFE6E2E2" CanUserReorderColumns="True"
+                          Width="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="№нач" Width="50" Binding="{Binding Start, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="№кон" Width="50" Binding="{Binding End, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox SelectedValuePath="Content" SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" IsEditable="True" IsReadOnly="True">
+                                        <ComboBoxItem Content="ЛЭП"/>
+                                        <ComboBoxItem Content="Тр-р" />
+                                        <ComboBoxItem Content="Выкл." />
+                                    </ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="№пар" Width="45" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Ктр" Width="65" Binding="{Binding Ktr, StringFormat=0.00000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Pнач" IsReadOnly="True" Width="70" Binding="{Binding Path=S_start.Real, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qнач" IsReadOnly="True" Width="70" Binding="{Binding Path=S_start.Imaginary, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Pкон" IsReadOnly="True" Width="70" Binding="{Binding Path=S_end.Real, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Qкон" IsReadOnly="True" Width="70" Binding="{Binding Path=S_end.Imaginary, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Sнач" IsReadOnly="True" MinWidth="100" Width="*" Binding="{Binding S_start, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Sкон" IsReadOnly="True" MinWidth="100" Width="*" Binding="{Binding S_end, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Iнач" IsReadOnly="True" MinWidth="100" Width="*" Binding="{Binding I_start, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridTextColumn Header="Iкон" IsReadOnly="True" MinWidth="100" Width="*" Binding="{Binding I_end, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+
+            <TabItem Margin="109,0,-167,0">
+
+            </TabItem>
+
+            <TabItem Margin="166,0,-224,0">
+
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

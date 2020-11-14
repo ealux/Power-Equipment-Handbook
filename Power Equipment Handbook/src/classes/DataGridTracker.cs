@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Xml.Serialization;
+using Complex = System.Numerics.Complex;
 
 namespace Power_Equipment_Handbook.src
 {
@@ -86,6 +87,9 @@ namespace Power_Equipment_Handbook.src
         private double idd;
         private int region;
 
+        private Complex s_start, s_end, i_start, i_end;
+        private double i_max_hv, i_max_lv;
+
         #region Properties
 
         [XmlAttribute] public int State { get => state; set => SetProperty(ref state, value); }
@@ -118,8 +122,27 @@ namespace Power_Equipment_Handbook.src
         [XmlAttribute] public int Region { get => region; set => SetProperty(ref region, value); }
         #endregion Properties
 
+
+
+        #region [Power Flow Props]
+
+        [XmlIgnore] public Complex S_start { get => s_start; set => SetProperty(ref s_start, value); }
+        [XmlIgnore] public Complex S_end { get => s_end; set => SetProperty(ref s_end, value); }
+        [XmlIgnore] public Complex I_start { get => i_start; set => SetProperty(ref i_start, value); }
+        [XmlIgnore] public Complex I_end { get => i_end; set => SetProperty(ref i_end, value); }
+
+
+        [XmlIgnore] public double I_max_hv { get => i_max_hv; set => SetProperty(ref i_max_hv, value); }
+        [XmlIgnore] public double I_max_lv { get => i_max_lv; set => SetProperty(ref i_max_lv, value); }
+
+
+        #endregion [Power Flow Props]
+
+
+        //ctor-1
         public Branch() { }
 
+        //ctor-2
         public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "",
                       int npar = 0, 
                       double r = 0, double x = 0, double b = 0, double g = 0,
@@ -139,7 +162,7 @@ namespace Power_Equipment_Handbook.src
             Region = region;
         }
 
-        #region INotifyPropertyChanged interface block
+        #region [INotifyPropertyChanged interface block]
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -154,9 +177,9 @@ namespace Power_Equipment_Handbook.src
             storage = value; OnPropertyChanged(propertyName); return true;
         }
 
-        #endregion INotifyPropertyChanged interface block
+        #endregion [INotifyPropertyChanged interface block]
 
-        #region IEquatable interface block
+        #region [IEquatable interface block]
 
         public new int GetHashCode()
         {
@@ -173,7 +196,7 @@ namespace Power_Equipment_Handbook.src
             else return false;
         }
 
-        #endregion IEquatable interface block
+        #endregion [IEquatable interface block]
     }
 
     /// <summary>
@@ -186,13 +209,16 @@ namespace Power_Equipment_Handbook.src
         private int number;
         private double unom;
         private string name;
-        private double p_n; private double q_n; private double p_g; private double q_g;
+        private double p_n, q_n, p_g, q_g;
         private double vzd;
         private double q_min; private double q_max;
-        private double b_sh;
+        private double b_sh, g_sh;
         private int region;
 
-        #region Properties
+        private Complex u;
+        private double delta;
+
+        #region [Properties]
 
         [XmlAttribute] public int State { get => state; set => SetProperty(ref state, value); }
         [XmlAttribute] public string Type { get => type; set => SetProperty(ref type, value); }
@@ -206,16 +232,30 @@ namespace Power_Equipment_Handbook.src
         [XmlAttribute] public double Vzd { get => vzd; set => SetProperty(ref vzd, value); }
         [XmlAttribute] public double Q_min { get => q_min; set => SetProperty(ref q_min, value); }
         [XmlAttribute] public double Q_max { get => q_max; set => SetProperty(ref q_max, value); }
+        [XmlAttribute] public double G_sh  { get => g_sh; set => SetProperty(ref g_sh, value); }
         [XmlAttribute] public double B_sh { get => b_sh; set => SetProperty(ref b_sh, value); }
         [XmlAttribute] public int Region { get => region; set => SetProperty(ref region, value); }
 
-        #endregion Properties
+        #endregion [Properties]
 
+
+        #region [Power Flow Props]
+
+        [XmlIgnore] public Complex U { get => u; set => SetProperty(ref u, value); } 
+        [XmlIgnore] public double Delta { get => delta; set => SetProperty(ref delta, value); }
+
+
+        #endregion [Power Flow Props]
+
+
+        //ctor-1
         public Node() { }
 
+        //ctor-2
         public Node(int number, double unom, string type, int state = 0, string name = "",
                       double p_n = 0, double q_n = 0, double p_g = 0, double q_g = 0,
-                      double vzd = 0, double q_min = 0, double q_max = 0, double b_sh = 0,
+                      double vzd = 0, double q_min = 0, double q_max = 0,
+                      double g_sh = 0, double b_sh = 0,
                       int region = 0)
         {
             State = state;
@@ -224,10 +264,12 @@ namespace Power_Equipment_Handbook.src
             Unom = unom;
             Name = name;
             P_n = p_n; Q_n = q_n; P_g = p_g; Q_g = q_g;
-            Vzd = vzd; Q_min = q_min; Q_max = q_max; B_sh = b_sh;
+            Vzd = vzd; Q_min = q_min; Q_max = q_max;
+            G_sh = g_sh; B_sh = b_sh;
             Region = region;
         }
 
+        //ctor-3
         public Node(Node other)
         {
             State = other.State;
@@ -236,11 +278,12 @@ namespace Power_Equipment_Handbook.src
             Unom = other.Unom;
             Name = other.Name;
             P_n = other.P_n; Q_n = other.Q_n; P_g = other.P_g; Q_g = other.Q_g;
-            Vzd = other.Vzd; Q_min = other.Q_min; Q_max = other.Q_max; B_sh = other.B_sh;
+            Vzd = other.Vzd; Q_min = other.Q_min; Q_max = other.Q_max;
+            G_sh = other.G_sh; B_sh = other.B_sh;
             Region = other.Region;
         }
 
-        #region INotifyPropertyChanged interface block
+        #region [INotifyPropertyChanged interface block]
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -255,9 +298,9 @@ namespace Power_Equipment_Handbook.src
             storage = value; OnPropertyChanged(propertyName); return true;
         }
 
-        #endregion INotifyPropertyChanged interface block
+        #endregion [INotifyPropertyChanged interface block]
 
-        #region IEquatable interface block
+        #region [IEquatable interface block]
 
         public new int GetHashCode()
         {
@@ -274,12 +317,12 @@ namespace Power_Equipment_Handbook.src
             return false;
         }
 
-        #endregion IEquatable interface block
+        #endregion [IEquatable interface block]
     }
 
 
 
-    #region IEqualityComparer interface block
+    #region [IEqualityComparer interface block]
     /// <summary>
     /// IEqualityComparer for Branches
     /// </summary>
@@ -296,5 +339,5 @@ namespace Power_Equipment_Handbook.src
             return obj.Start.GetHashCode()^obj.End.GetHashCode()^obj.Type.GetHashCode();
         }
     }
-    #endregion IEqualityComparer interface block
+    #endregion [IEqualityComparer interface block]
 }

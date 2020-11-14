@@ -21,7 +21,7 @@ namespace Power_Equipment_Handbook
     {
         //private readonly string MainTitle = "Power Equipment Handbook";
 
-        private List<DataGridTracker> tracks;   //Список сетей !!!ДОДЕЛАТЬ
+        //private List<DataGridTracker> tracks;   //Список сетей !!!ДОДЕЛАТЬ
         private DataGridTracker track;
         private DBProvider db_prv;
 
@@ -33,6 +33,7 @@ namespace Power_Equipment_Handbook
 
         public Library lib;
         public LinkedNodes lnodes;
+        public PowerFlowManager PFM;
 
         public bool isCable { get; set; }
         private GridLength SideWidth { get; set; }
@@ -47,7 +48,7 @@ namespace Power_Equipment_Handbook
         {
             InitializeComponent();
             track = new DataGridTracker(grdNodes, grdBranches, grdCells);
-            tracks = new List<DataGridTracker>();   //Список сетей !!!ДОДЕЛАТЬ
+            //tracks = new List<DataGridTracker>();   //Список сетей !!!ДОДЕЛАТЬ
 
             db_prv = new DBProvider("test.db");                     //Инициализация подключения к встроенной БД оборудования
             Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
@@ -193,6 +194,7 @@ namespace Power_Equipment_Handbook
                 double q_min = (string.IsNullOrWhiteSpace(txtQmin_N.Text) || double.Parse(txtQmin_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQmin_N.Text, CultureInfo.InvariantCulture);
                 double q_max = (string.IsNullOrWhiteSpace(txtQmax_N.Text) || double.Parse(txtQmax_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtQmax_N.Text, CultureInfo.InvariantCulture);
                 double b_sh = (string.IsNullOrWhiteSpace(txtBsh_N.Text) || double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtBsh_N.Text, CultureInfo.InvariantCulture);
+                double g_sh = (string.IsNullOrWhiteSpace(txtGsh_N.Text) || double.Parse(txtGsh_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(txtGsh_N.Text, CultureInfo.InvariantCulture);
                 int region = (string.IsNullOrWhiteSpace(txtRegion_N.Text) || int.Parse(txtRegion_N.Text) == 0) ? 0 : int.Parse(txtRegion_N.Text);
 
                 if (track.Nodes.Where((n) => n.Number == number).ToList().Count != 0)
@@ -205,7 +207,8 @@ namespace Power_Equipment_Handbook
                 track.AddNode(new Node(number: number, unom: unom, type: type,
                                        state: state, name: name,
                                        p_n: p_n, q_n: q_n, p_g: p_g, q_g: q_g,
-                                       vzd: vzd, q_min: q_min, q_max: q_max, b_sh: b_sh,
+                                       vzd: vzd, q_min: q_min, q_max: q_max,
+                                       g_sh: g_sh, b_sh: b_sh,
                                        region: region));
 
                 Tab_Data.SelectedIndex = 0;
@@ -320,6 +323,7 @@ namespace Power_Equipment_Handbook
 
         #region Работа с дизайном окна
 
+
         /// <summary>
         /// Показать/Скрыть панель ввода данных
         /// </summary>
@@ -347,6 +351,7 @@ namespace Power_Equipment_Handbook
                 grdNodes.IsReadOnly = false;
                 grdBranches.IsReadOnly = false;
                 grdCells.IsReadOnly = false;
+
                 imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/unlock.png"));
             }
             else
@@ -354,6 +359,7 @@ namespace Power_Equipment_Handbook
                 grdNodes.IsReadOnly = true;
                 grdBranches.IsReadOnly = true;
                 grdCells.IsReadOnly = true;
+
                 imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/lock.png"));
             }
         }

@@ -93,8 +93,11 @@
                 <MenuItem Header="Связность" Click="Connectivity"/>
                 <MenuItem Header="Cписок узлов" Click="Get_LinkedNodes"/>
                 <MenuItem Header="Выгрузить список оборудования" Click="EquipmentSerialize_Click"/>
-            </MenuItem>
-            <MenuItem Header="Справочник" Click="Get_Library"/>
+            </MenuItem>            
+            <Separator Width="50" Background="{x:Null}" />
+            <MenuItem Header="Режим" Click="Get_PowerFlowManager" Cursor="Hand"/>
+            <Separator Width="50" Background="{x:Null}" />
+            <MenuItem Header="Справочник" Click="Get_Library" Cursor="Hand"/>
         </Menu>
         <TabControl x:Name="Tab_Side" DockPanel.Dock="Left" Margin="5,5,0,0" Grid.Column="0" Grid.Row="1" BorderBrush="#FF9B9797">
             <TabItem Header="Схемы" Cursor="Hand">
@@ -148,8 +151,6 @@
                             <ListBoxItem HorizontalContentAlignment="Left">Нагр</ListBoxItem>
                             <ListBoxItem HorizontalContentAlignment="Left">База</ListBoxItem>
                             <ListBoxItem HorizontalContentAlignment="Left">Ген</ListBoxItem>
-                            <ListBoxItem HorizontalContentAlignment="Left">Ген+</ListBoxItem>
-                            <ListBoxItem HorizontalContentAlignment="Left">Ген-</ListBoxItem>
                         </ComboBox>
                         <Label x:Name="lblName_N" Content="Дисп. наименование" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="314,75,0,0" />
                         <TextBox x:Name="txtName_N" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Margin="239,101,0,0" IsManipulationEnabled="True" MaxLines="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="250"/>
@@ -167,8 +168,10 @@
                         <TextBox x:Name="txtQmin_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="862,101,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
                         <Label x:Name="lblQmax_N" Content="Q max" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="941,75,0,0" />
                         <TextBox x:Name="txtQmax_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="933,101,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
-                        <Label x:Name="lblBsh_N" Content="B шунт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1013,75,0,0" />
-                        <TextBox x:Name="txtBsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="1007,101,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
+                        <Label x:Name="lblGsh_N" Content="G шунт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1013,53,0,0" />
+                        <TextBox x:Name="txtGsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="1007,79,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
+                        <Label x:Name="lblBsh_N" Content="B шунт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1013,101,0,0" />
+                        <TextBox x:Name="txtBsh_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="60" Margin="1007,127,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" MaxLines="1" PreviewTextInput="DoubleChecker" TextChanged="DotCommaReplacer" MaxLength="8" />
                         <Label x:Name="lblState_N" Content="Состояние" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,13,0,0" />
                         <TextBox x:Name="txtState_N" HorizontalAlignment="Left" Height="22" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" Margin="22,39,0,0" Text="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" PreviewTextInput="DigitCheckerForNodes"  MaxLines="1" />
                         <Label x:Name="lblRegion_N" Content="Район" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="89,13,0,0" />
@@ -176,7 +179,7 @@
                         <Button x:Name="btnAdd_N" Content="Добавить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="1080,101,0,0" Height="22" Click="BtnAdd_N_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Tab_Lines" Header="Линия" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="134" Cursor="Hand" BorderBrush="#FF9B9797">
+                <TabItem x:Name="Tab_Lines" Header="Линия" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="100" Cursor="Hand" BorderBrush="#FF9B9797">
                     <Grid Margin="0,0,12,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -220,7 +223,7 @@
                             <ListBoxItem Content="1150"/>
                         </ComboBox>
                         <ComboBox x:Name="cmbTypeName_L" HorizontalAlignment="Left" Margin="221,100,0,0" VerticalAlignment="Top" Width="117" Height="22" IsTabStop="False" IsEditable="True" SelectionChanged="CmbTypeName_SelectionChanged" />
-                        <ComboBox x:Name="cmbGroundWire_L" HorizontalAlignment="Left" Margin="204,157,0,0" VerticalAlignment="Top" Width="409" Height="22" IsTabStop="False" IsEditable="True" SelectedIndex="0" SelectionChanged="CmbGroundedWire_SelectionChanged">
+                        <ComboBox x:Name="cmbGroundWire_L" HorizontalAlignment="Left" Margin="156,157,0,0" VerticalAlignment="Top" Width="466" Height="22" IsTabStop="False" IsEditable="True" SelectedIndex="0" SelectionChanged="CmbGroundedWire_SelectionChanged">
                             <ComboBoxItem Content="Одноцепная, без заземленных тросов (k=3.5)"/>
                             <ComboBoxItem Content="Одноцепная, со стальными заземленными тросами (k=3.0)"/>
                             <ComboBoxItem Content="Одноцепная, с заземленными хорошо проводящими тросами (k=2.0)"/>
@@ -228,7 +231,7 @@
                             <ComboBoxItem Content="Двухцепная, со стальными заземленными тросами (k=4.7)"/>
                             <ComboBoxItem Content="Двухцепная, с заземленными хорошо проводящими тросами (k=3.0)"/>
                         </ComboBox>
-                        <Label x:Name="lblGroundWireName_L" Content="Тип грозотроса и линии для нулевой последовантельности" HorizontalAlignment="Left" Margin="243,130,0,0" VerticalAlignment="Top" Height="27" Width="337" />
+                        <Label x:Name="lblGroundWireName_L" Content="Тип грозотроса и линии для нулевой последовантельности" HorizontalAlignment="Left" Margin="255,130,0,0" VerticalAlignment="Top" Height="27" Width="337" />
                         <TextBox x:Name="txtName_L" HorizontalAlignment="Left" Height="22" Margin="343,100,0,0" VerticalAlignment="Top" Width="216" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" AllowDrop="False" UndoLimit="1" IsEnabled="True" MaxLines="1" x:FieldModifier="public" />
                         <Label x:Name="lblUnom_L" Content="Uном" HorizontalAlignment="Left" Margin="165,76,0,122" Width="41" />
                         <Label x:Name="lblTypeName_L" Content="Сечение" HorizontalAlignment="Left" Margin="251,76,0,0" VerticalAlignment="Top" Height="24" Width="57" />
@@ -280,7 +283,7 @@
                         <CheckBox x:Name="chk_Line_Cable" Style="{DynamicResource CheckBoxStyle1}" Content="Линия" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250,22,0,0" IsChecked="{Binding Path=isCable, Mode=TwoWay}" Click="Chk_Line_Cable_Checked" Height="43" Width="60"/>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Tab_Trans" Header="Трансформатор" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129" Cursor="Hand" BorderBrush="#FF9B9797">
+                <TabItem x:Name="Tab_Trans" Header="Трансформатор" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="100" Cursor="Hand" BorderBrush="#FF9B9797">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -406,7 +409,7 @@
                         <Label x:Name="lblN_T" Content="Количество" HorizontalAlignment="Left" Margin="1015,147,0,0" VerticalAlignment="Top" Height="24" />
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Tab_Breaker" Header="Выключатель" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="129" Cursor="Hand" BorderBrush="#FF9B9797" >
+                <TabItem x:Name="Tab_Breaker" Header="Выключатель" Margin="0,-2,-86,0" HorizontalAlignment="Right" Width="100" Cursor="Hand" BorderBrush="#FF9B9797" >
                     <Grid Margin="0,-2,0,0">
                         <ComboBox x:Name="txtStartNode_B" HorizontalAlignment="Left" Height="22" Margin="5,102,0,0" VerticalAlignment="Top" Width="90" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" AllowDrop="False" IsEnabled="True" x:FieldModifier="public" SelectionChanged="TxtStartNode_B_SelectionChanged" DropDownOpened="DropDownNodeReflector" DisplayMemberPath="Number">
                             <ComboBox.ItemContainerStyle>
@@ -457,7 +460,7 @@
                         <Button x:Name="btnAdd_B" Margin="533,102,0,0" Content="Добавить" HorizontalAlignment="Left" Width="107" Height="22" VerticalAlignment="Top" Click="BtnAdd_B_Click" />
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Tab_Commutation" Header="Коммутация" Margin="0,-2,-130,0" HorizontalAlignment="Right" Width="130," Cursor="Hand" BorderBrush="#FF9B9797">
+                <TabItem x:Name="Tab_Commutation" Header="Оборудование" Margin="0,-2,-130,0" HorizontalAlignment="Right" Width="100" Cursor="Hand" BorderBrush="#FF9B9797">
                     <Grid>
                         <Menu Margin="18,141,0,0" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left" Width="80" Height="22" VerticalAlignment="Top">
                             <MenuItem Header="Действия | v" Height="20" Width="80" HorizontalContentAlignment="Stretch" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -582,50 +585,89 @@
             </TextBlock>
             <TabControl x:Name="Tab_Data" Margin="0,5,0,0" MinWidth="10" MinHeight="420" BorderBrush="#FF9B9797">
                 <TabItem x:Name="Tab_Nodes" Header="Узлы" Background="{x:Null}" Margin="-2,0" BorderBrush="#FF9B9797">
-                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFBBBABA" Margin="0" Height="Auto" CanUserReorderColumns="True">
+                    <TabItem.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </TabItem.Resources>
+                    <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFE6E2E2" Margin="0" Height="Auto" 
+                              CanUserReorderColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S " Width="10" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Тип" Width="55" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Номер" Width="50" Binding="{Binding Number}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedValuePath="Content" SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" IsEditable="True" IsReadOnly="True">
+                                            <ComboBoxItem Content="Нагр"/>
+                                            <ComboBoxItem Content="База" />
+                                            <ComboBoxItem Content="Ген" />
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Номер" Width="50" Binding="{Binding Number, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="U__ном" Width="*" Binding="{Binding Unom}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="P__н" Width="*" Binding="{Binding P_n}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Q__н" Width="*" Binding="{Binding Q_n}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="P__г" Width="*" Binding="{Binding P_g}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Q__г" Width="*" Binding="{Binding Q_g}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="V__зд" Width="*" Binding="{Binding Vzd}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Q__min" Width="*" Binding="{Binding Q_min}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Q__max" Width="*" Binding="{Binding Q_max}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="B__ш" Width="*" Binding="{Binding B_sh}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Uном" Width="*" Binding="{Binding Unom, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Pнагр" Width="*" Binding="{Binding P_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Qнагр" Width="*" Binding="{Binding Q_n, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Pген" Width="*" Binding="{Binding P_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Qген" Width="*" Binding="{Binding Q_g, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Vзд" Width="*" Binding="{Binding Vzd, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Qmin" Width="*" Binding="{Binding Q_min, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Qmax" Width="*" Binding="{Binding Q_max, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Gшунт" Width="*" Binding="{Binding G_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Bшунт" Width="*" Binding="{Binding B_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Район" Width="*" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem x:Name="Tab_Branches" Header="Ветви" Background="{x:Null}" Margin="0" BorderBrush="#FF9B9797">
-                    <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFBBBABA" CanUserReorderColumns="True">
+                <TabItem x:Name="Tab_Branches" Header="Ветви" Background="{x:Null}" Margin="1,0,-2,0" BorderBrush="#FF9B9797">
+                    <TabItem.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </TabItem.Resources>
+                    <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" AlternatingRowBackground="#FFE6E2E2" CanUserReorderColumns="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="N__Нач" Width="50" Binding="{Binding Start}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="N__кон" Width="50" Binding="{Binding End}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Тип" Width="50" Binding="{Binding Type}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="N__п" Width="50" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Марка" Width="200" Binding="{Binding TypeName}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="№ нач" Width="50" Binding="{Binding Start, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="№ кон" Width="50" Binding="{Binding End, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedValuePath="Content" SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" IsReadOnly="True" IsEditable="True">
+                                            <ComboBoxItem Background="{x:Null}" Content="ЛЭП"/>
+                                            <ComboBoxItem Content="Тр-р" />
+                                            <ComboBoxItem Content="Выкл." />
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="№парал" Width="55" Binding="{Binding Npar}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Марка" Width="150" Binding="{Binding TypeName}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Дисп. Наименование" Width="200" Binding="{Binding Name}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="R" Width="60" Binding="{Binding R}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="X" Width="60" Binding="{Binding X}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="B" Width="60" Binding="{Binding B}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="G" Width="60" Binding="{Binding G}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="R0" Width="60" Binding="{Binding R0}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="X0" Width="60" Binding="{Binding X0}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="B0" Width="60" Binding="{Binding B0}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="G0" Width="60" Binding="{Binding G0}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="Ктр" Width="*" Binding="{Binding Ktr}" ClipboardContentBinding="{x:Null}" />
-                            <DataGridTextColumn Header="I__доп__обор" Width="*" Binding="{Binding Idd}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="R" Width="60" Binding="{Binding R, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="X" Width="60" Binding="{Binding X, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="B" Width="60" Binding="{Binding B, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="G" Width="60" Binding="{Binding G, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="R0" Width="60" Binding="{Binding R0, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="X0" Width="60" Binding="{Binding X0, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="B0" Width="60" Binding="{Binding B0, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="G0" Width="60" Binding="{Binding G0, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Ктр" Width="65" Binding="{Binding Ktr, StringFormat=0.00000;;#}" ClipboardContentBinding="{x:Null}" />
+                            <DataGridTextColumn Header="Iдд.обор" Width="65" Binding="{Binding Idd}" ClipboardContentBinding="{x:Null}" />
                             <DataGridTextColumn Header="Район" Width="*" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem x:Name="Tab_Cells" Header="Ячейки" Background="{x:Null}" Margin="0" BorderBrush="#FF9B9797">
+                <TabItem x:Name="Tab_Cells" Header="Ячейки" Background="{x:Null}" Margin="1,0,-1,0" BorderBrush="#FF9B9797">
+                    <TabItem.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </TabItem.Resources>
                     <DataGrid x:Name="grdCells" ItemsSource="{Binding}" MinRowHeight="10" 
                               HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" 
                               HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" 

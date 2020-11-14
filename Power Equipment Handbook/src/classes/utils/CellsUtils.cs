@@ -398,8 +398,12 @@ namespace Power_Equipment_Handbook
                     int index_txt = txtStartNode_C.SelectedIndex;
                     var tmp_cell = (Cell)grdCommutation.SelectedItem;
 
+                    System.Windows.Media.Effects.BlurEffect blur = new System.Windows.Media.Effects.BlurEffect() { Radius = 5 };
+
                     CellElementAddSimple cr = new CellElementAddSimple(ref tmp_cell);
+                    this.Effect = blur;
                     cr.ShowDialog();
+                    this.Effect = null;
 
                     FullUpdate();
 
@@ -531,8 +535,13 @@ namespace Power_Equipment_Handbook
                     int index_txt = txtStartNode_C.SelectedIndex;
                     var tmp_cell = (Cell)grdCommutation.SelectedItem;
 
+                    System.Windows.Media.Effects.BlurEffect blur = new System.Windows.Media.Effects.BlurEffect() { Radius = 3 };
+
                     CellElementHandbook ceh = new CellElementHandbook(ref tmp_cell, db_prv);
+                    this.Effect = blur;
+                    ceh.Owner = this;
                     ceh.ShowDialog();
+                    
 
                     FullUpdate();
 

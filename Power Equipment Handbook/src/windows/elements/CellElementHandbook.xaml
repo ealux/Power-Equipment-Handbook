@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
         mc:Ignorable="d"
-        Title="Добавление оборудования по справочнику" Height="250" Width="750" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" VerticalContentAlignment="Stretch">
+        Title="Добавление оборудования по справочнику" Height="250" Width="750" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" VerticalContentAlignment="Stretch" Closing="Window_Closing">
     <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,10,11,10" Width="720" Height="200" KeyDown="Tab_Elements_KeyDown">
         <CheckBox x:Name="chkCloser" IsChecked="True" Content="Закрытвать окно при добавлении" Margin="185,149,325,31" VerticalContentAlignment="Center" Height="22"/>
 

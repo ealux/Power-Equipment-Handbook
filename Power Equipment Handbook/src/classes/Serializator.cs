@@ -4,8 +4,6 @@ using System.Xml.Serialization;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Threading.Tasks;
-using System.CodeDom;
-using System.Windows.Media;
 using System.Linq;
 
 namespace Power_Equipment_Handbook.src
@@ -202,42 +200,59 @@ namespace Power_Equipment_Handbook.src
 
                 if (fileInfo.Exists) fileInfo.Delete();
 
-                using (ExcelPackage p = new ExcelPackage(fileInfo))
+                var tmp = new FileInfo(Environment.CurrentDirectory + @"\src\res\_template.xlsx");
+
+                if (!tmp.Exists) tmp = fileInfo;
+
+                using (ExcelPackage p = new ExcelPackage(tmp))
                 {
                     var wb = p.Workbook;
+                    ExcelWorksheet sheetEquipment;
 
-                    var sheetEquipment = wb.Worksheets.Add("Основное оборудование");    //Страница оборудования
+                    int row;
 
-                    int row = 3; //Стартовая позиция строки
-                    int col = 1; //Стартовая позиция столбца
-
-                    #region Excel PreDesign
-
-                    string[] lbl = new string[] { "Наименование ПС", "№ ячейки", "Uном, кВ", "Оборудование", "Марка", 
-                                                  "I ном, А", "I откл.ном, кА", "I тер.ном, кА", "t тер.ном, с", "B к.норм, кА2с", "i пр.скв, кА",
-                                                  "I п0, А", "t сумм, с", "B к.норм, кА2с", "i уд, кА" , "ta, с", "t осн.защ, с", "b расч, %"};
-
-                    sheetEquipment.Cells[row, col].Value = "Оборудование";              sheetEquipment.Cells[row, col, row, col + 4].Merge = true;
-                    sheetEquipment.Cells[row, col + 5].Value = "Нормируемые параметры"; sheetEquipment.Cells[row, col + 5, row, col + 10].Merge = true;
-                    sheetEquipment.Cells[row, col + 11].Value = "Расчётные параметры";  sheetEquipment.Cells[row, col + 11, row, col + 17].Merge = true;
-                    sheetEquipment.Cells[row+1, col + 11].Value = "_Режим_1_";          sheetEquipment.Cells[row+1, col + 11, row+1, col + 17].Merge = true;
-
-                    for (int i = 0; i < lbl.Length; i++)
+                    if (!tmp.Exists)
                     {
-                        if (i <= 10)
+                        sheetEquipment = wb.Worksheets.Add("Основное оборудование");    //Страница оборудования
+
+                        row = 3; //Стартовая позиция строки
+                        int col = 1; //Стартовая позиция столбца
+
+                        #region Excel PreDesign
+
+                        string[] lbl = new string[] { "Наименование ПС", "№ ячейки", "Uном, кВ", "Оборудование", "Марка",
+                                                      "I ном, А", "I откл.ном, кА", "I тер.ном, кА", "t тер.ном, с", "B к.норм, кА2с", "i пр.скв, кА",
+                                                      "I п0, А", "t сумм, с", "B к.норм, кА2с", "i уд, кА" , "ta, с", "t осн.защ, с", "b расч, %"};
+
+                        sheetEquipment.Cells[row, col].Value = "Оборудование"; sheetEquipment.Cells[row, col, row, col + 4].Merge = true;
+                        sheetEquipment.Cells[row, col + 5].Value = "Нормируемые параметры"; sheetEquipment.Cells[row, col + 5, row, col + 10].Merge = true;
+                        sheetEquipment.Cells[row, col + 11].Value = "Расчётные параметры"; sheetEquipment.Cells[row, col + 11, row, col + 17].Merge = true;
+                        sheetEquipment.Cells[row + 1, col + 11].Value = "_Режим_1_"; sheetEquipment.Cells[row + 1, col + 11, row + 1, col + 17].Merge = true;
+
+                        for (int i = 0; i < lbl.Length; i++)
                         {
-                            sheetEquipment.Cells[4, i + 1, 5, i + 1].Merge = true;
-                            sheetEquipment.Cells[4, i + 1].Value = lbl[i];
+                            if (i <= 10)
+                            {
+                                sheetEquipment.Cells[4, i + 1, 5, i + 1].Merge = true;
+                                sheetEquipment.Cells[4, i + 1].Value = lbl[i];
+                            }
+                            else
+                            {
+                                sheetEquipment.Cells[5, i + 1].Value = lbl[i];
+                            }
                         }
-                        else
-                        {
-                            sheetEquipment.Cells[5, i + 1].Value = lbl[i];
-                        }
+
+                        row = row + 3;
+
+                        #endregion Excel PreDesign
+                    }
+                    else
+                    {
+                        sheetEquipment = wb.Worksheets[1];                     //Страница оборудования
+                        row = 6;                                               //Установка стартовой позиции строки для вывода ячеек 
                     }
 
-                    #endregion Excel PreDesign
 
-                    row = row + 3;                                                  //Установка стартовой похиции строки для вывода ячеек 
                     var nodes = track.Cells.Select(n => n.NodeNumber).Distinct();   //Список уникальных узлов где есть ячейки
 
                     foreach (var node in nodes) //Цикл по узлам
@@ -270,12 +285,12 @@ namespace Power_Equipment_Handbook.src
                                 {
                                     sheetEquipment.Cells[row, 4].Value = elem.SerializeType();  //Вывод Типа оборудования
                                     sheetEquipment.Cells[row, 5].Value = elem.Name;             //Вывод Марки оборудования
-                                    sheetEquipment.Cells[row, 6].Value = elem.Inom;             //Вывод Inom оборудования
-                                    sheetEquipment.Cells[row, 7].Value = elem.Iotkl;            //Вывод Iоткл оборудования
-                                    sheetEquipment.Cells[row, 8].Value = elem.Iterm;            //Вывод Iтерм оборудования
-                                    sheetEquipment.Cells[row, 9].Value = elem.Tterm;            //Вывод tтерм оборудования
-                                    sheetEquipment.Cells[row, 10].Value = elem.Bterm;           //Вывод Bтерм оборудования
-                                    sheetEquipment.Cells[row, 11].Value = elem.Iudar;           //Вывод iуд оборудования
+                                    sheetEquipment.Cells[row, 6].Value = elem.Inom == null ? "-" : elem.Inom.ToString();             //Вывод Inom оборудования
+                                    sheetEquipment.Cells[row, 7].Value = elem.Iotkl == null ? "-" : elem.Iotkl.ToString();            //Вывод Iоткл оборудования
+                                    sheetEquipment.Cells[row, 8].Value = elem.Iterm == null ? "-" : elem.Iterm.ToString();            //Вывод Iтерм оборудования
+                                    sheetEquipment.Cells[row, 9].Value = elem.Tterm == null ? "-" : elem.Tterm.ToString();            //Вывод tтерм оборудования
+                                    sheetEquipment.Cells[row, 10].Value = elem.Bterm == null ? "-" : elem.Bterm.ToString();           //Вывод Bтерм оборудования
+                                    sheetEquipment.Cells[row, 11].Value = elem.Iudar == null ? "-" : elem.Iudar.ToString();           //Вывод iуд оборудования
 
                                     row += 1;
                                 }
@@ -300,6 +315,7 @@ namespace Power_Equipment_Handbook.src
                     sheetEquipment.Cells[3, 1, row - 1, 5].Style.Border.BorderAround(ExcelBorderStyle.Thick);
                     sheetEquipment.Cells[3, 6, row - 1, 11].Style.Border.BorderAround(ExcelBorderStyle.Thick);
                     sheetEquipment.Cells[3, 12, row - 1, 18].Style.Border.BorderAround(ExcelBorderStyle.Thick);
+                    sheetEquipment.Cells[3, 1, 5, 18].Style.Border.BorderAround(ExcelBorderStyle.Thick);
 
                     sheetEquipment.Cells.AutoFitColumns();
                     sheetEquipment.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -308,9 +324,12 @@ namespace Power_Equipment_Handbook.src
                     sheetEquipment.Column(1).Style.WrapText = true;
                     sheetEquipment.Column(2).Style.WrapText = true;
 
+                    sheetEquipment.Cells.Style.Font.Name = "Times New Romans";
+                    sheetEquipment.Cells.Style.Font.Size = 10;
+
                     #endregion PostDesign
 
-                    p.Save(); //Сохранение выходного документа
+                    p.SaveAs(fileInfo); //Сохранение выходного документа
                 }                
             });
         }

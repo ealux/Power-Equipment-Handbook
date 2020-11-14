@@ -78,6 +78,7 @@ namespace Power_Equipment_Handbook.src.windows
 
         #region Обработчики конкретных событий
 
+
         /// <summary>
         /// Выгрузка данных из базы по факту выбора типа Оборудования
         /// </summary>
@@ -277,6 +278,11 @@ namespace Power_Equipment_Handbook.src.windows
             }
         }
 
+        /// <summary>
+        /// Снятие эффектов родительского окна  при закрытии 
+        /// </summary>
+        private void Window_Closing(object sender, CancelEventArgs e) => this.Owner.Effect = null;
+
 
         /// <summary>
         /// Выбор марки оборудования
@@ -294,6 +300,7 @@ namespace Power_Equipment_Handbook.src.windows
             txtIudar_E.DataContext = el;
         }
 
+        
         #endregion Обработчики конкретных событий
 
 
@@ -435,7 +442,11 @@ namespace Power_Equipment_Handbook.src.windows
 
             IdCounter++;
 
-            if (chkCloser.IsChecked == true) this.Close();
+            if (chkCloser.IsChecked == true)
+            {
+                this.Owner.Effect = null;
+                this.Close();
+            }
         }
 
 
@@ -449,5 +460,6 @@ namespace Power_Equipment_Handbook.src.windows
         }
 
         #endregion INotifyPropertyChanged Implementation
+      
     }
 }

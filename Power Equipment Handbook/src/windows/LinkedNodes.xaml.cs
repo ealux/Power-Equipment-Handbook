@@ -24,12 +24,13 @@ namespace Power_Equipment_Handbook.src.windows
     /// </summary>
     public partial class LinkedNodes : Window
     {
-
         ObservableCollection<Node> localNodes;
-        private int Count { get; set; }
-        //ObservableCollection<Branch> localBranches { get; set; }
 
-        //View-элемент для списка узлов
+        private int Count { get; set; }
+
+        /// <summary>
+        /// View-элемент для списка узлов
+        /// </summary>
         CollectionViewSource nodesView { get; set; }
 
         /// <summary>

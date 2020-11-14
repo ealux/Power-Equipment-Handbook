@@ -15,7 +15,7 @@
                 <Button x:Name="btnBreaker" Height="19" Background="Transparent" BorderThickness="0" Content="Выключатель" Click="btnAddElemSimple_Click" />
             </Border>
             <Separator Background="Transparent" />
-            <Border Background="#FFDAD7D3" BorderBrush="#FFACACAC" BorderThickness="1" CornerRadius="5">
+            <Border Background="#FFF0F0F0" BorderBrush="#FFACACAC" BorderThickness="1" CornerRadius="5">
                 <Button x:Name="btnDisconnector" Height="19" Background="Transparent" BorderThickness="0" Content="Разъединитель" Click="btnAddElemSimple_Click" />
             </Border>
             <Separator Background="Transparent" />
@@ -23,7 +23,7 @@
                 <Button x:Name="btnSC" Height="19" Background="Transparent" BorderThickness="0" Content="Отделитель/Короткозам." Click="btnAddElemSimple_Click" />
             </Border>
             <Separator Background="Transparent" />
-            <Border Background="#FFDAD7D3" BorderBrush="#FFACACAC" BorderThickness="1" CornerRadius="5">
+            <Border Background="#FFF0F0F0" BorderBrush="#FFACACAC" BorderThickness="1" CornerRadius="5">
                 <Button x:Name="btnTT" Height="19" Background="Transparent" BorderThickness="0" Content="Трансформатор Тока" Click="btnAddElemSimple_Click" />
             </Border>
             <Separator Background="Transparent" />

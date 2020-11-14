@@ -262,6 +262,9 @@ namespace Power_Equipment_Handbook
             Log.Clear();
         }
 
+
+
+
         /// <summary>
         /// Отображение окна Бибилиотеки оборудования
         /// </summary>
@@ -293,6 +296,23 @@ namespace Power_Equipment_Handbook
             {
                 this.lnodes = new src.windows.LinkedNodes(this.track) { Owner = this };
                 this.lnodes.Show();
+            }
+        }
+
+        /// <summary>
+        /// Отбражение окна менеджера режимов
+        /// </summary>
+        private void Get_PowerFlowManager(object sender, RoutedEventArgs e)
+        {
+            if (PFM != null)
+            {
+                if (PFM.IsVisible) PFM.Hide();
+                else PFM.Show();
+            }
+            else if (this.PFM == null || !this.PFM.IsVisible)
+            {
+                this.PFM = new src.windows.PowerFlowManager(ref this.track.Nodes, ref this.track.Branches) { Owner = this };
+                this.PFM.Show();
             }
         }
 
