@@ -33,12 +33,12 @@ namespace Power_Equipment_Handbook.src.windows
     /// </summary>
     public partial class PowerFlowManager : Window, INotifyPropertyChanged
     {
-        public Engine e;
+        Engine e;
         EngineOptions options;
-        public Converter conv;
+        Converter conv;
+        LogClass Log;
 
-        ObservableCollection<Node> Nodes;
-        ObservableCollection<Branch> Branches;
+        DataGridTracker track;
 
         /// <summary>
         /// Преобразователь схем
@@ -55,31 +55,39 @@ namespace Power_Equipment_Handbook.src.windows
         /// Настройки расчетног ядра
         /// </summary>
         public EngineOptions Options { get => options; set => SetProperty(ref options, value); }
-
-        ///// <summary>
-        ///// Коллекция Узлов
-        ///// </summary>
-        //public ObservableCollection<Node> Nodes { get => nds; set => SetProperty(ref nds, value); }
-
-        ///// <summary>
-        ///// Коллекция Ветвей
-        ///// </summary>
-        //public ObservableCollection<Branch> Branches { get => brs; set => SetProperty(ref brs, value); }
         
 
 
         //ctor
-        public PowerFlowManager(ref ObservableCollection<Node> nodes, ref ObservableCollection<Branch> branches)
+        public PowerFlowManager(ref DataGridTracker track, LogClass Log)
         {
             InitializeComponent();
 
-            this.Nodes = nodes;
-            this.Branches = branches;            
+            this.track = track;
+            this.track.StateHasChanged += (object sender, EventArgs e) => { this.Title = "Установившиеся режимы - " + this.track.Name; };
 
-            this.grdNodes.ItemsSource = this.Nodes;
-            this.grdBranches.ItemsSource = this.Branches;
+            this.grdNodes.ItemsSource = this.track.Nodes;
+            this.grdBranches.ItemsSource = this.track.Branches;
+
+            this.grdNodes.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.track.IsSaved = false;
+            this.grdBranches.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.track.IsSaved = false;
+
+            //Валидаторы схемы
+            this.grdNodes.CurrentCellChanged += (object sender, EventArgs e) =>
+            {
+                var n = (sender as DataGrid).SelectedValue;
+                if (n != null && !n.GetType().FullName.Equals("MS.Internal.NamedObject")) ((Node)n).ValidateNodeType();
+            };
+
+            this.grdBranches.CurrentCellChanged += (object sender, EventArgs e) =>
+            {
+                var n = (sender as DataGrid).SelectedValue;
+                if (n != null && !n.GetType().FullName.Equals("MS.Internal.NamedObject")) ((Branch)n).ValidateBranchType();
+            };
 
             this.Options = new EngineOptions();
+
+            this.Log = Log;
         }
 
 
@@ -90,15 +98,26 @@ namespace Power_Equipment_Handbook.src.windows
         {
 
             //ВАЛИДАТОРЫ!!!
+            if (this.track.Nodes.Count == 0 | this.track.Branches.Count == 0) //Проверка на налиие узлов/ветвей
+            {
+                this.Log.Show("Отсутствуют Узлы/Ветви для быстрого расчета схемы!");
+                return;
+            }
+            if (!this.track.Nodes.Any(n => n.Type == "База")) //Проверка на налиие базисного узла
+            {
+                this.Log.Show("Отсутствует базисный узел!");
+                return;
+            }
+            //ВАЛИДАТОРЫ!!!
 
 
             try
             {
-                this.Conv = new Converter(this.Nodes, this.Branches);
+                this.Conv = new Converter(this.track.Nodes, this.track.Branches);
                 this.Engine = new Engine(this.Conv, this.Options);
 
-                this.Nodes.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.Engine.NeedsToCalc = true;
-                this.Branches.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.Engine.NeedsToCalc = true;
+                this.track.Nodes.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.Engine.NeedsToCalc = true;
+                this.track.Branches.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.Engine.NeedsToCalc = true;
 
                 for (int i = 0; i < count; i++)
                 {
@@ -106,13 +125,14 @@ namespace Power_Equipment_Handbook.src.windows
                 }
                                
 
-                this.Conv.FillElementsBack(this.Engine.desc, ref this.Nodes, ref this.Branches);
+                this.Conv.FillElementsBack(this.Engine.desc, ref this.track.Nodes, ref this.track.Branches);
 
                 this.Engine.NeedsToCalc = false;
+                Log.Show("Успешный расчёт!", LogClass.LogType.Success);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Show(e.Message);
             }
         }
 
@@ -151,6 +171,24 @@ namespace Power_Equipment_Handbook.src.windows
         {
             Calculate();
         }
+
+
+        #region [Отлов горячих клавиш]
+
+        /// <summary>
+        /// Расчёт режима -> F5
+        /// </summary>
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F5) //Нажатие клавиши F5
+            {
+                this.Calculate();
+            }
+        }
+
+        #endregion [Отлов горячих клавиш]
+
+
     }
 
 
@@ -183,38 +221,6 @@ namespace Power_Equipment_Handbook.src.windows
             foreach (var item in nodes)
             {
                 var type = item.Type == "Нагр" ? NodeType.PQ : item.Type == "База" ? NodeType.Slack : NodeType.PV;
-
-                //Check if PV
-                var vpreN = item.Vzd == 0.0;
-                var qminN = item.Q_min == 0.0;
-                var qmaxN = item.Q_max == 0.0;
-                if (type == NodeType.PQ)
-                {                  
-                    if (!vpreN & !qminN & !qmaxN)
-                    {
-                        type = NodeType.PV;
-                        item.Type = "Ген";
-                    }
-                }
-                else if(type == NodeType.PV)
-                {
-                    if ((vpreN & qminN) | (qminN & qmaxN))
-                    {
-                        type = NodeType.PQ;
-                        item.Type = "Нагр";
-                    }
-                    else if (!qminN & qmaxN)
-                    {
-                        type = NodeType.PQ;
-                        item.Q_g = item.Q_min;
-                        item.Type = "Нагр";
-                    }
-                    else if (qminN & !qmaxN)
-                    {
-                        type = NodeType.PQ;
-                        item.Type = "Нагр";
-                    }
-                }
 
                 out_n.Add(new PFNode()
                 {

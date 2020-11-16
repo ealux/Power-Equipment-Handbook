@@ -287,7 +287,7 @@ namespace Power_Equipment_Handbook
             txtg0_L.DataContext = ""; txtG_L.Text = ""; txtG0_L.Text = "";
             txtb0_L.DataContext = ""; txtB_L.Text = ""; txtB0_L.Text = "";
             txtNpar_L.Text = ""; ; txtIdd_L.DataContext = "";
-            txtState_L.Text = "0";
+            txtState_L.IsChecked = true;
             txtRegion_L.Text = "";
             txtN_L.Text = "1";
         }
@@ -311,7 +311,7 @@ namespace Power_Equipment_Handbook
                 if (start == default) { ChangeCmbColor(txtStartNode_L, true); return; }
                 if (end == default) { ChangeCmbColor(txtEndNode_L, true); return; }
 
-                int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
+                bool state = txtState_L.IsChecked == false ? false : true;
                 string type = "ЛЭП";
                 int npar = (string.IsNullOrWhiteSpace(txtNpar_L.Text) || int.Parse(txtNpar_L.Text) == 0) ? 0 : int.Parse(txtNpar_L.Text);
                 string typename = cmbTypeName_L.Text;

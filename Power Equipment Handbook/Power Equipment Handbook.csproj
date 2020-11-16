@@ -51,7 +51,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -60,7 +59,7 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>185072.ico</ApplicationIcon>
+    <ApplicationIcon>src\res\main.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -113,6 +112,8 @@
     <Compile Include="src\classes\utils\BreakerUtils.cs" />
     <Compile Include="src\classes\utils\LinesUtils.cs" />
     <Compile Include="src\classes\utils\TransUtils.cs" />
+    <Compile Include="src\classes\validators\ValidatorBranchExtentions.cs" />
+    <Compile Include="src\classes\validators\ValidatorNodesExtentions.cs" />
     <Compile Include="src\windows\elements\CellElementAddSimple.xaml.cs">
       <DependentUpon>CellElementAddSimple.xaml</DependentUpon>
     </Compile>
@@ -190,6 +191,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="src\res\flow.png" />
+    <Resource Include="src\res\calc.png" />
+    <Resource Include="src\res\main.ico" />
     <Content Include="src\res\_template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -217,14 +221,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="185072.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="EPPlus">
       <Version>4.5.3.3</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite">
-      <Version>1.0.112</Version>
+      <Version>1.0.113.6</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

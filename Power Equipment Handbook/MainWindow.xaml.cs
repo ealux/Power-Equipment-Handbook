@@ -1,9 +1,13 @@
-﻿using Power_Equipment_Handbook.src;
+﻿using Microsoft.Win32;
+using Power_Equipment_Handbook.src;
 using Power_Equipment_Handbook.src.windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,9 +23,6 @@ namespace Power_Equipment_Handbook
     /// </summary>
     public partial class MainWindow
     {
-        //private readonly string MainTitle = "Power Equipment Handbook";
-
-        //private List<DataGridTracker> tracks;   //Список сетей !!!ДОДЕЛАТЬ
         private DataGridTracker track;
         private DBProvider db_prv;
 
@@ -48,12 +49,20 @@ namespace Power_Equipment_Handbook
         {
             InitializeComponent();
             track = new DataGridTracker(grdNodes, grdBranches, grdCells);
-            //tracks = new List<DataGridTracker>();   //Список сетей !!!ДОДЕЛАТЬ
+            track.StateHasChanged += (object sender, EventArgs e) => { this.Title = "Power Equipment Handbook - " + track.Name; };
+
+            this.grdCommutation.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.track.IsSaved = false;
+            this.grdElements.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.track.IsSaved = false;
+            this.grdElements.LoadingRow += (object sender, DataGridRowEventArgs e) => this.track.IsSaved = false;
+
 
             db_prv = new DBProvider("test.db");                     //Инициализация подключения к встроенной БД оборудования
             Status_Text.Text = "Состояние подключения:   " + db_prv.Status;
 
+            if(db_prv.Connection== null | db_prv.Connection.State == ConnectionState.Closed) db_prv.ReConnect(Path.Combine(Environment.CurrentDirectory, "test.db"));
+
             cmbType_T.SelectedIndex = 1; cmbType_T.SelectedIndex = 0;
+
 
             txtStartNode_L.ItemsSource = track.Nodes; 
             txtEndNode_L.ItemsSource = track.Nodes;
@@ -79,7 +88,7 @@ namespace Power_Equipment_Handbook
         }
 
         
-        #region Обработчики конкретных событий
+        #region [Обработчики конкретных событий]
 
         /// <summary>
         /// Выгрузка параметров из базы по факту выбора Сечения/Марки
@@ -182,7 +191,7 @@ namespace Power_Equipment_Handbook
                 if(cmbUnom_N.Text =="" || cmbUnom_N.SelectedIndex == -1) { Log.Show("Класс напряжения не выбран!"); return; }
 
                 if (txtNumber_N.Text == "") { ChangeTxtColor(txtNumber_N, true); Log.Show("Введите номер узла!"); return; } else { number = int.Parse(txtNumber_N.Text); }
-                int state = (string.IsNullOrWhiteSpace(txtState_L.Text) || int.Parse(txtState_L.Text) == 0) ? 0 : 1;
+                bool state = txtState_N.IsChecked == false ? false : true;
                 string type = txtType_N.Text;
                 double unom = (string.IsNullOrWhiteSpace(cmbUnom_N.Text) || double.Parse(cmbUnom_N.Text, CultureInfo.InvariantCulture) == 0) ? 0 : double.Parse(cmbUnom_N.Text, CultureInfo.InvariantCulture);
                 string name = txtName_N.Text;
@@ -260,7 +269,52 @@ namespace Power_Equipment_Handbook
             });
         }
 
-        #region Отлов горячих клавиш
+
+        /// <summary>
+        /// Закрытие окна
+        /// </summary>
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {  
+
+            if(this.track.IsSaved == false)
+            {
+                var result = MessageBox.Show("Текущий файл был изменен. Сохранить?", "Сохраниение файла", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                else if (result == MessageBoxResult.No) return;
+                else
+                {
+                    SaveFileDialog sfd = new SaveFileDialog
+                    {
+                        Filter = "PEH files|*.peh",
+                        OverwritePrompt = true,
+                        AddExtension = true
+                    };
+
+                    if (sfd.ShowDialog() == false)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    this.track.Name = sfd.SafeFileName;
+                    this.track.FullPath = sfd.FileName;
+
+                    string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
+                    string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
+
+                    UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
+
+                    serializator.toXML();
+                }                
+            }
+        }
+
+        #region [Отлов горячих клавиш]
 
         /// <summary>
         /// Отчистка (Ctrl+N) + Ввод данных (Enter)
@@ -306,22 +360,26 @@ namespace Power_Equipment_Handbook
         }
 
         /// <summary>
-        /// Блокировка таблиц данных (Ctrl+B)
+        /// Общий метод отлова горячих клавиш главного окна
         /// </summary>
-        private void BlockHotKey_KeyDown(object sender, KeyEventArgs e)
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyboardDevice.Modifiers.HasFlag(ModifierKeys.Control) && (e.Key == Key.B)) //Нажатие сочетания Ctrl+B - Блокировка таблиц данных
             {
                 LockUnlockDataTable_Click(btnBlockTables, null);
             }
+            if (e.Key == Key.F5) //Нажатие клавиши F5 - Расчёт режима
+            {
+                Fast_Calc(this, null);
+            }
         }
 
-        #endregion Отлов горячих клавиш
+        #endregion [Отлов горячих клавиш]
 
-        #endregion Обработчики конкретных событий
+        #endregion [Обработчики конкретных событий]
 
 
-        #region Работа с дизайном окна
+        #region [Работа с дизайном окна]
 
 
         /// <summary>
@@ -363,42 +421,11 @@ namespace Power_Equipment_Handbook
                 imgBlock.Source = new BitmapImage(new Uri("pack://application:,,,/../src/res/lock.png"));
             }
         }
+        
 
-        /// <summary>
-        /// Сокрытие/Открытие сайдбара с двойного щелчка
-        /// </summary>
-        private void GridSplitter_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if(Tab_Side.Visibility != Visibility.Collapsed)
-            {
-                this.SideWidth = this.gridGlobal.ColumnDefinitions[0].Width;
-                this.gridGlobal.ColumnDefinitions[0].MinWidth = 0;
-                this.gridGlobal.ColumnDefinitions[0].MaxWidth = 0;
-                this.spliterGridGlobal.Cursor = Cursors.ScrollE;
-                this.gridGlobal.ColumnDefinitions[0].Width = new GridLength(0, GridUnitType.Star);
-                Tab_Side.Visibility = Visibility.Collapsed;
-                this.btnCollapse.Content = ">";
-            }
-            else
-            {
-                this.gridGlobal.ColumnDefinitions[0].MinWidth = 150;
-                this.gridGlobal.ColumnDefinitions[0].MaxWidth = Single.MaxValue;
-                this.gridGlobal.ColumnDefinitions[0].Width = this.SideWidth;
-                this.spliterGridGlobal.Cursor = Cursors.SizeWE;
-                Tab_Side.Visibility = Visibility.Visible;
-                this.btnCollapse.Content = "<";
-            }
-        }
+        #endregion [Работа с дизайном окна]
 
-        /// <summary>
-        /// Сокрытие/Открытие сайдбара
-        /// </summary>
-        private void btnCollapse_Click(object sender, RoutedEventArgs e)
-        {
-            GridSplitter_MouseDoubleClick(sender: spliterGridGlobal, e:null);
-        }
 
-        #endregion Работа с дизайном окна
-
+        
     }
 }

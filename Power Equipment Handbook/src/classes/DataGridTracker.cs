@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -16,17 +17,36 @@ namespace Power_Equipment_Handbook.src
     [XmlType("SchemaContainer")]
     public class DataGridTracker
     {
+        bool issaved = true;
 
-        [XmlIgnore] public DataGrid grdNodes { get; set; }      //Таблица(UI) узлов
-        [XmlIgnore] public DataGrid grdBranches { get; set; }   //Таблица(UI) ветвей
-        [XmlIgnore] public DataGrid grdCells { get; set; }      //Таблица(UI) ячеек
+        [XmlIgnore] public string Name { get; set; } = "<Новый файл>"; //Наименование схемы
+        [XmlIgnore] public string FullPath { get; set; }       //Полный путь до файла
+        [XmlIgnore] public bool IsSaved                        //Флаг состояния схемы
+        {
+            get { return issaved; }
+            set
+            {
+                issaved = value;
+                if (value == true) this.Name = this.Name.TrimEnd('*');
+                if (value == false) if (!this.Name.Contains("*")) this.Name += "*";
+                StateHasChanged?.Invoke(this, null);
+            }
+        }                              
+        
 
-        private CollectionViewSource CellsView { get; set; }
+        [XmlIgnore] public DataGrid grdNodes { get; set; }                      //Таблица(UI) узлов
+        [XmlIgnore] public DataGrid grdBranches { get; set; }                   //Таблица(UI) ветвей
+        [XmlIgnore] public DataGrid grdCells { get; set; }                      //Таблица(UI) ячеек
+
+        private CollectionViewSource CellsView { get; set; } 
 
 
         [XmlArrayItem("Node",   Type =typeof(Node))]    public ObservableCollection<Node>   Nodes = new ObservableCollection<Node>();       //Узлы
         [XmlArrayItem("Branch", Type = typeof(Branch))] public ObservableCollection<Branch> Branches = new ObservableCollection<Branch>();  //Ветви
         [XmlArrayItem("Cell",   Type = typeof(Cell))]   public ObservableCollection<Cell>   Cells = new ObservableCollection<Cell>();       //Ячейки
+
+        //Событие изменения состояния сохранения схемы
+        public event EventHandler StateHasChanged;
 
         //ctor 1
         public DataGridTracker() { }
@@ -35,9 +55,45 @@ namespace Power_Equipment_Handbook.src
         {
             this.grdNodes = grdNodes;           this.grdNodes.ItemsSource = Nodes;
             this.grdBranches = grdBranches;     this.grdBranches.ItemsSource = Branches;
-            this.grdCells = grdCells;           GenerateViewForCells(); //MainWindow.GenerateViewForCells();
+            this.grdCells = grdCells;           GenerateViewForCells();
 
             Cells.CollectionChanged += CellsCollectionChanged;
+
+            this.grdNodes.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.IsSaved = false;
+            this.grdBranches.CellEditEnding += (object sender, DataGridCellEditEndingEventArgs e) => this.IsSaved = false;
+
+            //Валидаторы схемы
+            this.grdNodes.CurrentCellChanged += (object sender, EventArgs e) =>
+            {
+                var n = (sender as DataGrid).SelectedValue;
+                if (n != null && !n.GetType().FullName.Equals("MS.Internal.NamedObject")) ((Node)n).ValidateNodeType();
+            };
+
+            this.grdBranches.CurrentCellChanged += (object sender, EventArgs e) =>
+            {
+                var n = (sender as DataGrid).SelectedValue;
+                if (n != null && !n.GetType().FullName.Equals("MS.Internal.NamedObject")) ((Branch)n).ValidateBranchType();
+            };
+
+
+            this.Nodes.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.IsSaved = false;
+            this.Branches.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.IsSaved = false;
+            this.Cells.CollectionChanged += (object sender, NotifyCollectionChangedEventArgs e) => this.IsSaved = false;
+        }
+
+
+        public void Nodes_CellEdditing(object sender, DataGridCellEditEndingEventArgs e)
+        {           
+            if (e.EditingElement != null)
+            {
+                (sender as DataGrid).CellEditEnding -= Nodes_CellEdditing;
+                (sender as DataGrid).CommitEdit(DataGridEditingUnit.Cell, true);
+                (sender as DataGrid).CellEditEnding += Nodes_CellEdditing;
+            }
+            else return;
+
+            ((Node)e.Row.Item).ValidateNodeType();
+            this.IsSaved = false;
         }
 
 
@@ -66,7 +122,7 @@ namespace Power_Equipment_Handbook.src
         /// <summary>
         /// Реакция на события изменения исходной коллекции для таблицы ячеек
         /// </summary>
-        private void CellsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) => Application.Current.Dispatcher?.Invoke(() => { GenerateViewForCells(); });
+        private void CellsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => Application.Current.Dispatcher?.Invoke(() => { GenerateViewForCells(); });
     }
 
 
@@ -75,8 +131,8 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Branch : INotifyPropertyChanged, IEquatable<Branch>
     {
-        private int state;
-        private string type;
+        private bool state = true;
+        private string type = "Выкл.";
         private int start; private int end;
         private int npar;
         private string name;
@@ -92,7 +148,7 @@ namespace Power_Equipment_Handbook.src
 
         #region Properties
 
-        [XmlAttribute] public int State { get => state; set => SetProperty(ref state, value); }
+        [XmlAttribute] public bool State { get => state; set => SetProperty(ref state, value); }
         [XmlAttribute] public string Type { get => type; set => SetProperty(ref type, value); }
         [XmlAttribute] public int Start { get => start; set => SetProperty(ref start, value); }
         [XmlAttribute] public int End { get => end; set => SetProperty(ref end, value); }
@@ -143,7 +199,7 @@ namespace Power_Equipment_Handbook.src
         public Branch() { }
 
         //ctor-2
-        public Branch(int start, int end, string type, double? ktr, int state = 0, string typename = "", string name = "",
+        public Branch(int start, int end, string type, double? ktr, bool state = true, string typename = "", string name = "",
                       int npar = 0, 
                       double r = 0, double x = 0, double b = 0, double g = 0,
                       double r0 = 0, double x0 = 0, double b0 = 0, double g0 = 0,
@@ -204,8 +260,8 @@ namespace Power_Equipment_Handbook.src
     /// </summary>
     public class Node : INotifyPropertyChanged, IEquatable<Node>
     {
-        private int state;
-        private string type;
+        private bool state = true;
+        private string type = "Нагр";
         private int number;
         private double unom;
         private string name;
@@ -220,7 +276,7 @@ namespace Power_Equipment_Handbook.src
 
         #region [Properties]
 
-        [XmlAttribute] public int State { get => state; set => SetProperty(ref state, value); }
+        [XmlAttribute] public bool State { get => state; set => SetProperty(ref state, value); }
         [XmlAttribute] public string Type { get => type; set => SetProperty(ref type, value); }
         [XmlAttribute] public int Number { get => number; set => SetProperty(ref number, value); }
         [XmlAttribute] public double Unom { get => unom; set => SetProperty(ref unom, value); }
@@ -252,7 +308,7 @@ namespace Power_Equipment_Handbook.src
         public Node() { }
 
         //ctor-2
-        public Node(int number, double unom, string type, int state = 0, string name = "",
+        public Node(int number, double unom, string type, bool state = true, string name = "",
                       double p_n = 0, double q_n = 0, double p_g = 0, double q_g = 0,
                       double vzd = 0, double q_min = 0, double q_max = 0,
                       double g_sh = 0, double b_sh = 0,

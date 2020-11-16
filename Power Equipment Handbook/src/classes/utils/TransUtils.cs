@@ -581,7 +581,7 @@ namespace Power_Equipment_Handbook
             txtRH_T.DataContext = ""; txtRL_T.DataContext = ""; txtRM_T.DataContext = ""; txtRH_T.Clear(); txtRL_T.Clear(); txtRM_T.Clear();
             txtXH_T.DataContext = ""; txtXL_T.DataContext = ""; txtXM_T.DataContext = ""; txtXH_T.Clear(); txtXL_T.Clear(); txtXM_T.Clear();
             txtBH_T.DataContext = ""; txtGH_T.DataContext = ""; txtBH_T.Clear(); txtGH_T.Clear();
-            txtState_T.Text = "0";
+            txtState_T.IsChecked = true;
             txtRegion_T.Text = "";
             txtN_T.Text = "1";
             txtIddH_T.DataContext = ""; txtIddM_T.DataContext = ""; txtIddL_T.DataContext = "";
@@ -608,7 +608,7 @@ namespace Power_Equipment_Handbook
                     if (start == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
                     if (end == default) { ChangeCmbColor(txtStartNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
 
-                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
+                    bool state = txtState_T.IsChecked == false ? false : true;
                     string type = "Тр-р";
                     int npar = 0;
                     string typename = cmbTypeName_T.Text;
@@ -664,7 +664,7 @@ namespace Power_Equipment_Handbook
                     if (endM == default) { ChangeCmbColor(txtEndMidNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
                     if (endL == default) { ChangeCmbColor(txtEndLowNode_T, true); Log.Show("Ошибка ввода узлов Трансофрматора!"); return; }
 
-                    int state = (string.IsNullOrWhiteSpace(txtState_T.Text) || int.Parse(txtState_T.Text) == 0) ? 0 : 1;
+                    bool state = txtState_T.IsChecked == false ? false : true;
                     string type = "Тр-р";
                     int npar = 0;
                     string typename = cmbTypeName_T.Text;

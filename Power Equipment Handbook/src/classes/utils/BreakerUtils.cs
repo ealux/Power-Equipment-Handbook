@@ -103,7 +103,7 @@ namespace Power_Equipment_Handbook
             cmbUnom_B.SelectedIndex = state;
             txtEndNode_B.SelectedIndex = -1;
             txtName_B.Text = "";
-            txtState_B.Text = "0";
+            txtState_B.IsChecked = true;
             txtRegion_B.Text = "";
         }
 
@@ -126,7 +126,7 @@ namespace Power_Equipment_Handbook
                 if (start == default) { ChangeCmbColor(txtStartNode_B, true); return; }
                 if (end == default) { ChangeCmbColor(txtEndNode_B, true); return; }
 
-                int state = (string.IsNullOrWhiteSpace(txtState_B.Text) || int.Parse(txtState_B.Text) == 0) ? 0 : 1;
+                bool state = txtState_B.IsChecked == false ? false : true;
                 string type = "Выкл.";
                 string name = txtName_B.Text;
                 int region = (string.IsNullOrWhiteSpace(txtRegion_B.Text) || int.Parse(txtRegion_B.Text) == 0) ? 0 : int.Parse(txtRegion_B.Text);

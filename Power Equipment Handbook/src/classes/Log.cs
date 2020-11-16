@@ -8,7 +8,7 @@ namespace Power_Equipment_Handbook.src
     /// <summary>
     /// Класс объекта лога с привязкой к существующему TextBlock
     /// </summary>
-    class LogClass
+    public class LogClass
     {
         TextBlock logBox;
 

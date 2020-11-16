@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Power_Equipment_Handbook.src.windows"
       mc:Ignorable="d" WindowStyle="ThreeDBorderWindow" Closing="Window_Closing"
-      Title="PowerFlowManager" Height="768" Width="1269">
+      Title="Установившиеся режимы" Height="768" Width="1269" KeyDown="Window_KeyDown">
 
     <Grid Width="Auto">
 
@@ -23,10 +23,28 @@
                         <Setter Property="HorizontalContentAlignment" Value="Center" />
                     </Style>
                 </TabItem.Resources>
-                <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="#FFE6E2E2" Margin="0" Height="Auto" 
-                              CanUserReorderColumns="True" Width="Auto">
+                <DataGrid x:Name="grdNodes" ItemsSource="{Binding}" AutoGenerateColumns="False" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" Margin="0" Height="Auto" 
+                              CanUserReorderColumns="True" Width="Auto" AlternationCount="-1">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="False">
+                                    <Setter Property="Background" Value="#A5E67373"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="True">
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="S " Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridCheckBoxColumn Header="S " Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}">
+                            <DataGridCheckBoxColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Состояние узла (вкл/откл)" />
+                                </Style>
+                            </DataGridCheckBoxColumn.CellStyle>
+                        </DataGridCheckBoxColumn>
                         <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -63,11 +81,28 @@
                     </Style>
                 </TabItem.Resources>
                 <DataGrid x:Name="grdBranches" ItemsSource="{Binding}" MinRowHeight="10" AreRowDetailsFrozen="True" HeadersVisibility="All" Margin="0" AutoGenerateColumns="False" 
-                          HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" 
-                          AlternatingRowBackground="#FFE6E2E2" CanUserReorderColumns="True"
-                          Width="Auto" HorizontalScrollBarVisibility="Disabled">
+                          HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" IsManipulationEnabled="True" IsSynchronizedWithCurrentItem="True" CanUserReorderColumns="True"
+                          Width="Auto" HorizontalScrollBarVisibility="Disabled" AlternationCount="-1">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding State}" Value="False">
+                                    <Setter Property="Background" Value="#A5E67373"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}" Value="True">
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}" />
+                        <DataGridCheckBoxColumn Header="S" Width="15" Binding="{Binding State}" ClipboardContentBinding="{x:Null}">
+                            <DataGridCheckBoxColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Состояние ветви (вкл/откл)" />
+                                </Style>
+                            </DataGridCheckBoxColumn.CellStyle>
+                        </DataGridCheckBoxColumn>
                         <DataGridTextColumn Header="№нач" Width="50" Binding="{Binding Start, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
                         <DataGridTextColumn Header="№кон" Width="50" Binding="{Binding End, StringFormat=0;;#}" ClipboardContentBinding="{x:Null}" />
                         <DataGridTemplateColumn Header="Тип" Width="65" ClipboardContentBinding="{x:Null}">

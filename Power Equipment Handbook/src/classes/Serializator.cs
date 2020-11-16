@@ -33,7 +33,6 @@ namespace Power_Equipment_Handbook.src
         /// Сериализация в XML-структуру с внутренним расширением *.peh
         /// </summary>
         public void toXML()
-        #pragma warning restore IDE1006 // Стили именования
         {
             Task.Run(()=>
             {
@@ -119,7 +118,7 @@ namespace Power_Equipment_Handbook.src
                     for(int i = 1; i <= track.Nodes.Count; i++)
                     {
                         sheetNodes.Cells[i + 1, 1].Value = String.Empty;
-                        sheetNodes.Cells[i + 1, 2].Value = track.Nodes[i - 1].State == 0 ? String.Empty : "1";
+                        sheetNodes.Cells[i + 1, 2].Value = track.Nodes[i - 1].State == false ? "0" : "1";
                         sheetNodes.Cells[i + 1, 3].Value = track.Nodes[i - 1].Type;
                         sheetNodes.Cells[i + 1, 4].Value = track.Nodes[i - 1].Number;
                         sheetNodes.Cells[i + 1, 5].Value = track.Nodes[i - 1].Name;
@@ -150,7 +149,7 @@ namespace Power_Equipment_Handbook.src
                     for(int i = 1; i <= track.Branches.Count; i++)
                     {
                         sheetBranches.Cells[i + 1, 1].Value = String.Empty;
-                        sheetBranches.Cells[i + 1, 2].Value = track.Branches[i - 1].State == 0 ? String.Empty : "1";
+                        sheetBranches.Cells[i + 1, 2].Value = track.Branches[i - 1].State == false ? String.Empty : "1";
                         sheetBranches.Cells[i + 1, 3].Value = track.Branches[i - 1].Type;
                         sheetBranches.Cells[i + 1, 4].Value = track.Branches[i - 1].Start;
                         sheetBranches.Cells[i + 1, 5].Value = track.Branches[i - 1].End;
@@ -227,7 +226,7 @@ namespace Power_Equipment_Handbook.src
                         sheetEquipment.Cells[row, col].Value = "Оборудование"; sheetEquipment.Cells[row, col, row, col + 4].Merge = true;
                         sheetEquipment.Cells[row, col + 5].Value = "Нормируемые параметры"; sheetEquipment.Cells[row, col + 5, row, col + 10].Merge = true;
                         sheetEquipment.Cells[row, col + 11].Value = "Расчётные параметры"; sheetEquipment.Cells[row, col + 11, row, col + 17].Merge = true;
-                        sheetEquipment.Cells[row + 1, col + 11].Value = "_Режим_1_"; sheetEquipment.Cells[row + 1, col + 11, row + 1, col + 17].Merge = true;
+                        sheetEquipment.Cells[row + 1, col + 11].Value = this.track.Name; sheetEquipment.Cells[row + 1, col + 11, row + 1, col + 17].Merge = true;
 
                         for (int i = 0; i < lbl.Length; i++)
                         {
@@ -249,6 +248,7 @@ namespace Power_Equipment_Handbook.src
                     else
                     {
                         sheetEquipment = wb.Worksheets[1];                     //Страница оборудования
+                        sheetEquipment.Cells[4, 12].Value = this.track.Name;   //Имя сети
                         row = 6;                                               //Установка стартовой позиции строки для вывода ячеек 
                     }
 

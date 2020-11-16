@@ -1,13 +1,13 @@
-﻿using Power_Equipment_Handbook.src;
+﻿using Microsoft.Win32;
+using Power_Equipment_Handbook.src;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.IO;
-using Microsoft.Win32;
 
 namespace Power_Equipment_Handbook
 {
@@ -24,9 +24,9 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void DigitCheckerForNodes(object sender, TextCompositionEventArgs e)
         {
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
             ChangeTxtColor(sender, false);
-            if(!char.IsDigit(e.Text, 0)) e.Handled = true;
+            if (!char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
         /// <summary>
@@ -34,10 +34,10 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void DoubleChecker(object sender, TextCompositionEventArgs e)
         {
-            if(Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) | Keyboard.IsKeyDown(Key.RightCtrl)) return; //Отлавливаем Ctrl
             TextBox tb = (TextBox)sender;
-            if((e.Text.Contains(".") || e.Text.Contains(",")) & (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
-            if(!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0))) e.Handled = true;
+            if ((e.Text.Contains(".") || e.Text.Contains(",")) & (tb.Text.Contains(".") || tb.Text.Contains(","))) e.Handled = true;
+            if (!(Char.IsDigit(e.Text, 0) | Char.IsPunctuation(e.Text, 0))) e.Handled = true;
         }
 
         /// <summary>
@@ -46,13 +46,13 @@ namespace Power_Equipment_Handbook
         private void DotCommaReplacer(object sender, TextChangedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
-            using(tb.DeclareChangeBlock())
+            using (tb.DeclareChangeBlock())
             {
-                foreach(var c in e.Changes)
+                foreach (var c in e.Changes)
                 {
-                    if(c.AddedLength == 0) continue;
+                    if (c.AddedLength == 0) continue;
                     tb.Select(c.Offset, c.AddedLength);
-                    if(tb.SelectedText.Contains(',')) tb.SelectedText = tb.SelectedText.Replace(',', '.');
+                    if (tb.SelectedText.Contains(',')) tb.SelectedText = tb.SelectedText.Replace(',', '.');
                     tb.Select(c.Offset + c.AddedLength, 0);
                 }
             }
@@ -63,10 +63,10 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void ChangeTxtColor(object sender, bool error)
         {
-            Application.Current.Dispatcher?.Invoke(delegate()
+            Application.Current.Dispatcher?.Invoke(delegate ()
             {
                 TextBox tb = (TextBox)sender;
-                if(error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                if (error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                 else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
             });
         }
@@ -79,7 +79,7 @@ namespace Power_Equipment_Handbook
             Application.Current.Dispatcher?.Invoke(delegate ()
             {
                 ComboBox tb = (ComboBox)sender;
-                if(error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                if (error) tb.Background = new SolidColorBrush(Color.FromRgb(255, 0, 0));
                 else { tb.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255)); }
             });
         }
@@ -92,10 +92,10 @@ namespace Power_Equipment_Handbook
             bool result = NodeChecker(br, cmbStart, cmbEnd);
             Application.Current.Dispatcher?.Invoke(delegate ()
             {
-                if(result)
+                if (result)
                 {
                     var other = track.Branches.Where((b) => ((b.Start == br.Start & b.End == br.End) || (b.Start == br.End & b.End == br.Start)) & (b.Type != br.Type)).ToList();
-                    if(other.Count > 0)
+                    if (other.Count > 0)
                     {
                         Log.Show("Узлы начала и конца совпадают для ветви другого типа!");
                         result = false;
@@ -123,11 +123,11 @@ namespace Power_Equipment_Handbook
             var nodesEn = track.Nodes.Where((n) => n.Number == end).ToList();
             var reverse_br = track.Branches.Where((b) => (b.Start == br.End) & (b.End == br.Start)).ToList();
 
-            if(reverse_br.Count != 0) { ChangeCmbColor(cmbStart, true); ChangeCmbColor(cmbEnd, true); Log.Show("Проверить начало и конец ветви! Уже существует ветвь с заданными узлами!"); return false; }
-            if(nodesSt.Count == 0) ChangeCmbColor(cmbStart, true);
-            if(nodesEn.Count == 0) ChangeCmbColor(cmbEnd, true);
+            if (reverse_br.Count != 0) { ChangeCmbColor(cmbStart, true); ChangeCmbColor(cmbEnd, true); Log.Show("Проверить начало и конец ветви! Уже существует ветвь с заданными узлами!"); return false; }
+            if (nodesSt.Count == 0) ChangeCmbColor(cmbStart, true);
+            if (nodesEn.Count == 0) ChangeCmbColor(cmbEnd, true);
 
-            if(nodesSt.Count == 0 || nodesEn.Count == 0) return false;
+            if (nodesSt.Count == 0 || nodesEn.Count == 0) return false;
             else return true;
         }
 
@@ -140,19 +140,19 @@ namespace Power_Equipment_Handbook
         private void GetData(string type, double unom, DBProvider provider)
         {
             //Таблица Lines
-            if(type == "Line")
+            if (type == "Line")
             {
                 Lines.Clear();
                 string comm;
 
-                if (isCable == true) comm = $"SELECT * FROM [Cables] WHERE [Unom] = {unom}".Replace(',','.');
+                if (isCable == true) comm = $"SELECT * FROM [Cables] WHERE [Unom] = {unom}".Replace(',', '.');
                 else comm = $"SELECT * FROM [Lines] WHERE [Unom] = {unom}".Replace(',', '.');
 
                 using (var sqldata = provider.Command_Query(comm, provider.Connection))
                 {
-                    if(sqldata.HasRows == false) return;
+                    if (sqldata.HasRows == false) return;
 
-                    while(sqldata.Read())
+                    while (sqldata.Read())
                     {
                         Lines.Add(new Line()
                         {
@@ -171,19 +171,19 @@ namespace Power_Equipment_Handbook
                 cmbTypeName_L.DisplayMemberPath = "TypeName";
             }
             //Таблица Trans
-            if(type == "Trans")
+            if (type == "Trans")
             {
                 //Двухобмоточные
-                if(cmbType_T.Text == "двух." & cmbType_T.SelectedIndex == 0)
+                if (cmbType_T.Text == "двух." & cmbType_T.SelectedIndex == 0)
                 {
                     Trans.Clear();
                     string comm = $"SELECT * FROM [Trans] WHERE [Unom] = {unom}".Replace(',', '.');
 
-                    using(var sqldata = provider.Command_Query(comm, provider.Connection))
+                    using (var sqldata = provider.Command_Query(comm, provider.Connection))
                     {
-                        if(sqldata.HasRows == false) return;
+                        if (sqldata.HasRows == false) return;
 
-                        while(sqldata.Read())
+                        while (sqldata.Read())
                         {
                             var snom_loc = sqldata["Snom"] as double?;
                             var unom_loc = sqldata["UnomH"] as double?;
@@ -208,16 +208,16 @@ namespace Power_Equipment_Handbook
                     cmbTypeName_T.DisplayMemberPath = "TypeName";
                 }
                 //Трехобмоточные и Автотрансформаторы
-                if(cmbType_T.Text == "тр./АТ" & cmbType_T.SelectedIndex == 1)
+                if (cmbType_T.Text == "тр./АТ" & cmbType_T.SelectedIndex == 1)
                 {
                     MultiTrans.Clear();
                     string comm = $"SELECT * FROM [MultiTrans] WHERE [Unom] = {unom}".Replace(',', '.');
 
-                    using(var sqldata = provider.Command_Query(comm, provider.Connection))
+                    using (var sqldata = provider.Command_Query(comm, provider.Connection))
                     {
-                        if(sqldata.HasRows == false) return;
+                        if (sqldata.HasRows == false) return;
 
-                        while(sqldata.Read())
+                        while (sqldata.Read())
                         {
                             var snom_loc = sqldata["Snom"] as double?;
                             var unomh_loc = sqldata["UnomH"] as double?;
@@ -270,9 +270,9 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void Get_Library(object sender, RoutedEventArgs e)
         {
-            if(lib != null)
-            { 
-                if(lib.IsVisible) lib.Hide();
+            if (lib != null)
+            {
+                if (lib.IsVisible) lib.Hide();
                 else lib.Show();
             }
             else if (this.lib == null || !this.lib.IsVisible)
@@ -311,8 +311,36 @@ namespace Power_Equipment_Handbook
             }
             else if (this.PFM == null || !this.PFM.IsVisible)
             {
-                this.PFM = new src.windows.PowerFlowManager(ref this.track.Nodes, ref this.track.Branches) { Owner = this };
+                this.PFM = new src.windows.PowerFlowManager(ref this.track, this.Log) { Owner = this };
                 this.PFM.Show();
+            }
+        }
+
+
+        /// <summary>
+        /// Быстрый расчет режима схемы
+        /// </summary>
+        private void Fast_Calc(object sender, RoutedEventArgs e)
+        {
+            if (this.track.Nodes.Count == 0 | this.track.Branches.Count == 0) //Проверка на налиие узлов/ветвей
+            {
+                this.Log.Show("Отсутствуют Узлы/Ветви для быстрого расчета схемы!");
+                return;
+            }
+            if (!this.track.Nodes.Any(n=>n.Type == "База")) //Проверка на налиие базисного узла
+            {
+                this.Log.Show("Отсутствует базисный узел!");
+                return;
+            }
+
+            if (this.PFM == null || !this.PFM.IsVisible)
+            {
+                this.PFM = new src.windows.PowerFlowManager(ref this.track, this.Log) { Owner = this };
+                this.PFM.Calculate();
+            }
+            else
+            {
+                this.PFM.Calculate();
             }
         }
 
@@ -336,7 +364,7 @@ namespace Power_Equipment_Handbook
             txtQmax_N.Text = "";
             txtBsh_N.Text = "";
             txtRegion_N.Text = "";
-            txtState_N.Text = "0";
+            txtState_N.IsChecked = true;
         }
 
         /// <summary>
@@ -362,6 +390,7 @@ namespace Power_Equipment_Handbook
 
         #endregion Утилиты        
 
+
         #region Power Network Methods
 
         /// <summary>
@@ -369,13 +398,13 @@ namespace Power_Equipment_Handbook
         /// </summary>
         public void Connectivity(object sender, RoutedEventArgs e)
         {
-            if(track.Nodes.Count == 0 || track.Branches.Count == 0)                                                 //Отсутствие узлов или ветвей
+            if (track.Nodes.Count == 0 || track.Branches.Count == 0)                                                 //Отсутствие узлов или ветвей
             {
                 Log.Show("Отсутствуют узлы/ветви в схеме для проверки связанности!", LogClass.LogType.Error);
                 return;
             }
-                                                
-            var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b=>b.Start).ToList();      //Список уникальных ветвей
+
+            var branches = track.Branches.Distinct(new BranchEqualityComparer()).OrderBy(b => b.Start).ToList();      //Список уникальных ветвей
 
             var exNodes = track.Nodes.OrderBy(n => n.Number).Select(n => n.Number).ToList();                        //Список узлов для исключения
 
@@ -383,11 +412,11 @@ namespace Power_Equipment_Handbook
             {
                 Log.Show("Связанность отсутствует!", LogClass.LogType.Error);
                 return;
-            }                   
+            }
 
             List<int> linked = new List<int>();
 
-            foreach(var b in branches) { if(b.Start == exNodes[0]) linked.Add(b.End); else if(b.End == exNodes[0]) linked.Add(b.Start); } //Формирование списка связности для первого узла
+            foreach (var b in branches) { if (b.Start == exNodes[0]) linked.Add(b.End); else if (b.End == exNodes[0]) linked.Add(b.Start); } //Формирование списка связности для первого узла
 
             exNodes.Remove(exNodes[0]); //Исключение первого узла из списка узлов (список - индикатор)
 
@@ -403,24 +432,24 @@ namespace Power_Equipment_Handbook
 
             void RecurseFinder(List<int> Linked, ref List<int> Exnodes) //Рекурсивная функция обхода графа в глубину
             {
-                foreach(int j in Linked)
+                foreach (int j in Linked)
                 {
-                    if(Exnodes.Contains(j)) Exnodes.Remove(j);
+                    if (Exnodes.Contains(j)) Exnodes.Remove(j);
                 }
 
-                if(Exnodes.Count == 0) return;
+                if (Exnodes.Count == 0) return;
 
-                foreach(int link in Linked)
+                foreach (int link in Linked)
                 {
                     var linker = new List<int>();
 
-                    foreach(var b in branches)
+                    foreach (var b in branches)
                     {
-                        if(b.Start == link & Exnodes.Contains(b.End)) linker.Add(b.End);
-                        else if(b.End == link & Exnodes.Contains(b.Start)) linker.Add(b.Start);
+                        if (b.Start == link & Exnodes.Contains(b.End)) linker.Add(b.End);
+                        else if (b.End == link & Exnodes.Contains(b.Start)) linker.Add(b.Start);
                     }
 
-                    if(linker.Count != 0) RecurseFinder(new List<int>(linker), ref Exnodes);
+                    if (linker.Count != 0) RecurseFinder(new List<int>(linker), ref Exnodes);
                 }
             }
         }
@@ -433,6 +462,7 @@ namespace Power_Equipment_Handbook
 
         #endregion Power Network Methods
 
+
         #region Save/Open (Serialize/Deserialize) Methods
 
         /// <summary>
@@ -440,7 +470,7 @@ namespace Power_Equipment_Handbook
         /// </summary>
         private void Export_Click(object sender, RoutedEventArgs e)
         {
-            if(track.Nodes.Count == 0 | track.Branches.Count == 0)
+            if (track.Nodes.Count == 0 | track.Branches.Count == 0)
             {
                 Log.Show("Отсутствуют узлы/ветви!");
                 return;
@@ -454,14 +484,15 @@ namespace Power_Equipment_Handbook
                 //InitialDirectory = "./Save/", 
             };
 
-            if(sfd.ShowDialog() == false) return;
+            if (sfd.ShowDialog() == false) return;         
+
 
             string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
             string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
 
             UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
 
-            switch(extension)
+            switch (extension)
             {
                 case ".peh":
                     Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
@@ -471,11 +502,15 @@ namespace Power_Equipment_Handbook
                     Log.Show($"Запись данных в файла: {filename}. Процесс...", LogClass.LogType.Information);
                     serializator.toXLSX();
                     break;
-                
-                //case ".rg2":
-                //    serializator.toRG2();
-                //    break;
+
+                    //case ".rg2":
+                    //    serializator.toRG2();
+                    //    break;
             }
+
+            this.track.IsSaved = true;
+            this.track.Name = sfd.SafeFileName;
+            this.track.FullPath = sfd.FileName;
 
             Log.Show($"Успешно записано в файл: {filename}", LogClass.LogType.Information); //Информирует об записи в файл
         }
@@ -491,7 +526,7 @@ namespace Power_Equipment_Handbook
                 Multiselect = false
             };
 
-            if(sfd.ShowDialog() == false) return;
+            if (sfd.ShowDialog() == false) return;
 
             string filename = sfd.FileName;                 //Получение абсолютного пути к сохраняемому файлу
             string extension = Path.GetExtension(filename); //получения расширения файла для выбора типа сериализатора
@@ -499,7 +534,7 @@ namespace Power_Equipment_Handbook
             UniverseSerializator serializator = new UniverseSerializator(file: filename, tracker: track);       //Сериализатор
             DataGridTracker localTracker;
 
-            switch(extension.ToLower())
+            switch (extension.ToLower())
             {
                 case ".peh":
                     try
@@ -511,8 +546,8 @@ namespace Power_Equipment_Handbook
 
                         Log.Show($"Извлечение данных из файла: {filename}. Процесс...", LogClass.LogType.Information);
 
-                        foreach(var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
-                        foreach(var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
+                        foreach (var i in localTracker.Nodes) track.Nodes.Add(i);        //Добавление Узлов 
+                        foreach (var i in localTracker.Branches) track.Branches.Add(i);  //Добавление Ветвей
                         foreach (var i in localTracker.Cells) track.Cells.Add(i);       //Добавление Ячеек
 
                         FullUpdate();
@@ -529,8 +564,13 @@ namespace Power_Equipment_Handbook
                     //    break;
             }
 
+            this.track.Name = sfd.SafeFileName;
+            this.track.FullPath = sfd.FileName;
+            this.track.IsSaved = true;            
+
             Log.Show($"Успешно прочитан файл {filename}", LogClass.LogType.Information); //Информирует об успешном чтении файла
         }
+
 
 
         /// <summary>

@@ -25,11 +25,11 @@ namespace Power_Equipment_Handbook.src.windows
         readonly Cell cell;
         readonly DBProvider db;
 
-        List<BreakerCell> Br = new List<BreakerCell>();
-        List<DisconnectorCell> Dis = new List<DisconnectorCell>();
-        List<ShortCircuiterCell> SC = new List<ShortCircuiterCell>();
-        List<TTCell> TT = new List<TTCell>();
-        //List<BusbarCell> BB = new List<BusbarCell>();
+        List<BreakerCell> Br = new List<BreakerCell>();                 //Выключатели
+        List<DisconnectorCell> Dis = new List<DisconnectorCell>();      //Разъединители
+        List<ShortCircuiterCell> SC = new List<ShortCircuiterCell>();   //Отделители/Короткозамыкатели
+        List<TTCell> TT = new List<TTCell>();                           //ТТ
+        List<BusbarCell> BB = new List<BusbarCell>();                   //Ошиновка
 
         private int _idCounter;
         public int IdCounter

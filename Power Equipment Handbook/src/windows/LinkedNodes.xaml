@@ -74,7 +74,7 @@
                 <DataGridTextColumn Header="Qmax" Width="*" Binding="{Binding Q_max, StringFormat=0.00;;#}" ClipboardContentBinding="{x:Null}" />
                 <DataGridTextColumn Header="Gшунт" Width="*" Binding="{Binding G_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
                 <DataGridTextColumn Header="Bшунт" Width="*" Binding="{Binding B_sh, StringFormat=0.000;;#}" ClipboardContentBinding="{x:Null}" />
-                <DataGridTextColumn Header="Район" Width="35" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}" />
+                <DataGridTextColumn Header="Район" Width="55" Binding="{Binding Region}" ClipboardContentBinding="{x:Null}" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

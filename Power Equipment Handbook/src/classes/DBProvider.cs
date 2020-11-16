@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 using System.Windows;
 
 namespace Power_Equipment_Handbook.src
@@ -60,7 +61,7 @@ namespace Power_Equipment_Handbook.src
         /// <param name="DB_name">Имя базы данных</param>
         public SQLiteConnection Connect (string DB_name)
         {
-            if (!System.IO.File.Exists(DB_name))
+            if (!File.Exists(Path.Combine(Environment.CurrentDirectory, DB_name)))
             {
                 MessageBox.Show("Database file NOT found!"); return null;
             }
@@ -124,5 +125,12 @@ namespace Power_Equipment_Handbook.src
 
             return dr;
         }
+
+
+        //public enum ConnectionState
+        //{
+        //    Connected,
+        //    Disconnected
+        //}
     }
 }

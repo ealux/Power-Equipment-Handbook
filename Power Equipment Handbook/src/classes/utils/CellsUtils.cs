@@ -28,7 +28,6 @@ namespace Power_Equipment_Handbook
         int nodenumber;
         string name;
         double unom;
-        //int elemscount;
 
 
         [XmlAttribute] public int NodeNumber { get => nodenumber; set => SetProperty(ref nodenumber, value); }
